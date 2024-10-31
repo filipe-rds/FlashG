@@ -1,4 +1,79 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import br.edu.ifpb.pweb2.flashg.model.Photographer;
+import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class PhotographerService {
+
+    @Autowired
+    private  PhotographerRepository repository;
+
+    public Photographer create(Photographer photographer) throws Exception{
+        if(repository.findByEmail(photographer.getEmail()) != null){
+            throw new Exception("Email already exists");
+        }
+        return repository.save(photographer);
+    }
+
+    public Photographer update(int id,Photographer updatedPhotographer) throws Exception{
+        Photographer existPhotographer = repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
+        String name = updatedPhotographer.getName();
+        String email = existPhotographer.getEmail();
+
+        if(name != null){
+            if(updatedPhotographer.getName().isBlank() || updatedPhotographer.getName().length() < 2 || updatedPhotographer.getName().length() > 100){
+                throw new Exception("Name is invalid");
+            }
+            existPhotographer.setName(updatedPhotographer.getName());
+        }
+
+        // verificar caso de problema ao atualizar o usuario com o mesmo email
+        if(email != null){
+            if(!updatedPhotographer.getEmail().isBlank() || updatedPhotographer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")){
+                Photographer photographerWithSameEmail = repository.findByEmail(email);
+                if(photographerWithSameEmail == null){
+                    existPhotographer.setEmail(email);
+                }
+                else {
+                    throw new Exception("Email already exists");
+                }
+            }
+            else {
+                throw new Exception("Email is invalid");
+            }
+        }
+        else {
+            throw new Exception("Email is null");
+        }
+        return repository.save(existPhotographer);
+    }
+
+    public List<Photographer> readAll(){
+        return repository.findAll();
+    }
+
+    public Photographer readById(int id)throws Exception{
+        return repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
+    }
+
+    //codigo para ser otimizado depois
+    public Photographer readByEmail(String email)throws Exception{
+        return repository.findByEmail(email);
+    }
+
+    public List<Photographer> readByName(String name)throws Exception{
+        return repository.findByName(name);
+    }
+
+    public void delete(int id)throws Exception{
+        repository.deleteById(id);
+    }
+
+
 }
