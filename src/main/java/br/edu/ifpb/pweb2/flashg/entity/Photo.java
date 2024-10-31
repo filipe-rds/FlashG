@@ -1,24 +1,22 @@
-package br.edu.ifpb.pweb2.flashg.model;
+package br.edu.ifpb.pweb2.flashg.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Photographer {
+public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(unique = true)
-    private String email;
+    @OneToOne
+    private Photographer photographer;
 
-    private String name;
-
+    private String imageUrl;
+    private byte[] imageData;
 }
-
-
