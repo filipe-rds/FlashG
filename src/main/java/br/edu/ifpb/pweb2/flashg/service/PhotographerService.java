@@ -1,12 +1,11 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
-import br.edu.ifpb.pweb2.flashg.model.Photographer;
+import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PhotographerService {
@@ -15,7 +14,7 @@ public class PhotographerService {
     private  PhotographerRepository repository;
 
     public Photographer create(Photographer photographer) throws Exception{
-        if(repository.findByEmail(photographer.getEmail()) != null){
+        if(repository.findByEmail(photographer.getEmail()).isPresent()){
             throw new Exception("Email already exists");
         }
         return repository.save(photographer);
@@ -27,7 +26,7 @@ public class PhotographerService {
         String email = existPhotographer.getEmail();
 
         if(name != null){
-            if(updatedPhotographer.getName().isBlank() || updatedPhotographer.getName().length() < 2 || updatedPhotographer.getName().length() > 100){
+            if(name.isBlank() || name.length() < 2 || name.length() > 100){
                 throw new Exception("Name is invalid");
             }
             existPhotographer.setName(updatedPhotographer.getName());
@@ -35,14 +34,14 @@ public class PhotographerService {
 
         // verificar caso de problema ao atualizar o usuario com o mesmo email
         if(email != null){
-            if(!updatedPhotographer.getEmail().isBlank() || updatedPhotographer.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")){
-                Photographer photographerWithSameEmail = repository.findByEmail(email);
-                if(photographerWithSameEmail == null){
-                    existPhotographer.setEmail(email);
-                }
-                else {
-                    throw new Exception("Email already exists");
-                }
+            if(!email.isBlank() || email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")){
+                    //Photographer photographerWithSameEmail = repository.findByEmail(email).orElseThrow(() -> new Exception("Photographer not found"));
+                    if(repository.findByEmail(email).isEmpty()){
+                        existPhotographer.setEmail(email);
+                    }
+                    else {
+                        throw new Exception("Email already exists");
+                    }
             }
             else {
                 throw new Exception("Email is invalid");
@@ -64,7 +63,7 @@ public class PhotographerService {
 
     //codigo para ser otimizado depois
     public Photographer readByEmail(String email)throws Exception{
-        return repository.findByEmail(email);
+        return repository.findByEmail(email).orElseThrow(() -> new Exception("Photographer not found"));
     }
 
     public List<Photographer> readByName(String name)throws Exception{
