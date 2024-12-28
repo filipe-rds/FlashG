@@ -16,17 +16,17 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, name = "text", length = 255)
+    @Column(nullable = false, length = 255)
     private String commentText;
 
-    @Column(nullable = false, name = "date_created")
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "photographer_id")
+    @JoinColumn(nullable = false)
     private Photographer photographer;
 
     @ManyToOne
-    @JoinColumn(nullable = false, name = "photo_id")
+    @JoinColumn(nullable = false)
     private Photo photo;
 }
