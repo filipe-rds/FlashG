@@ -9,15 +9,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    // Consulta para retornar todos os comentários de uma foto
-    List<Comment> findByPhoto(Photo photo);
+    // Consulta para retornar todos os comentários de uma foto, ordenados pela data de envio mais recente
+    List<Comment> findByPhotoOrderByCreatedAtDesc(Photo photo);
 
-    // Consulta para retornar todos os comentários de um fotógrafo em uma foto
-    List<Comment> findByPhotographerAndPhoto(Photographer photographer, Photo photo);
+    // Consulta para retornar todos os comentários de um fotógrafo em uma foto, ordenados pela data de envio mais recente
+    List<Comment> findByPhotographerAndPhotoOrderByCreatedAtDesc(Photographer photographer, Photo photo);
 
-    // Consulta para retornar todos os comentários de uma foto excluindo um fotógrafo específico
-    List<Comment> findByPhotoAndPhotographerNot(Photo photo, Photographer photographer);
-
+    // Consulta para retornar todos os comentários de uma foto excluindo um fotógrafo específico, ordenados pela data de envio mais recente
+    List<Comment> findByPhotoAndPhotographerNotOrderByCreatedAtDesc(Photo photo, Photographer photographer);
 }
+
