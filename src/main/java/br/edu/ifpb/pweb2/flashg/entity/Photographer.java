@@ -30,4 +30,11 @@ public class Photographer {
 
     @OneToMany(mappedBy = "photographer")
     private List<Photo> photos;
+
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> following;
+
+    @OneToMany(mappedBy = "followed")
+    private List<Follow> followers;
+
 }
