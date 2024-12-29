@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,13 +14,20 @@ import lombok.AllArgsConstructor;
 public class Photographer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Column(unique = true)
     private String email;
 
-    private String name;
+    @Column(nullable = false, length = 64)
+    private String password;
 
+    @OneToMany(mappedBy = "photographer")
+    private List<Photo> photos;
 }
-
-
