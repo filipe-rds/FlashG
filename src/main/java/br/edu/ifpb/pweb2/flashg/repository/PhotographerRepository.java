@@ -9,10 +9,8 @@ import java.util.Optional;
 
 
 @Repository
-public interface PhotographerRepository extends JpaRepository<Photographer, Integer> {
-
+public interface PhotographerRepository extends JpaRepository<Photographer, Long> {
+    List<Photographer> findByFirstName(String firstName);
+    List<Photographer> findByLastName(String lastName);
     Optional<Photographer> findByEmail(String email);
-
-    List<Photographer> findByName (String name);
-
 }
