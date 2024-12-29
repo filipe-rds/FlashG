@@ -22,7 +22,7 @@ public class Comment {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(nullable = false)
     private Photographer photographer;
 
