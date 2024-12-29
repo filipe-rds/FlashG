@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 
 @Repository
-public interface PhotoRepository extends JpaRepository<Photo, Integer> {
+public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
 }
