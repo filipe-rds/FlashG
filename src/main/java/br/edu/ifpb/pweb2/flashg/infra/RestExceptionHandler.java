@@ -11,7 +11,7 @@ import br.edu.ifpb.pweb2.flashg.exceptioon.NotFoundPhotoException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(NotFoundPhotoException.class)
-    private ModelAndView handleNotFoundPhotoException( NotFoundPhotoException ex){
+    private ModelAndView handlerNotFoundPhotoException( NotFoundPhotoException ex){
 
         return new ModelAndView("error/404");
 
