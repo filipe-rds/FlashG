@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import br.edu.ifpb.pweb2.flashg.exceptioon.NotFoundPhotoException;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler{

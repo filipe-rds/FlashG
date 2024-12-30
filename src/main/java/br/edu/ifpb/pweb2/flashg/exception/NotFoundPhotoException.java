@@ -1,4 +1,4 @@
-package br.edu.ifpb.pweb2.flashg.exceptioon;
+package br.edu.ifpb.pweb2.flashg.exception;
 
 public class NotFoundPhotoException extends RuntimeException {
 
