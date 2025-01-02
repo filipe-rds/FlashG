@@ -31,6 +31,9 @@ public class Photographer {
     @OneToMany(mappedBy = "photographer")
     private List<Photo> photos;
 
+    @OneToMany(mappedBy = "photographer")
+    private List<Comment> comments;
+
     @OneToMany(mappedBy = "follower")
     private List<Follow> following;
 
