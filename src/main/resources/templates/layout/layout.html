@@ -1,0 +1,20 @@
+<html lang="pt_BR" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    <title>Layout</title>
+</head>
+<body>
+    <div th:replace="~{fragments/cabecalho :: header}"></div>
+
+
+        <div layout:fragment="content">
+            <h1>Conteúdo da página</h1>
+        </div>
+
+
+    <div th:replace="~{fragments/rodape :: footer}"></div>
+    
+</body>
+</html>
