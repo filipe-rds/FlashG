@@ -28,6 +28,9 @@ public class Photographer {
     @Column(nullable = false, length = 64)
     private String password;
 
+    @Column(nullable = false)
+    private boolean acceptsFollowers;
+
     @OneToMany(mappedBy = "photographer")
     private List<Photo> photos;
 
