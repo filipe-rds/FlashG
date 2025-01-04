@@ -1,20 +1,24 @@
+<!DOCTYPE html>
 <html lang="pt_BR" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Layout</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/css/coreui.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
+
+
 </head>
 <body>
+    
     <div th:replace="~{fragments/cabecalho :: header}"></div>
 
-
-        <div layout:fragment="content">
-            <h1>Conteúdo da página</h1>
-        </div>
-
+    <!-- Conteúdo dinâmico -->
+    <main layout:fragment="content">
+        <h2>Conteúdo da página</h2>
+    </main>
 
     <div th:replace="~{fragments/rodape :: footer}"></div>
-    
 </body>
 </html>

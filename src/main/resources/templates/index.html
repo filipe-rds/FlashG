@@ -1,17 +1,24 @@
-    <html lang="pt_BR"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
-    xmlns:th="http://www.thymeleaf.org"
-    layout:decorate="~{layout/layout}">
+<!DOCTYPE html>
+<html lang="pt_BR" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
+xmlns:th="http://www.thymeleaf.org"
+layout:decorate="~{layout/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <!-- Importando o CoreUI -->
 </head>
 <body>
-
     <div layout:fragment="content">
-        <h1>Conteúdo da página</h1>
-
+        <div class="card text-center">
+            <div class="card-header" >
+                <h3>Exemplo de uso do CoreUI</h3>
+            <div>
+            <div class="card-body " style="background-color: blue">
+                <p> testing</p>
+            </div>
+            <h1>Conteúdo da página</h1>
+        </div>
     </div>
-    
 </body>
 </html>
