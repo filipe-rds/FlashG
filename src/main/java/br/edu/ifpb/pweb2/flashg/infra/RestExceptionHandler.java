@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
 
 @ControllerAdvice
@@ -15,6 +16,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 
         return new ModelAndView("error/404");
 
+    }
+
+    @ExceptionHandler(NotFoundAnyPhotograferWithName.class)
+    private ModelAndView handlerNotFoundAnyPhotografer(NotFoundAnyPhotograferWithName ex) {
+        // Exibe a mensagem de erro e redireciona para a página de "findPhotographers"
+        ModelAndView mav = new ModelAndView("application/findPhotographers");
+        mav.addObject("message", ex.getMessage());
+        return mav;
     }
     
 }
