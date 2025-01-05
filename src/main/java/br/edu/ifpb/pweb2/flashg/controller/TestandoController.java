@@ -16,5 +16,12 @@ public class TestandoController {
         mav.setViewName("index");
         return mav;
     }
+
+    @RequestMapping(value = "/save2", method = RequestMethod.GET)
+    public ModelAndView save1(ModelAndView mav) {
+        mav.setViewName("index2");
+        return mav;
+    }
+    
 }
 
