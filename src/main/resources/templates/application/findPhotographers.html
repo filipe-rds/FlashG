@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
+layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Importando o CoreUI -->
+</head>
+
+<tbody>
+    <div layout:fragment="content">
+
+        <form th:action="@{/facade/findPhotographers}" method="GET">
+            <label for="username">Pesquisar</label><br>
+            <input type="text" th:value=${username} id="username" name="username" placeholder="Digite o @"><br><br>
+            <button type="submit">Pesquisar</button>
+        </form>
+        <p class = "mt-5" th:if="${message != null and message != '' }" th:text="${message}"></p>
+
+
+        <p class = "mt-5" th:if="${resultados != null and resultados != '' }" th:text="${resultados}"></p>
+
+        <table class="table" th:if="${photographers != null and photographers.size() > 0}">
+            <thead>
+                <tr>
+                    <th>Primeiro Nome</th>
+                    <th>Último nome</th>
+                    <th>Senha</th>
+                    <th>Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="photographer : ${photographers}">
+                    <td th:text="${photographer.firstName}"></td>
+                    <td th:text="${photographer.lastName}"></td>
+                    <td th:text="${photographer.password}"></td>
+                    <td th:text="${photographer.username}"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</tbody>
+
+</html>
