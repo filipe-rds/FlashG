@@ -12,13 +12,17 @@
 </head>
 <body>
     
-    <div th:replace="~{fragments/cabecalho :: header}"></div>
+   <div class="d-flex">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="w-100 d-flex flex-column">
+        <!-- Centralizando o conteúdo -->
+        <div class=" mt-4 " layout:fragment="content" >
+            <h2>Conteúdo da página</h2>
+        </div>
+         <!-- <div th:replace="~{fragments/rodape :: footer}"></div> -->
+    </div>
+</div>
+   
 
-    <!-- Conteúdo dinâmico -->
-    <main layout:fragment="content">
-        <h2>Conteúdo da página</h2>
-    </main>
-
-    <div th:replace="~{fragments/rodape :: footer}"></div>
 </body>
 </html>
