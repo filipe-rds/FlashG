@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Like {
+public class Likee {
 
     @EmbeddedId
     private LikeId id;
