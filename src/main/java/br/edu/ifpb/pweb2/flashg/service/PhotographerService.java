@@ -20,16 +20,16 @@ public class PhotographerService {
         return repository.save(photographer);
     }
 
-    public Photographer update(int id,Photographer updatedPhotographer) throws Exception{
+    public Photographer update(Long id,Photographer updatedPhotographer) throws Exception{
         Photographer existPhotographer = repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
-        String name = updatedPhotographer.getName();
+        String name = updatedPhotographer.getFirstName();
         String email = existPhotographer.getEmail();
 
         if(name != null){
             if(name.isBlank() || name.length() < 2 || name.length() > 100){
                 throw new Exception("Name is invalid");
             }
-            existPhotographer.setName(updatedPhotographer.getName());
+            existPhotographer.setFirstName(updatedPhotographer.getFirstName());
         }
 
         // verificar caso de problema ao atualizar o usuario com o mesmo email
@@ -57,7 +57,7 @@ public class PhotographerService {
         return repository.findAll();
     }
 
-    public Photographer readById(int id)throws Exception{
+    public Photographer readById(Long id)throws Exception{
         return repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
     }
 
@@ -66,11 +66,11 @@ public class PhotographerService {
         return repository.findByEmail(email).orElseThrow(() -> new Exception("Photographer not found"));
     }
 
-    public List<Photographer> readByName(String name)throws Exception{
-        return repository.findByName(name);
-    }
+//    public List<Photographer> readByName(String name)throws Exception{
+//        return repository.findByName(name);
+//    }
 
-    public void delete(int id)throws Exception{
+    public void delete(Long id)throws Exception{
         repository.deleteById(id);
     }
 
