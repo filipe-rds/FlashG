@@ -1,13 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt_BR">
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashG | Sign Up</title>
+    <title>FlashG | Sign In</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/css/coreui.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
 </head>
-<body>
-  <h1>Sign In</h1>
+<body class="px-5 pt-5 d-flex flex-column vh-100">
+<header class="d-flex justify-content-between position-relative">
+    <h1>FlashG</h1>
+
+    <a th:href="@{/auth/signup}" class="btn btn-primary d-flex justify-content-center align-items-center fs-4"
+       role="button" style="width: 212px; height: 56px;">Fazer Cadastro</a>
+</header>
+
+<main class="d-flex flex-grow-1 w-100 justify-content-center align-items-center">
+    <div class="d-flex flex-column gap-5" style="max-width: 540px;">
+        <div class="d-flex flex-column gap-1">
+            <h2>
+                Que bom ter você de volta!
+            </h2>
+
+            <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+        </div>
+
+        <form th:action="@{/auth/login}" th:object="${photographer}" method="post" class="d-flex flex-column gap-2">
+            <div>
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" th:field="*{email}" placeholder="exemplo@exemplo.com"
+                       class="form-control">
+                <p class="text-danger fs-6" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+
+            <div>
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" id="password" name="password" th:field="*{password}"
+                       placeholder="Senha forte com no mínimo 8 dígitos" class="form-control">
+                <p class="text-danger fs-6" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+            </div>
+
+            <button class="btn btn-primary mt-3">
+                Logar no Sistema
+            </button>
+        </form>
+    </div>
+</main>
 </body>
 </html>

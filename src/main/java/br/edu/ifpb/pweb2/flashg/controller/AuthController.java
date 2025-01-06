@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
 @RequestMapping("/auth")
@@ -49,7 +53,33 @@ public class AuthController {
 
     @GetMapping("/signin")
     public ModelAndView signIn(ModelAndView mav) {
+        mav.addObject("photographer", new LoginDTO());
         mav.setViewName("auth/signin");
         return mav;
+    }
+
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute("photographer") LoginDTO photographer,
+                        BindingResult result,
+                        HttpSession session,
+                        Model model) {
+        if (result.hasErrors()) {
+            return "auth/signin";
+        }
+
+        Optional<Photographer> optionalPhotographer = this.photographerRepository.findByEmail(photographer.getEmail());
+
+        if (optionalPhotographer.isPresent()) {
+            if (optionalPhotographer.get().getPassword().equals(photographer.getPassword())) {
+                session.setAttribute("loggedPhotographer", optionalPhotographer.get());
+                return "redirect:/testando/save";
+            } else {
+                model.addAttribute("error", "Email ou senha incorreta");
+                return "auth/signin";
+            }
+        } else {
+            model.addAttribute("error", "Email ou senha incorreta");
+            return "auth/signin";
+        }
     }
 }
