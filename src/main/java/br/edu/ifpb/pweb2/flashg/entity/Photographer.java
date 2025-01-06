@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,15 +18,21 @@ public class Photographer {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank
     private String firstName;
 
     @Column(nullable = false)
+    @NotBlank
     private String lastName;
 
     @Column(unique = true)
+    @NotBlank
+    @Email
     private String email;
 
     @Column(nullable = false, length = 64)
+    @NotBlank
+    @Size(min = 8, max = 64)
     private String password;
 
     @Column(nullable = false)
