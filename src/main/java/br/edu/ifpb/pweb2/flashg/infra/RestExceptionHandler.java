@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
 
@@ -25,6 +26,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
         mav.addObject("message", ex.getMessage());
         return mav;
     }
+
+    @ExceptionHandler(NotFoundAnyFollowing.class)
+    private ModelAndView handlerNotFoundAnyFollowing(NotFoundAnyFollowing ex) {
+        // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
+        ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
+        mav.addObject("message", ex.getMessage());
+        return mav;
+    }
+
     
 }
 
