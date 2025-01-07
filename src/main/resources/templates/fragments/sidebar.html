@@ -44,7 +44,8 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" th:href="@{/facade/listPhotographerFollowing}">
+                    <a class="nav-link" th:href="@{/facade/listPhotographerFollowing/{id}(id=${session.loggedPhotographer.id})}">
+
                       <i class="nav-icon cil-speedometer"></i> Seguindo
                     </a>
                   </li>
