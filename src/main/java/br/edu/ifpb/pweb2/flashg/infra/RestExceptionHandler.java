@@ -35,8 +35,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundAnyFollowing.class)
     private ModelAndView handlerNotFoundAnyFollowing(NotFoundAnyFollowing ex) {
         // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("application/listPhotographerFollowing");
+        ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
+        //ModelAndView mav = new ModelAndView("application/findPhotographers2");
         mav.addObject("message", ex.getMessage());
         return mav;
     }

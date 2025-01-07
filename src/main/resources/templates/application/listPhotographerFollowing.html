@@ -2,23 +2,18 @@
 <html lang="pt_BR"
 xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
 layout:decorate="~{layout/layout}">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Importando o CoreUI -->
+</head>
     <body>
         <div layout:fragment="content">
             <div class="container ">
                 <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
                     <p class = "mt-5" th:if="${message != null and message != '' }" th:text="${message}"></p>
-                    <h3 class="mb-5"  th:text="${photographers.size()+' Fotógrafos'}"></h3>
-                        <tr th:each="photographer : ${seguidos}">
-                            <td th:text="${photographer.username}"></td>
-                            <td th:text="${photographer.firstName+' '+photographer.lastName}"></td>
-                            <td >
-                        <a th:href="@{/facade/showProfile/{id}(id=${photographer.id})}" class="btn btn-outline-success">Acessar</a>
-                    </td>
                 </div>
             </div>
         </div>
