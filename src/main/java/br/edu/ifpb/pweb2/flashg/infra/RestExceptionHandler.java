@@ -1,5 +1,9 @@
 package br.edu.ifpb.pweb2.flashg.infra;
 
+import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
+import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
+import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,15 +12,33 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
 
 @ControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler{
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundPhotoException.class)
-    private ModelAndView handlerNotFoundPhotoException( NotFoundPhotoException ex){
-
-        return new ModelAndView("error/404");
-
+    private ModelAndView handlerNotFoundPhotoException(NotFoundPhotoException ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("error/404");
+        return mav;
     }
-    
+
+    @ExceptionHandler(EmailAlreadyExists.class)
+    private ModelAndView handlerEmailAlreadyExists(EmailAlreadyExists ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signup");
+        mav.addObject("photographer", new Photographer());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(EmailOrPasswordIsIncorrect.class)
+    private ModelAndView handlerEmailOrPasswordIsIncorrect(EmailOrPasswordIsIncorrect ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signin");
+        mav.addObject("photographer", new LoginDTO());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
 }
 
 

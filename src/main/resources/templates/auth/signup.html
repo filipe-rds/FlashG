@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashG | Sign Up</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/css/coreui.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
+</head>
+<body class="p-5">
+    <header class="d-flex justify-content-between">
+        <h1>FlashG</h1>
+
+        <a th:href="@{/auth/signin}" class="btn btn-primary d-flex justify-content-center align-items-center fs-4" role="button" style="width: 212px; height: 56px;">Fazer Login</a>
+    </header>
+
+    <main class="mt-5 d-flex gap-5 justify-content-center" style="height: 640px;">
+        <div class="d-flex flex-column justify-content-between" style="max-width: 780px;">
+            <h2>
+                Participe da rede social que conecta fotógrafos, inspira criatividade e compartilha histórias visuais.
+            </h2>
+
+            <ul>
+                <li>
+                    <span>X</span>
+                    <span>Conecte-se com fotógrafos de todo o mundo e amplie sua rede.</span>
+                </li>
+
+                <li>
+                    <span>X</span>
+                    <span>Exiba seu portfólio em uma galeria moderna e personalizada.</span>
+                </li>
+
+                <li>
+                    <span>X</span>
+                    <span>Descubra oportunidades para colaborações e novos projetos.</span>
+                </li>
+            </ul>
+
+            <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
+
+            <form th:action="@{/auth/register}" th:object="${photographer}" method="post" class="d-flex flex-column gap-2">
+                <div>
+                    <label for="firstName" class="form-label">Nome:</label>
+                    <input type="text" id="firstName" name="firstName" th:field="*{firstName}" placeholder="Insira seu nome..." class="form-control">
+                    <p class="text-danger fs-6" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                </div>
+
+                <div>
+                    <label for="lastName" class="form-label">Sobrenome:</label>
+                    <input type="text" id="lastName" name="lastName" th:field="*{lastName}" placeholder="Insira seu sobrenome..." class="form-control">
+                    <p class="text-danger fs-6" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                </div>
+
+                <div>
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" th:field="*{email}" placeholder="exemplo@exemplo.com" class="form-control">
+                    <p class="text-danger fs-6" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                </div>
+
+                <div>
+                    <label for="password" class="form-label">Senha:</label>
+                    <input type="password" id="password" name="password" th:field="*{password}" placeholder="Senha forte com no mínimo 8 dígitos" class="form-control">
+                    <p class="text-danger fs-6" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+
+                <button class="btn btn-primary mt-3">
+                    Cadastrar-se
+                </button>
+            </form>
+        </div>
+
+
+        <img th:src="@{/assets/Photographer.jpg}" alt="Imagem de uma fotógrafa" class="rounded" style="min-width: 580px; height: 640px; object-fit: cover">
+    </main>
+</body>
+</html>
