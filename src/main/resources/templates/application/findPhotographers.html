@@ -10,39 +10,51 @@ layout:decorate="~{layout/layout}">
     <!-- Importando o CoreUI -->
 </head>
 
-<tbody>
+<body>
     <div layout:fragment="content">
+        <div class="container ">
+            <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+                <div class="card mb-3">
+                <div class="card-header" style="background-color: black !important; color: white;">
+                    <h3>Encontrar Fotógrafos</h3>
+                </div>
+                <div class="card-body text-primary">
+                <form th:action="@{/facade/findPhotographers}" method="GET">
+                    <div class = "d-flex">
+                    <h5 class="card-title">Pesquisar</h5>
+                    <input class = "ms-3"type="text" th:value=${username} id="username" name="username" placeholder="Digite o @"><br><br>
+                    <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+                </div>
+                </div>
+                </form>
+             </div>  
 
-        <form th:action="@{/facade/findPhotographers}" method="GET">
-            <label for="username">Pesquisar</label><br>
-            <input type="text" th:value=${username} id="username" name="username" placeholder="Digite o @"><br><br>
-            <button type="submit">Pesquisar</button>
-        </form>
-        <p class = "mt-5" th:if="${message != null and message != '' }" th:text="${message}"></p>
-
-
-        <p class = "mt-5" th:if="${resultados != null and resultados != '' }" th:text="${resultados}"></p>
-
-        <table class="table" th:if="${photographers != null and photographers.size() > 0}">
-            <thead>
-                <tr>
-                    <th>Primeiro Nome</th>
-                    <th>Último nome</th>
-                    <th>Senha</th>
-                    <th>Username</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="photographer : ${photographers}">
-                    <td th:text="${photographer.firstName}"></td>
-                    <td th:text="${photographer.lastName}"></td>
-                    <td th:text="${photographer.password}"></td>
-                    <td th:text="${photographer.username}"></td>
-                </tr>
-            </tbody>
-        </table>
-        
+                <p class = "mt-5" th:if="${message != null and message != '' }" th:text="${message}"></p>
+                <p class = "mt-5" th:if="${resultados != null and resultados != '' }" th:text="${resultados}"></p>
+                <table class="table table-success" th:if="${photographers != null and photographers.size() > 0}">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Nome</th>
+                            <th>Acessar</th>                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h3 class="mb-5"  th:text="${photographers.size()+' Fotógrafos'}"></h3>
+                        <tr th:each="photographer : ${photographers}">
+                            <td th:text="${photographer.username}"></td>
+                            <td th:text="${photographer.firstName+' '+photographer.lastName}"></td>
+                            <td >
+                                <a th:href="@{/facade/showProfile/{id}(id=${photographer.id})}" class="btn btn-outline-success">Acessar</a>
+                            </td>
+                            <!--
+                            <td th:text="${photographer.password}"></td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</tbody>
+</body>
 
 </html>

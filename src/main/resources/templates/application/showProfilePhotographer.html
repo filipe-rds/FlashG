@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
+layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Importando o CoreUI -->
+</head>
+<div layout:fragment="content">
+    <div class="container ">
+        <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+            <div class="card">
+                <div class="card-header">
+                    <h3 th:text="'Perfil do fotógrafo: ' + ${photographer.username}"></h3>
+                </div>
+                <div class="card-body d-flex">
+                    <div>
+                        <h3 class="ms-2" th:text="'Nome: '+${photographer.firstName + ' ' + photographer.lastName}"></h3>
+                    </div>
+                    <div class="ms-3">
+                        <h3 th:text="'Seguidores: ' +${photographer.followers.size()}"></h3>
+                    </div>
+                    <div class="ms-3">
+                        <h3 th:text="'Seguindo: ' +${photographer.following.size()}"></h3>
+                    </div>
+                    <div class="ms-5">
+                        <form action="" method="POST">
+                            <button class="btn btn-primary" type="submit" th:if="${photographer.acceptsFollowers}">
+                                Seguir
+                            </button>
+                        </form>
+                        <h3 class="text-danger" th:unless="${photographer.acceptsFollowers}">
+                            O fotógrafo não aceita ser seguido
+                        </h3>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
