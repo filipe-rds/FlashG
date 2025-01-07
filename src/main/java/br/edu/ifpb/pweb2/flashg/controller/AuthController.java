@@ -2,12 +2,13 @@ package br.edu.ifpb.pweb2.flashg.controller;
 
 import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
+import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
+import br.edu.ifpb.pweb2.flashg.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,14 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    private PhotographerRepository photographerRepository;
+    private AuthService authService;
 
     @GetMapping("/signup")
     public ModelAndView signUp(ModelAndView mav) {
@@ -34,18 +32,12 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("photographer") Photographer photographer,
                                BindingResult result,
-                               HttpSession session,
-                               Model model) {
+                               HttpSession session) throws EmailAlreadyExists {
         if (result.hasErrors()) {
             return "auth/signup";
         }
 
-        if (this.photographerRepository.findByEmail(photographer.getEmail()).isPresent()) {
-            model.addAttribute("error", "Email já cadastrado");
-            return "auth/signup";
-        }
-
-        Photographer savedPhotographer = this.photographerRepository.save(photographer);
+        Photographer savedPhotographer = authService.register(photographer);
         session.setAttribute("loggedPhotographer", savedPhotographer);
 
         return "redirect:/testando/save";
@@ -61,25 +53,13 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("photographer") LoginDTO photographer,
                         BindingResult result,
-                        HttpSession session,
-                        Model model) {
+                        HttpSession session) throws EmailOrPasswordIsIncorrect {
         if (result.hasErrors()) {
             return "auth/signin";
         }
 
-        Optional<Photographer> optionalPhotographer = this.photographerRepository.findByEmail(photographer.getEmail());
-
-        if (optionalPhotographer.isPresent()) {
-            if (optionalPhotographer.get().getPassword().equals(photographer.getPassword())) {
-                session.setAttribute("loggedPhotographer", optionalPhotographer.get());
-                return "redirect:/testando/save";
-            } else {
-                model.addAttribute("error", "Email ou senha incorreta");
-                return "auth/signin";
-            }
-        } else {
-            model.addAttribute("error", "Email ou senha incorreta");
-            return "auth/signin";
-        }
+        Photographer loggedPhotographer = authService.login(photographer);
+        session.setAttribute("loggedPhotographer", loggedPhotographer);
+        return "redirect:/testando/save";
     }
 }
