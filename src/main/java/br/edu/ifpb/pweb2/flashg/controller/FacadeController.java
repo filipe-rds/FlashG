@@ -62,7 +62,7 @@ public class FacadeController {
     }
 
     @RequestMapping(value = "/listPhotographerFollowing/{id}", method = RequestMethod.GET)
-    public ModelAndView listAllFollowing(ModelAndView mav, @PathVariable("id") Long id){ 
+    public ModelAndView listAllFollowing(ModelAndView mav, @PathVariable("id") Long id ){ 
         List<Photographer> seguidos = facadeService.findAllFollowing(id);
         mav.setViewName("application/listPhotographerFollowing");
         mav.addObject("seguidos", seguidos);

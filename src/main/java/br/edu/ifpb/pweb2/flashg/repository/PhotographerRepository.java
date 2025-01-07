@@ -15,8 +15,8 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
     List<Photographer> findByFirstName(String firstName);
     List<Photographer> findByLastName(String lastName);
     Optional<Photographer> findByEmail(String email);
+    Optional<Photographer> findByUsername(String username);
     List<Photographer> findByUsernameStartingWith(String prefix);
-
     @Query("SELECT f.followed FROM Follow f WHERE f.follower.id = :id")
     List<Photographer> findAllFollowing(@Param("id") Long id);
 }

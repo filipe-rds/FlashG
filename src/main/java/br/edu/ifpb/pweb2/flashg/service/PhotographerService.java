@@ -26,6 +26,7 @@ public class PhotographerService {
 
     public Photographer findById(Long id){
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
+    }
     public Photographer update(Long id,Photographer updatedPhotographer) throws Exception{
         Photographer existPhotographer = repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
         String name = updatedPhotographer.getFirstName();
@@ -68,10 +69,12 @@ public class PhotographerService {
         List<Photographer> photographers = repository.findAllFollowing(id);
 
         if(photographers.isEmpty()){
-            throw new NotFoundAnyFollowing("Você não segue ninguém!");
+            throw new NotFoundAnyFollowing();
         }
         return photographers;
     }
+
+
     public Photographer readById(Long id)throws Exception{
         return repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
     }
