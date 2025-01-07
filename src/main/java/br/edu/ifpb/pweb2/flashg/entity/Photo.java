@@ -24,7 +24,7 @@ public class Photo {
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "photo")
-    private List<Like> likes;
+    private List<Likee> likes;
 
     private String imageUrl;
     private byte[] imageData;
