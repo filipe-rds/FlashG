@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
+import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -34,7 +35,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundAnyFollowing.class)
     private ModelAndView handlerNotFoundAnyFollowing(NotFoundAnyFollowing ex) {
         // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
-        ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("application/listPhotographerFollowing");
         mav.addObject("message", ex.getMessage());
         return mav;
     }
@@ -54,6 +56,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("auth/signin");
         mav.addObject("photographer", new LoginDTO());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(UsernameAlreadyExists.class)
+    private ModelAndView handlerUsernameAlreadyExists(UsernameAlreadyExists ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signup");
+        mav.addObject("photographer", new Photographer());
         mav.addObject("error", ex.getMessage());
         return mav;
     }
