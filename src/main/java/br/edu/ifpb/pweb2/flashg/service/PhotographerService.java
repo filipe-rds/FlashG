@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,21 @@ public class PhotographerService {
         return photographers;
     }
 
+    public Photographer findById(Long id){
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
+    }
 
+    public List<Photographer> findAll(){
+        return repository.findAll();
+    }
+
+    public List<Photographer> findAllFollowing(Long id){
+
+        List<Photographer> photographers = repository.findAllFollowing(id);
+
+        if(photographers.isEmpty()){
+            throw new NotFoundAnyFollowing("Você não segue ninguém!");
+        }
+        return photographers;
+    }
 }
