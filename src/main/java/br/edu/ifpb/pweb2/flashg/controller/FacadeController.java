@@ -1,11 +1,17 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
+import br.edu.ifpb.pweb2.flashg.service.PhotographerService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +32,7 @@ public class FacadeController {
         return mav;
     }
 
-    
+
     @RequestMapping(value = "/findPhotographers", method = RequestMethod.GET)
     public ModelAndView getAllPhotographerStartingWith(ModelAndView mav, @RequestParam("username") String username){
         List<Photographer> Photographers = facadeService.findByUsernameStartingWith(username);
@@ -68,4 +74,34 @@ public class FacadeController {
         mav.addObject("seguidos", seguidos);
         return mav;
     }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.GET)
+    public ModelAndView uploadPage(ModelAndView mav) {
+        mav.setViewName("application/uploadPhotos");
+        return mav;
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public ModelAndView handleFileUpload(ModelAndView mav,HttpSession session, @RequestParam("photo") MultipartFile file) throws Exception {
+        if (file.isEmpty()) {
+            mav.addObject("message", "Por favor, selecione um arquivo para enviar.");
+            mav.setViewName("application/uploadPhotos");
+            return mav;
+        }
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        facadeService.uploadPhoto(loggedPhotographer.getId(),file);
+        mav.setViewName("application/uploadPhotos");
+        return mav;
+    }
+
+    @RequestMapping(value = "/myPhotos", method = RequestMethod.GET)
+    public ModelAndView showPhotographerPhotos(ModelAndView mav,HttpSession session) {
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        List<String> photos = facadeService.showPhotos(loggedPhotographer.getId());
+        mav.setViewName("application/myPhotos");
+        mav.addObject("photographer", loggedPhotographer);
+        mav.addObject("photos", photos);
+        return mav;
+    }
+
 }
