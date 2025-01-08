@@ -87,7 +87,9 @@ public class FacadeService {
     }
 
     public List<Photographer> findAllFollowing(Long id){
-        return photographerService.findAllFollowing(id);
+        
+        List<Photographer> photographers  =photographerService.findAllFollowing(id);
+        return photographers;
     }
 
 

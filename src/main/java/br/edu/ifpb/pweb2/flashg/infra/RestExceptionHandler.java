@@ -28,7 +28,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private ModelAndView handlerNotFoundAnyPhotografer(NotFoundAnyPhotograferWithName ex) {
         // Exibe a mensagem de erro e redireciona para a página de "findPhotographers"
         ModelAndView mav = new ModelAndView("application/findPhotographers");
-        mav.addObject("message", ex.getMessage());
+        mav.addObject("errorMessage", ex.getMessage());
         return mav;
     }
 
@@ -37,7 +37,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
         ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
         //ModelAndView mav = new ModelAndView("application/findPhotographers2");
-        mav.addObject("message", ex.getMessage());
+        mav.addObject("errorMessage", ex.getMessage());
         return mav;
     }
 
