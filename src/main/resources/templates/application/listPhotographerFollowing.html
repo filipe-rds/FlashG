@@ -13,7 +13,36 @@ layout:decorate="~{layout/layout}">
         <div layout:fragment="content">
             <div class="container ">
                 <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
-                    <p class = "mt-5" th:if="${message != null and message != '' }" th:text="${message}"></p>
+                    <!--<div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div> -->
+
+                    <div class="d-flex justify-content-center align-items-center">
+                        
+                        <div class="w-75">
+                            <div class = "alert alert-danger" role="alert" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                            <table class="table table-success" th:if="${seguidos}">
+                                <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Nome</th>
+                                        <th>Acessar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        Perfis que <strong th:text="${session.loggedPhotographer.username}"></strong> segue:
+                                    </div>
+                                    <tr th:each="photographer : ${seguidos}">
+                                        <td th:text="${photographer.username}"></td>
+                                        <td th:text="${photographer.firstName + ' ' + photographer.lastName}"></td>
+                                        <td>
+                                            <a th:href="@{/facade/showProfile/{id}(id=${photographer.id})}" class="btn btn-outline-success">Acessar</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
