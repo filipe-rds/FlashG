@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
@@ -87,6 +88,9 @@ public class PhotographerService {
 //    public List<Photographer> readByName(String name)throws Exception{
 //        return repository.findByName(name);
 //    }
+    public List<Photo> findAllPhotos(Long id){
+        return repository.findAllPhotos(id);
+    }
 
     public void delete(Long id)throws Exception{
         repository.deleteById(id);

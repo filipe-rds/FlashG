@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +30,8 @@ public class PhotoService {
         return repository.save(photo);
     }
 
-    public Photo create(Photo photo, MultipartFile file) throws IOException {
-
+    public Photo create(Photo photo, MultipartFile file) throws Exception {
+//        byte[] fileData = file.getBytes();
         photo.setImageData(file.getBytes());
         photo.setImageUrl(file.getOriginalFilename());
         return repository.save(photo);
@@ -39,5 +40,11 @@ public class PhotoService {
     public void delete(Long id){
         repository.deleteById(id);
     }
-    
+
+//    public List<Photo> findByPhotographer(Long id){
+//        return repository.FindByPhotographerId(id);
+//    }
+
+
+
 }

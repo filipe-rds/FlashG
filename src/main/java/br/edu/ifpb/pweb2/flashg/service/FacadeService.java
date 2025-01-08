@@ -1,6 +1,8 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
@@ -93,7 +95,7 @@ public class FacadeService {
     }
 
 
-    public void uploadPhoto(Long id, MultipartFile file) throws IOException {
+    public void uploadPhoto(Long id, MultipartFile file) throws Exception {
         Photographer photographer = photographerService.findById(id);
         Photo photo = new Photo();
         photo.setPhotographer(photographer);
@@ -106,5 +108,22 @@ public class FacadeService {
         photographerRepository.save(photographer);
 
     }
+
+    public String convertPhotoToBase64(Photo photo) {
+        return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
+    }
+
+    public List<String> showPhotos(Long id){
+        Photographer photographer = photographerService.findById(id);
+        List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
+        List<String> photoUrls = new ArrayList<>();
+
+        for (Photo photo : photos) {
+            photoUrls.add(convertPhotoToBase64(photo));
+        }
+        return photoUrls;
+    }
+
+
 
 }
