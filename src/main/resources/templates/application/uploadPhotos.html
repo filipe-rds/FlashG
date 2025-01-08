@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+      xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuida Pai</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75">
+
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4>Upload de Foto</h4>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/facade/upload}" method="POST" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="photo" class="form-label">Selecione uma foto</label>
+                                    <input type="file" class="form-control" id="photo" th:name="photo" accept="image/*" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Enviar Foto</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <small class="text-muted">Formatos aceitos: JPEG, PNG</small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

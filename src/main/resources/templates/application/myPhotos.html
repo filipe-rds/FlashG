@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+      xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuida Pai</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+  <div class="container mt-5">
+      <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+          <div class="d-flex justify-content-center align-items-center">
+              <div class="w-75">
+
+                  <h1 class="text-center mb-4">Minhas Fotos</h1>
+                  <p class="text-center" th:text="'Bem-vindo, ' + ${photographer.getFirstName()}"></p>
+
+                  <!-- Galeria de Fotos -->
+                  <div class="row">
+                      <div class="col-md-4 mb-4" th:each="photo : ${photos}">
+                          <div class="card">
+                              <img th:src="${photo}" class="card-img-top" alt="Foto do fotógrafo">
+                              <div class="card-body text-center">
+<!--                                  <p class="card-text">Fotografia</p>-->
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+</body>
+</html>
