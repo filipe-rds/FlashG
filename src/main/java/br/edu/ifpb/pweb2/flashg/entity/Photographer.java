@@ -39,18 +39,18 @@ public class Photographer {
     private String password;
 
     @Column(nullable = false)
-    private boolean acceptsFollowers;
+    private boolean acceptsFollowers = true;
 
-    @OneToMany(mappedBy = "photographer")
+    @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
 
-    @OneToMany(mappedBy = "photographer")
+    @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "follower")
+    @OneToMany(mappedBy = "follower", fetch = FetchType.EAGER)
     private List<Follow> following;
 
-    @OneToMany(mappedBy = "followed")
+    @OneToMany(mappedBy = "followed", fetch = FetchType.EAGER)
     private List<Follow> followers;
 
 }
