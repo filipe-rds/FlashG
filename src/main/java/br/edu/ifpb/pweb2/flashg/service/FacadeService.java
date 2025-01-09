@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Follow;
 import br.edu.ifpb.pweb2.flashg.entity.FollowId;
+import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
@@ -28,6 +29,9 @@ public class FacadeService {
 
     @Autowired
     private PhotographerRepository photographerRepository;
+
+    @Autowired
+    private FollowService followService;
     
     public List<Photographer> findByUsernameStartingWith(String nome){
 
@@ -43,50 +47,92 @@ public class FacadeService {
         return photographerService.findAll();
     }
 
-    public void follow(Long id, Long id2){
+    public String checkFollowStatus(Photographer seguidor, Photographer seguido ){
+
+        Follow existingFollow = isFollowed(seguidor, seguido);
+        return (existingFollow) != null ? "Deixar de seguir" : "Seguir";
+    }
+
+    // Executa a açao de seguir ou deixar de seguir
+    public boolean handleFollowAction(Long id, Long id2){
 
         // 01 -> Quem vai seguir
-        Photographer photographer = photographerService.findById(id);
+        Photographer Seguidor = photographerService.findById(id);
         // 02 -> Quem vai ser seguido
-        Photographer photographer2 = photographerService.findById(id2);
+        Photographer Seguido = photographerService.findById(id2);
+        
+        Follow Follow = isFollowed(Seguidor, Seguido); // Seguido 
 
-        List<Follow> listaDeSeguindo = photographer.getFollowing();
-        List<Follow> listaDeSeguidores = photographer2.getFollowers();
-
-        boolean entrouNoIf = false;
-
-        for (Follow f : listaDeSeguindo) {
-            if(f.getFollowed().getId() == id2){
-                listaDeSeguindo.remove(f);
-                photographerRepository.save(photographer);
-                entrouNoIf = true;
+        if(Follow == null){
+            follow(Seguidor, Seguido);
+            return true;
+        }
+        else{
+            unfollow(Seguidor,Seguido,Follow);
+            return false;
+        }
+    }
+    
+    // Seguido 
+    public Follow isFollowed(Photographer Seguidor,Photographer Seguido){ 
+        List<Follow> listaDeSeguidos = Seguidor.getFollowing();
+        for(Follow f : listaDeSeguidos){
+            if(f.getFollowed().getId().equals(Seguido.getId())){
+                return f;
             }
         }
+        return null;
+    }
 
+    // Seguidor
+    public Follow isFollower(Photographer Seguido,Photographer Seguidor){
+        List<Follow> listaDeSeguidores = Seguido.getFollowers();
         for(Follow f : listaDeSeguidores){
-            if(f.getFollower().getId() == id){
-                listaDeSeguidores.remove(f);
-                photographerRepository.save(photographer2);
-                if(entrouNoIf){
-                    return;
-                }
+            if(f.getFollower().getId().equals(Seguidor.getId())){
+                return f;
             }
         }
-        // --------------------------------------------------
-        // Adicionar na lista seguindos do fotógrafo que solicitou o follow
-        FollowId followId = new FollowId(id, id2);
-        Follow follow = new Follow(followId, photographer, photographer2);
-        listaDeSeguindo.add(follow);
-        photographerRepository.save(photographer);
-        // --------------------------------------------------
-        // Adicionar na lista de seguidores do fotógrafo que foi seguido
-        FollowId followId2 = new FollowId(id2,id);
-        Follow follow2 = new Follow(followId2, photographer2, photographer);
-        listaDeSeguidores.add(follow2);
-        photographerRepository.save(photographer2);
+        return null;
+    }
 
+    public void unfollow(Photographer p1,Photographer p2,Follow follow){
+
+        List<Follow> listaDeSeguindo = p1.getFollowing();
+        List<Follow> listaDeSeguidores = p2.getFollowers();
+        listaDeSeguindo.remove(follow);
+        listaDeSeguidores.remove(follow);
+        followService.delete(follow);
+        photographerRepository.save(p1);
+        photographerRepository.save(p2);
 
     }
+
+    public void follow(Photographer Seguidor, Photographer Seguido){
+
+        List<Follow> listaDeSeguindo = Seguidor.getFollowing();
+        List<Follow> listaDeSeguidores = Seguido.getFollowers();
+
+        // Adicionar na lista seguindos do fotógrafo que solicitou o follow
+        FollowId followId = new FollowId(Seguidor.getId(), Seguido.getId());
+        Follow follow = new Follow(followId, Seguidor, Seguido);
+        followService.save(follow);
+        // -------------------------------------------------------------
+        listaDeSeguindo.add(follow);
+        listaDeSeguidores.add(follow);
+        // --------------------------------------------------
+        // Adicionar na lista de seguidores do fotógrafo que foi seguido
+        //FollowId followId2 = new FollowId(p2.getId(),p1.getId());
+        //Follow follow2 = new Follow(followId2, p2, p1);
+        photographerRepository.save(Seguidor);
+        photographerRepository.save(Seguido);
+
+    }
+
+    public void removePhotographerFromArray(List<Photographer> photographers, Photographer photographer) {
+        Long idPhotographer = photographer.getId();
+        photographers.removeIf(p -> p.getId().equals(idPhotographer)); 
+    }
+    
 
     public List<Photographer> findAllFollowing(Long id){
         
