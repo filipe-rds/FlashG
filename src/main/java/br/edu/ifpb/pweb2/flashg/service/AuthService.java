@@ -20,7 +20,7 @@ public class AuthService {
         return this.photographerRepository.findByEmail(email).isPresent();
     }
 
-    private boolean isUsernameAlreadyRegistered(String username) {
+    private boolean isUsernameAlreadyRegistered(String username) throws UsernameAlreadyExists {
         return this.photographerRepository.findByUsername(username).isPresent();
     }
 
