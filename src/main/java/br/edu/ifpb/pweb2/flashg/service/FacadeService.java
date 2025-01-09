@@ -64,9 +64,15 @@ public class FacadeService {
         }
     }
     
-    // Seguido 
-    public Follow isFollowed(Photographer Seguidor,Photographer Seguido){ 
+     // Seguido 
+     public Follow isFollowed(Photographer Seguidor,Photographer Seguido){ 
+
         List<Follow> listaDeSeguidos = Seguidor.getFollowing();
+
+        if (listaDeSeguidos == null) {
+            return null;
+        } 
+    
         for(Follow f : listaDeSeguidos){
             if(f.getFollowed().getId().equals(Seguido.getId())){
                 return f;
@@ -78,6 +84,11 @@ public class FacadeService {
     // Seguidor
     public Follow isFollower(Photographer Seguido,Photographer Seguidor){
         List<Follow> listaDeSeguidores = Seguido.getFollowers();
+
+        if (listaDeSeguidores == null) {
+            return null;
+        }
+        
         for(Follow f : listaDeSeguidores){
             if(f.getFollower().getId().equals(Seguidor.getId())){
                 return f;
@@ -85,7 +96,6 @@ public class FacadeService {
         }
         return null;
     }
-
     public void unfollow(Photographer p1,Photographer p2,Follow follow){
 
         List<Follow> listaDeSeguindo = p1.getFollowing();
