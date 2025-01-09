@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuida Pai</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
@@ -19,13 +20,15 @@
                   <p class="text-center" th:text="'Bem-vindo, ' + ${photographer.getFirstName()}"></p>
 
                   <!-- Galeria de Fotos -->
-                  <div class="row">
-                      <div class="col-md-4 mb-4" th:each="photo : ${photos}">
-                          <div class="card">
-                              <img th:src="${photo}" class="card-img-top" alt="Foto do fotógrafo">
-                              <div class="card-body text-center">
-<!--                                  <p class="card-text">Fotografia</p>-->
+                  <div class="row row-cols-3 g-2">
+                      <div class="col" th:each="photo : ${photos}">
+                          <div class="card h-100 bg-light">
+                              <div class="card-img-top" style="height: 350px; overflow: hidden; aspect-ratio: 1 / 1;">
+                                  <img th:src="${photo}" class="img-fluid h-100 w-100 object-fit-cover" alt="Foto do fotógrafo">
                               </div>
+<!--                              <div class="card-body d-flex flex-column justify-content-center align-items-center border">-->
+<!--                                  <p class="card-text">Texto de descrição vai ficar aqui</p>-->
+<!--                              </div>-->
                           </div>
                       </div>
                   </div>
@@ -35,6 +38,8 @@
       </div>
   </div>
 </div>
+
+
 
 </body>
 </html>
