@@ -7,11 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.edu.ifpb.pweb2.flashg.entity.Follow;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/facade")
@@ -28,8 +31,10 @@ public class FacadeController {
 
     
     @RequestMapping(value = "/findPhotographers", method = RequestMethod.GET)
-    public ModelAndView getAllPhotographerStartingWith(ModelAndView mav, @RequestParam("username") String username){
+    public ModelAndView getAllPhotographerStartingWith(ModelAndView mav, @RequestParam("username") String username, HttpSession session){
         List<Photographer> Photographers = facadeService.findByUsernameStartingWith(username);
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        facadeService.removePhotographerFromArray(Photographers,loggedPhotographer);
         mav.setViewName("application/findPhotographers");
         mav.addObject("photographers", Photographers);
         mav.addObject("resultados", "Resultados para: "+ username); 
@@ -37,10 +42,13 @@ public class FacadeController {
     }
 
     @RequestMapping(value = "/showProfile/{id}", method = RequestMethod.GET)
-    public ModelAndView showProfile(ModelAndView mav, @PathVariable("id") Long id){
+    public ModelAndView showProfile(ModelAndView mav, @PathVariable("id") Long id,  HttpSession session){
         mav.setViewName("application/showProfilePhotographer");
-        Photographer photographer = facadeService.findByIdPhotographer(id);
-        mav.addObject("photographer", photographer);
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        Photographer seguido = facadeService.findByIdPhotographer(id);
+        String status  = facadeService.checkFollowStatus(loggedPhotographer, seguido);
+        mav.addObject("status", status);
+        mav.addObject("photographer", seguido);
         return mav;
     }
 
@@ -52,18 +60,24 @@ public class FacadeController {
     //     return mav;
     // }
 
-    @RequestMapping(value = "/follow/{id}/{id2}", method = RequestMethod.POST)
-    public ModelAndView follow (ModelAndView mav , @PathVariable("id") Long id, @PathVariable("id2") Long id2){
-        facadeService.follow(id, id2);
-        mav.setViewName("application/listPhotographerFollowing");
-        List<Photographer> photographes = facadeService.findAll();
-        mav.addObject("photographers", photographes);
+    @RequestMapping(value = "/followAction", method = RequestMethod.POST)
+    public ModelAndView followAction (ModelAndView mav , @RequestParam("id") Long id,HttpSession session){
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        facadeService.handleFollowAction(loggedPhotographer.getId(), id);
+        // Atualiza o objeto do fotografo logado
+        Photographer updatedloggedPhotographer = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+        // Atualiza a sessão com o novo status
+        session.setAttribute("loggedPhotographer", updatedloggedPhotographer);
+        mav.setViewName("redirect:/facade/showProfile/"+id);
+        //redirectAttributes.addFlashAttribute("status", "Deix");
+        
         return mav;
     }
 
-    @RequestMapping(value = "/listPhotographerFollowing/{id}", method = RequestMethod.GET)
-    public ModelAndView listAllFollowing(ModelAndView mav, @PathVariable("id") Long id ){ 
-        List<Photographer> seguidos = facadeService.findAllFollowing(id);
+    @RequestMapping(value = "/listPhotographerFollowing", method = RequestMethod.GET)
+    public ModelAndView listAllFollowing(ModelAndView mav, HttpSession session){ 
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        List<Photographer> seguidos = facadeService.findAllFollowing(loggedPhotographer.getId());
         mav.setViewName("application/listPhotographerFollowing");
         mav.addObject("seguidos", seguidos);
         return mav;
