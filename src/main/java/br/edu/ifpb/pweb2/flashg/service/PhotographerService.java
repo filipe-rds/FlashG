@@ -16,7 +16,7 @@ public class PhotographerService {
     @Autowired
     private  PhotographerRepository repository;
 
-    public List<Photographer> findByUsernameStartingWith(String username){
+    public List<Photographer> findByUsernameStartingWith(String username) throws NotFoundAnyPhotograferWithName {
 
         List<Photographer> photographers = repository.findByUsernameStartingWith(username);
         if(photographers.isEmpty()){
@@ -26,6 +26,7 @@ public class PhotographerService {
     }
 
     public Photographer findById(Long id){
+        // Vai ser arrumado depois.
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
     }
     public Photographer update(Long id,Photographer updatedPhotographer) throws Exception{
