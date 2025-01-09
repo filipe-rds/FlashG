@@ -15,8 +15,8 @@ layout:decorate="~{layout/layout}">
             <!--<div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>-->
             <div class="d-flex justify-content-center align-items-center">
                 <div class="w-75">
-                    <div class="alert alert-danger fw-bold" role="alert" th:if="${errorMessage}" th:text="${errorMessage}"></div>
-                    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert" th:if="!${errorMessage}">
+                    <div class="alert alert-danger fw-bold" role="alert" th:if="${error}" th:text="${error}"></div>
+                    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert" th:if="!${error}">
                         Perfis que <strong th:text="${session.loggedPhotographer.username}"></strong> segue:
                     </div>
                     <table class="table table-hover table-borderless table-success mt-4" th:if="${seguidos}">

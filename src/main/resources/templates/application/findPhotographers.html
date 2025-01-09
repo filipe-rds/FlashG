@@ -29,7 +29,7 @@ layout:decorate="~{layout/layout}">
                             </form>
                         </div>
                     </div>
-                    <div class="alert alert-danger fw-bold" role="alert" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                    <div class="alert alert-danger fw-bold" role="alert" th:if="${error}" th:text="${error}"></div>
                     <p class="mt-5 text-muted" th:if="${resultados}" th:text="${resultados}"></p>
                     <h3 class="mb-5 text-info" th:if="${photographers}" th:text="${photographers.size() + ' Fotógrafos'}"></h3>
                     
