@@ -95,9 +95,9 @@ public class FacadeService {
     }
 
 
-    public void uploadPhoto(Long id, MultipartFile file) throws Exception {
+    public void uploadPhoto(Long id,Photo photo,MultipartFile file) throws Exception {
         Photographer photographer = photographerService.findById(id);
-        Photo photo = new Photo();
+//        Photo photo = new Photo();
         photo.setPhotographer(photographer);
         //chama metodo que vai inserir a foto no banco
         photoService.create(photo,file);

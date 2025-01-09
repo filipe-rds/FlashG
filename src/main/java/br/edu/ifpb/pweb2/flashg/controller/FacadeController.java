@@ -5,16 +5,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.service.PhotographerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
@@ -77,19 +75,19 @@ public class FacadeController {
 
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public ModelAndView uploadPage(ModelAndView mav) {
+        mav.addObject("photo", new Photo());
         mav.setViewName("application/uploadPhotos");
         return mav;
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public ModelAndView handleFileUpload(ModelAndView mav,HttpSession session, @RequestParam("photo") MultipartFile file) throws Exception {
+    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session, @RequestParam("image") MultipartFile file, @ModelAttribute("photo")Photo photo) throws Exception {
         if (file.isEmpty()) {
-            mav.addObject("message", "Por favor, selecione um arquivo para enviar.");
             mav.setViewName("application/uploadPhotos");
             return mav;
         }
         Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
-        facadeService.uploadPhoto(loggedPhotographer.getId(),file);
+        facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file);
         mav.setViewName("application/uploadPhotos");
         return mav;
     }

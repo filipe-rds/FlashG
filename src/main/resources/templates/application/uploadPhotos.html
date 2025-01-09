@@ -19,14 +19,27 @@
                             <h4>Upload de Foto</h4>
                         </div>
                         <div class="card-body">
-                            <form th:action="@{/facade/upload}" method="POST" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label for="photo" class="form-label">Selecione uma foto</label>
-                                    <input type="file" class="form-control" id="photo" th:name="photo" accept="image/*" required>
+                            <form th:action="@{/facade/upload}"  method="POST" enctype="multipart/form-data">
+                                <div class=" mb-3">
+<!--                                    <label for="photo" class="form-label">Selecione uma foto</label>-->
+                                    <input type="file" class="form-control" id="photo" th:name="image" accept="image/*" required>
+
                                 </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Titulo</span>
+                                    <input type="text" id="tittle" class="form-control" th:field="*{photo.title}" placeholder="titulo da foto" aria-label="titulo" aria-describedby="basic-addon1">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">Descrição da foto</span>
+                                    <textarea id="description"  class="form-control" th:field="*{photo.description}" aria-label="description"></textarea>
+                                </div>
+
                                 <div class="d-grid">
                                     <button type="submit" class="btn btn-primary">Enviar Foto</button>
                                 </div>
+
                             </form>
                         </div>
                         <div class="card-footer text-center">

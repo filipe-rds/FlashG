@@ -16,6 +16,10 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "photographer_id", nullable = false)
     private Photographer photographer;
