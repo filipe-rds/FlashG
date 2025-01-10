@@ -51,7 +51,11 @@
                     <input type="text" id="lastName" name="lastName" th:field="*{lastName}" placeholder="Insira seu sobrenome..." class="form-control">
                     <p class="text-danger fs-6" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
                 </div>
-
+                <div>
+                    <label for="lastName" class="form-label">Username:</label>
+                    <input type="text" id="username" name="username" th:field="*{username}" placeholder="Insira seu username..." class="form-control">
+                    <p class="text-danger fs-6" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                </div>
                 <div>
                     <label for="email" class="form-label">Email:</label>
                     <input type="email" id="email" name="email" th:field="*{email}" placeholder="exemplo@exemplo.com" class="form-control">
@@ -71,7 +75,7 @@
         </div>
 
 
-        <img th:src="@{/assets/Photographer.jpg}" alt="Imagem de uma fotógrafa" class="rounded" style="min-width: 580px; height: 640px; object-fit: cover">
+        <img th:src="@{/assets/Photographer.jpg}" alt="Imagem de uma fotógrafa" class="rounded" style="min-width: 580px; height: 690px; object-fit: cover">
     </main>
 </body>
 </html>

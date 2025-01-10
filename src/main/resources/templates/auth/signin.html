@@ -21,7 +21,6 @@
             <h2>
                 Que bom ter você de volta!
             </h2>
-
             <div class="alert alert-danger" role="alert" th:if="${error}" th:text="${error}"></div>
         </div>
 
@@ -32,14 +31,12 @@
                        class="form-control">
                 <p class="text-danger fs-6" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
             </div>
-
             <div>
                 <label for="password" class="form-label">Senha:</label>
                 <input type="password" id="password" name="password" th:field="*{password}"
                        placeholder="Senha forte com no mínimo 8 dígitos" class="form-control">
                 <p class="text-danger fs-6" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
             </div>
-
             <button class="btn btn-primary mt-3">
                 Logar no Sistema
             </button>

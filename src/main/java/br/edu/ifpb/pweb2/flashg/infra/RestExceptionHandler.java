@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
+import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -21,6 +24,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return mav;
     }
 
+    @ExceptionHandler(NotFoundAnyPhotograferWithName.class)
+    private ModelAndView handlerNotFoundAnyPhotografer(NotFoundAnyPhotograferWithName ex) {
+        // Exibe a mensagem de erro e redireciona para a página de "findPhotographers"
+        ModelAndView mav = new ModelAndView("application/findPhotographers");
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(NotFoundAnyFollowing.class)
+    private ModelAndView handlerNotFoundAnyFollowing(NotFoundAnyFollowing ex) {
+        // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
+        ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
+        //ModelAndView mav = new ModelAndView("application/findPhotographers2");
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    
     @ExceptionHandler(EmailAlreadyExists.class)
     private ModelAndView handlerEmailAlreadyExists(EmailAlreadyExists ex) {
         ModelAndView mav = new ModelAndView();
@@ -35,6 +56,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("auth/signin");
         mav.addObject("photographer", new LoginDTO());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(UsernameAlreadyExists.class)
+    private ModelAndView handlerUsernameAlreadyExists(UsernameAlreadyExists ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signup");
+        mav.addObject("photographer", new Photographer());
         mav.addObject("error", ex.getMessage());
         return mav;
     }

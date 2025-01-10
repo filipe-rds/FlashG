@@ -1,6 +1,8 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,19 @@ public class PhotographerService {
     @Autowired
     private  PhotographerRepository repository;
 
-    public Photographer create(Photographer photographer) throws Exception{
-        if(repository.findByEmail(photographer.getEmail()).isPresent()){
-            throw new Exception("Email already exists");
+    public List<Photographer> findByUsernameStartingWith(String username) throws NotFoundAnyPhotograferWithName {
+
+        List<Photographer> photographers = repository.findByUsernameStartingWith(username);
+        if(photographers.isEmpty()){
+            throw new NotFoundAnyPhotograferWithName("Nenhum fotógrafo encontrado com o nome de usuário: "+ username);
         }
-        return repository.save(photographer);
+        return photographers;
     }
 
+    public Photographer findById(Long id){
+        // Vai ser arrumado depois.
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
+    }
     public Photographer update(Long id,Photographer updatedPhotographer) throws Exception{
         Photographer existPhotographer = repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
         String name = updatedPhotographer.getFirstName();
@@ -53,9 +61,20 @@ public class PhotographerService {
         return repository.save(existPhotographer);
     }
 
-    public List<Photographer> readAll(){
+    public List<Photographer> findAll(){
         return repository.findAll();
     }
+
+    public List<Photographer> findAllFollowing(Long id){
+
+        List<Photographer> photographers = repository.findAllFollowing(id);
+
+        if(photographers.isEmpty()){
+            throw new NotFoundAnyFollowing();
+        }
+        return photographers;
+    }
+
 
     public Photographer readById(Long id)throws Exception{
         return repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
