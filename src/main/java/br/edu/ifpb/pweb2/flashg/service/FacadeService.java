@@ -43,8 +43,8 @@ public class FacadeService {
         return photographerService.findById(id);
     }
 
-    public List<Photographer> findAll(){
-        return photographerService.findAll();
+    public List<Photographer> findAllPhotographers(){
+        return photographerService.findAllPhotographers();
     }
 
     public String checkFollowStatus(Photographer seguidor, Photographer seguido ){
@@ -141,6 +141,11 @@ public class FacadeService {
     public void removePhotographerFromArray(List<Photographer> photographers, Photographer photographer) {
         Long idPhotographer = photographer.getId();
         photographers.removeIf(p -> p.getId().equals(idPhotographer)); 
+    }
+
+    public boolean removePhotographerAdminFromArray(List<Photographer> photographers, Photographer photographer) {
+        Long idPhotographer = photographer.getId();
+        return photographers.removeIf(p -> p.getId().equals(idPhotographer)); 
     }
     
 
