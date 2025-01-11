@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
+layout:decorate="~{layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seus Seguimores</title>
+    <!-- Importando o CoreUI -->
+</head>
+    <body>
+    <div layout:fragment="content">
+        <div class="overflow-auto" style="max-height:700px; max-width: 1500px;">
+            <!--<div class="alert alert-success" role="alert" th:if="${success}" th:text="${success}"></div>-->
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75">
+                    <div class="alert alert-danger fw-bold" role="alert" th:if="${error}" th:text="${error}"></div>
+                    <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert" th:if="!${error}">
+                        Todos perfis cadastrados no sistema, adminstrador: <strong th:text="${session.loggedPhotographer.username}"></strong>
+                    </div>
+                    <table class="table table-hover table-borderless table-success mt-4" th:if="${Photographers}">
+                        <thead >
+                            <tr class = "">
+                                <th>Id</th>
+                                <th>Username</th>
+                                <th>Primeiro Nome</th>
+                                <th>Último Nome</th>
+                                <th>E-mail</th>
+                                <th>Aceita ser seguido</th>
+                                <th>É adminstrador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="photographer : ${Photographers}">
+                                <td class="fw-bold fst-italic " th:text="${photographer.id}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.username}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.firstName}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.lastName}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.email}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.acceptsFollowers}"></td>
+                                <td class="fw-bold fst-italic " th:text="${photographer.isAdmin}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

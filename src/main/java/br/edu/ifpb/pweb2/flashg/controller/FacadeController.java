@@ -82,4 +82,16 @@ public class FacadeController {
         mav.addObject("seguidos", seguidos);
         return mav;
     }
+
+    @RequestMapping(value = "/showAllPhotographers", method = RequestMethod.GET)
+    public ModelAndView listAllPhotographer(ModelAndView mav,HttpSession session){
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        List<Photographer> Photographers = facadeService.findAllPhotographers();
+        facadeService.removePhotographerFromArray(Photographers,loggedPhotographer);
+        mav.addObject("Photographers", Photographers);
+        mav.setViewName("application/showAllPhotographers");
+        return mav;
+
+    }
+
 }
