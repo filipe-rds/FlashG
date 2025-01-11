@@ -61,7 +61,7 @@ public class PhotographerService {
         return repository.save(existPhotographer);
     }
 
-    public List<Photographer> findAll(){
+    public List<Photographer> findAllPhotographers(){
         return repository.findAll();
     }
 

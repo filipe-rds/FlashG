@@ -41,6 +41,12 @@ public class Photographer {
     @Column(nullable = false)
     private boolean acceptsFollowers = true;
 
+    @Column(nullable = false)
+    private boolean isAdmin = false;
+
+    @Column(nullable = false)
+    private boolean isBlocked = false;
+
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
 

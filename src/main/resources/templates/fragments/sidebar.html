@@ -45,13 +45,27 @@
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" th:href="@{/facade/listPhotographerFollowing}">
-
                       <i class="nav-icon cil-speedometer"></i> Seguindo
                     </a>
                   </li>
-                    
-                  
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/facade/showAllPhotographers}" th:if="${session.loggedPhotographer.isAdmin}">
+                      <i class="nav-icon cil-speedometer"></i> Todos fotógrafos
+                    </a>
+                  </li>
                 <!-- 
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/facade/listAllPhotographer}" th:if="${session.photographer.isAdmin}">
+                      <i class="nav-icon cil-speedometer"></i> Todos fotógrafos
+                    </a>
+                  </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/facade/listAllPhotographer}" th:if="${session.photographer.isAdmin}">
+                      <i class="nav-icon cil-speedometer"></i> Todos fotógrafos
+                    </a>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link active" href="#">
                       <i class="nav-icon cil-speedometer"></i> Minhas fotos
@@ -74,9 +88,6 @@
                       <span class="badge bg-primary ms-auto">NEW</span>
                     </a>
                   </li>
-
-
-
                   <li class="nav-item nav-group show">
                     <a class="nav-link nav-group-toggle" href="#">
                       <i class="nav-icon cil-puzzle"></i> Nav dropdown
