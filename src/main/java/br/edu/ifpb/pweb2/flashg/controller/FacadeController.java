@@ -95,7 +95,7 @@ public class FacadeController {
     @RequestMapping(value = "/myPhotos", method = RequestMethod.GET)
     public ModelAndView showPhotographerPhotos(ModelAndView mav,HttpSession session) {
         Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
-        List<String> photos = facadeService.showPhotos(loggedPhotographer.getId());
+        List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         mav.setViewName("application/myPhotos");
         mav.addObject("photographer", loggedPhotographer);
         mav.addObject("photos", photos);

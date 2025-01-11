@@ -113,15 +113,16 @@ public class FacadeService {
         return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
     }
 
-    public List<String> showPhotos(Long id){
+    public List<Photo> showPhotos(Long id){
         Photographer photographer = photographerService.findById(id);
         List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
         List<String> photoUrls = new ArrayList<>();
 
         for (Photo photo : photos) {
             photoUrls.add(convertPhotoToBase64(photo));
+            photo.setImageUrl(convertPhotoToBase64(photo));
         }
-        return photoUrls;
+        return photos;
     }
 
 

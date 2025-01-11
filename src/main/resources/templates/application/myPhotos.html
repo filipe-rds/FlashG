@@ -11,20 +11,21 @@
 <body>
 
 <div layout:fragment="content">
-  <div class="container mt-5">
-      <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+  <div class="container-fluid mt-5">
+      <div class="overflow-auto " style="max-height:900px; max-width: 1500px;">
           <div class="d-flex justify-content-center align-items-center">
-              <div class="w-75">
+              <div class="w-75" style="max-width: 1500px;">
 
                   <h1 class="text-center mb-4">Minhas Fotos</h1>
                   <p class="text-center" th:text="'Bem-vindo, ' + ${photographer.getFirstName()}"></p>
 
                   <!-- Galeria de Fotos -->
                   <div class="row row-cols-3 g-2">
-                      <div class="col" th:each="photo : ${photos}">
+                      <div class="col" th:each="photo, iterStat : ${photos}">
                           <div class="card h-100 bg-light">
-                              <div class="card-img-top" style="height: 350px; overflow: hidden; aspect-ratio: 1 / 1;">
-                                  <img th:src="${photo}" class="img-fluid h-100 w-100 object-fit-cover" alt="Foto do fotógrafo">
+                              <div class="card-img-top" style="height: 350px; overflow: hidden; aspect-ratio: 1 / 1;"  data-coreui-toggle="modal"
+                                   th:data-coreui-target="'#photoModal-' + ${iterStat.index}">
+                                  <img th:src="${photo.getImageUrl()}" class="img-fluid h-100 w-100 object-fit-cover" alt="Foto do fotógrafo">
                               </div>
 <!--                              <div class="card-body d-flex flex-column justify-content-center align-items-center border">-->
 <!--                                  <p class="card-text">Texto de descrição vai ficar aqui</p>-->
@@ -33,7 +34,40 @@
                       </div>
                   </div>
 
-              </div>
+                  <!-- modal das fotos -->
+                  <div th:each="photo, iterStat : ${photos}">
+                      <div
+                              class="modal fade"
+                              th:id="'photoModal-' + ${iterStat.index}"
+                              tabindex="-1"
+                              aria-labelledby="'photoModalLabel-' + ${iterStat.index}"
+                              aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" th:text="${photo.title}" th:id="'photoModalLabel-' + ${iterStat.index}">
+                                          Título da Foto
+                                      </h5>
+                                      <button type="button" class="btn-close" data-coreui-dismiss="modal" aria-label="Fechar"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <img
+                                              th:src="${photo.imageUrl}"
+                                              class="img-fluid mb-3"
+                                              alt="Foto do fotógrafo">
+                                      <p th:text="${photo.description}">Descrição da foto vai aparecer aqui.</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-coreui-dismiss="modal">Fechar</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+
+
+                </div>
           </div>
       </div>
   </div>
