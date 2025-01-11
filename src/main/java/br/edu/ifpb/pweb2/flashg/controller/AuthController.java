@@ -40,7 +40,7 @@ public class AuthController {
         Photographer savedPhotographer = authService.register(photographer);
         session.setAttribute("loggedPhotographer", savedPhotographer);
 
-        return "redirect:/testando/save";
+        return "redirect:/home";
     }
 
     @GetMapping("/signin")
@@ -60,6 +60,6 @@ public class AuthController {
 
         Photographer loggedPhotographer = authService.login(photographer);
         session.setAttribute("loggedPhotographer", loggedPhotographer);
-        return "redirect:/testando/save";
+        return "redirect:/home";
     }
 }
