@@ -2,14 +2,9 @@
 <html lang="pt_BR"
 xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
 layout:decorate="~{layout/layout}">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- Importando o CoreUI -->
+    <title>FlashG</title>
 </head>
-
 <body>
     <div layout:fragment="content">
         <div class="overflow-auto" style="max-height:700px; max-width: 1500px;">
@@ -20,7 +15,7 @@ layout:decorate="~{layout/layout}">
                             <h3 class="m-0">Encontrar Fotógrafos</h3>
                         </div>
                         <div class="card-body text-primary">
-                            <form th:action="@{/facade/findPhotographers}" method="GET">
+                            <form th:action="@{/findPhotographers}" method="GET">
                                 <div class="d-flex align-items-center">
                                     <h5 class="card-title mb-0">Pesquisar</h5>
                                     <input class="form-control ms-3 me-3" type="text" th:value="${username}" id="username" name="username" placeholder="Digite o @">
@@ -46,7 +41,7 @@ layout:decorate="~{layout/layout}">
                                 <td class="fw-bold fst-italic"   th:text="${photographer.username}"></td>
                                 <td class="fw-bold"  th:text="${photographer.firstName + ' ' + photographer.lastName}"></td>
                                 <td>
-                                    <a th:href="@{/facade/showProfile/{id}(id=${photographer.id})}" class="btn btn-outline-success btn-sm">Acessar</a>
+                                    <a th:href="@{/showProfile/{id}(id=${photographer.id})}" class="btn btn-outline-success btn-sm">Acessar</a>
                                 </td>
                             </tr>
                         </tbody>

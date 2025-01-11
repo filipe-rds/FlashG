@@ -2,45 +2,45 @@
 <html lang="pt_BR"
 xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" 
 layout:decorate="~{layout/layout}">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- Importando o CoreUI -->
+    <title>FlashG</title>
 </head>
-<div layout:fragment="content">
-        <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
-            <div class="d-flex justify-content-center align-items-center"> 
-            <div class="w-75">
-                <div class="card shadow-sm border-primary">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="m-0" th:text="'Perfil do fotógrafo: ' + ${photographer.username}"></h3>
+<body>
+    <div layout:fragment="content">
+            <div class="overflow-auto " style="max-height:700px; max-width: 1500px;">
+                <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75">
+                    <div class="card shadow-sm border-primary">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="m-0" th:text="'Perfil do fotógrafo: ' + ${photographer.username}"></h3>
+                        </div>
+                        <div class="card-body d-flex align-items-center">
+                            <div>
+                                <h3 class="ms-2 text-primary" th:text="'Nome: '+${photographer.firstName + ' ' + photographer.lastName}"></h3>
+                            </div>
+                            <div class="ms-3">
+                                <h3 class="text-info" th:text="'Seguidores: ' +${photographer.followers.size()}"></h3>
+                            </div>
+                            <div class="ms-3">
+                                <h3 class="text-success" th:text="'Seguindo: ' +${photographer.following.size()}"></h3>
+                            </div>
+                            <div class="ms-5">
+                                <form th:action="@{/followAction}" method="POST" class="d-inline">
+                                    <input type="hidden" name="id" th:value="${photographer.id}" />
+                                    <button class="btn btn-primary" type="submit" th:text="${status}" th:if="${photographer.acceptsFollowers}">
+                                    </button>
+                                </form>
+                                <h3 class="text-danger fw-bold" th:unless="${photographer.acceptsFollowers}">
+                                    O fotógrafo não aceita ser seguido
+                                </h3>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body d-flex align-items-center">
-                        <div>
-                            <h3 class="ms-2 text-primary" th:text="'Nome: '+${photographer.firstName + ' ' + photographer.lastName}"></h3>
-                        </div>
-                        <div class="ms-3">
-                            <h3 class="text-info" th:text="'Seguidores: ' +${photographer.followers.size()}"></h3>
-                        </div>
-                        <div class="ms-3">
-                            <h3 class="text-success" th:text="'Seguindo: ' +${photographer.following.size()}"></h3>
-                        </div>
-                        <div class="ms-5">
-                            <form th:action="@{/facade/followAction}" method="POST" class="d-inline">
-                                <input type="hidden" name="id" th:value="${photographer.id}" />
-                                <button class="btn btn-primary" type="submit" th:text="${status}" th:if="${photographer.acceptsFollowers}">
-                                </button>
-                            </form>
-                            <h3 class="text-danger fw-bold" th:unless="${photographer.acceptsFollowers}">
-                                O fotógrafo não aceita ser seguido
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-                
+
+            </div>
+        </div>
         </div>
     </div>
-    </div>
-</div>
+</body>
+
+</html>
