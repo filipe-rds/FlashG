@@ -142,7 +142,13 @@ public class FacadeService {
 
     public List<Photographer> findAllFollowing(Long id){
         
-        List<Photographer> photographers  =photographerService.findAllFollowing(id);
+        List<Photographer> photographers  = photographerService.findAllFollowing(id);
+        return photographers;
+    }
+
+    public List<Photographer> findAllFollowers(Long id){
+
+        List<Photographer> photographers  = photographerService.findAllFollowers(id);
         return photographers;
     }
     
