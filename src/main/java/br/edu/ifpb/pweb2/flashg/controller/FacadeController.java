@@ -53,6 +53,26 @@ public class FacadeController {
         return mav;
     }
 
+    @GetMapping(value = "/myProfile")
+    public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
+        // Define a view que será exibida
+        mav.setViewName("application/myProfilePhotographer");
+
+        // Recupera o fotógrafo logado da sessão
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+
+        if (loggedPhotographer == null) {
+            // Redireciona para a página de login se não houver fotógrafo na sessão
+            mav.setViewName("redirect:/auth/signin");
+            return mav;
+        }
+
+        // Adiciona os dados do fotógrafo logado ao modelo
+        mav.addObject("photographer", loggedPhotographer);
+
+        return mav;
+    }
+
     @PostMapping(value = "/followAction")
     public ModelAndView followAction (ModelAndView mav , @RequestParam("id") Long id,HttpSession session){
         Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
