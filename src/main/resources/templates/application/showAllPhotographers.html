@@ -78,7 +78,7 @@ layout:decorate="~{layout/layout}">
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="photographer : ${Photographers}" class="hover:bg-slate-50 border-b border-slate-200">
+                <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
                     <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
                     <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
                     <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
@@ -93,26 +93,23 @@ layout:decorate="~{layout/layout}">
             </tbody>
         </table>
 
-        <div class="flex justify-between items-center px-4 py-3">
-            <div class="text-sm text-slate-500">
-                <p><b th:text="${'Total: ' + Photographers.size()}"></b></p>
+        <div >
+            <div class="flex justify-between items-center px-4 py-3" th:if="${photographers?.size() > 0}">
+                <div class="text-sm text-slate-500" >
+                    <p><b th:text="${'Total: ' + photographers.size()}"></b></p>
+                </div>
+                <div class="flex space-x-1">
+                    <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                        Prev
+                    </button>
+                    <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
+                        Next
+                    </button>
+                </div>
             </div>
-            <div class="flex space-x-1">
-                <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    Prev
-                </button>
-                <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-white bg-slate-800 border border-slate-800 rounded hover:bg-slate-600 hover:border-slate-600 transition duration-200 ease">
-                    1
-                </button>
-                <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    2
-                </button>
-                <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    3
-                </button>
-                <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                    Next
-                </button>
+
+            <div class="pt-30 text-sm text-slate-500" th:if="${seguidos.size() == 0}">
+                <p><b>Sua plataforma só possui seu registro :(</b></p>
             </div>
         </div>
     </div>
