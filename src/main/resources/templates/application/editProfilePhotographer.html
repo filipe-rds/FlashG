@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt_BR"
+      xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>FlashG</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="overflow-auto" style="max-height:700px; max-width: 1500px;">
+        <div class="flex justify-center items-center">
+            <div class="w-3/4">
+                <!-- Card para edição do perfil -->
+                <div class="shadow-lg border border-gray-300 rounded-lg">
+                    <div class="bg-gray-800 text-white rounded-t-lg p-4">
+                        <h3 class="text-lg font-bold">Meu Perfil</h3>
+                    </div>
+                    <div class="bg-white p-6">
+                        <form th:action="@{/updateProfile}" method="POST">
+                            <!-- Campo Username (somente leitura) -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2" for="username">Username</label>
+                                <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
+                                       type="text" id="username" name="username" th:value="${photographer.username}" readonly />
+                            </div>
+                            <!-- Nome Completo -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2" for="firstName">Nome</label>
+                                <input class="w-full p-2 border border-gray-300 rounded"
+                                       type="text" id="firstName" name="firstName" th:value="${photographer.firstName}" />
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2" for="lastName">Sobrenome</label>
+                                <input class="w-full p-2 border border-gray-300 rounded"
+                                       type="text" id="lastName" name="lastName" th:value="${photographer.lastName}" />
+                            </div>
+                            <!-- Email -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
+                                <input class="w-full p-2 border border-gray-300 rounded"
+                                       type="email" id="email" name="email" th:value="${photographer.email}" />
+                            </div>
+                            <!-- Senha -->
+                            <div class="mb-4">
+                                <label class="block text-gray-700 font-semibold mb-2" for="password">Nova Senha</label>
+                                <input class="w-full p-2 border border-gray-300 rounded"
+                                       type="password" id="password" name="password" placeholder="Deixe em branco para manter a senha atual" />
+                                <small class="text-gray-500">A senha precisa ter ao menos 8 caracteres.</small>
+                            </div>
+                            <!-- Aceita seguidores -->
+                            <div class="mb-4 flex items-center">
+                                <label class="block text-gray-700 font-semibold mr-4" for="acceptsFollowers">Aceita Seguidores?</label>
+                                <input class="form-checkbox h-5 w-5 text-blue-600"
+                                       type="checkbox" id="acceptsFollowers" name="acceptsFollowers" th:checked="${photographer.acceptsFollowers}" />
+                            </div>
+
+                            <!-- Campo isBlock (visível somente para admins) -->
+                            <div th:if="${loggedPhotographer.isAdmin}" class="mb-4 flex items-center">
+                                <label class="block text-gray-700 font-semibold mr-4" for="isBlock">Bloqueado?</label>
+                                <input class="form-checkbox h-5 w-5 text-red-600"
+                                       type="checkbox" id="isBlock" name="isBlock" th:checked="${photographer.isBlock}" />
+                            </div>
+
+                            <!-- Botões de ação -->
+                            <div class="flex space-x-4">
+                                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500" type="submit">Salvar Alterações</button>
+                                <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500" type="reset">Redefinir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
