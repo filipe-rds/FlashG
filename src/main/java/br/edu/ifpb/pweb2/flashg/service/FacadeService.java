@@ -160,5 +160,14 @@ public class FacadeService {
     public void logoutPhotographer(HttpSession session){
         sessionService.logoutPhotographer(session);
     }
+
+    public String checkBlockedStatus(Photographer photographer){
+        
+        return photographerService.checkBlockedStatus(photographer);
+    }
+
+    public void handleBlockAction(Long id){
+        photographerService.handleBlockAction(id);
+    }
     
 }
