@@ -6,114 +6,113 @@ layout:decorate="~{layout/layout}">
     <title>FlashG</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
-        <div>
-            <h3 class="text-lg font-semibold text-slate-800">Lista de fotógrafos registrados na plataforma</h3>
-        </div>
-        <div class="ml-3">
-            <div class="w-full max-w-sm min-w-[200px] relative">
-                <div class="relative">
-                    <input
-                            class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
-                            placeholder="Procure por username..."
-                    />
-                    <button
-                            class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
-                            type="button"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                        </svg>
-                    </button>
+    <div layout:fragment="content">
+        <div class="flex justify-center items-center w-3/4 bg-red-200 text-red-600 w-full p-4 rounded text-center border border-gray-100 rounded-lg" role="alert" th:if="${error}" th:text="${error}"></div>
+        <div th:if="!${error}">
+            <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-800">Lista de fotógrafos registrados na plataforma</h3>
+                </div>
+                <div class="ml-3">
+                    <div class="w-full max-w-sm min-w-[200px] relative">
+                        <div class="relative">
+                            <input
+                                    class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
+                                    placeholder="Procure por username..."
+                            />
+                            <button
+                                    class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
+                                    type="button"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
+                <table class="w-full text-left table-auto min-w-max">
+                    <thead>
+                        <tr>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Id
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Username
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Nome
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    E-mail
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Pode ser seguido
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Administrador
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Bloqueado
+                                </p>
+                            </th>
+                            <th class="p-4 border-b border-slate-200 bg-slate-50">
+                                <p class="text-sm font-normal leading-none text-slate-500">
+                                    Editar Dados
+                                </p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
+                            <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
+                            <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
+                            <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
+                            <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
+                            <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                            <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                            <td th:text="${photographer.isBlocked}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                            <td class="p-4 py-5 text-sm ">
+                                <a th:href="@{showProfile/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Acessar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div >
+                    <div class="flex justify-between items-center px-4 py-3" th:if="${photographers?.size() > 0}">
+                        <div class="text-sm text-slate-500" >
+                            <p><b th:text="${'Total: ' + photographers.size()}"></b></p>
+                        </div>
+<!--                        <div class="flex space-x-1">-->
+<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
+<!--                                Prev-->
+<!--                            </button>-->
+<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
+<!--                                Next-->
+<!--                            </button>-->
+<!--                        </div>-->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
-        <table class="w-full text-left table-auto min-w-max">
-            <thead>
-                <tr>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Id
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Username
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Nome
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            E-mail
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Pode ser seguido
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Administrador
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Bloqueado
-                        </p>
-                    </th>
-                    <th class="p-4 border-b border-slate-200 bg-slate-50">
-                        <p class="text-sm font-normal leading-none text-slate-500">
-                            Editar Dados
-                        </p>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
-                    <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
-                    <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
-                    <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
-                    <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
-                    <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                    <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                    <td th:text="${photographer.isBlocked}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                    <td class="p-4 py-5 text-sm ">
-                        <a th:href="@{showProfile/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Acessar</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div >
-            <div class="flex justify-between items-center px-4 py-3" th:if="${photographers?.size() > 0}">
-                <div class="text-sm text-slate-500" >
-                    <p><b th:text="${'Total: ' + photographers.size()}"></b></p>
-                </div>
-                <div class="flex space-x-1">
-                    <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                        Prev
-                    </button>
-                    <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">
-                        Next
-                    </button>
-                </div>
-            </div>
-
-            <div class="pt-30 text-sm text-slate-500" th:if="${photographers.size() == 0}">
-                <p><b>Sua plataforma só possui seu registro :(</b></p>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 
 </html>
