@@ -84,8 +84,8 @@ layout:decorate="~{layout/layout}">
                     <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
                     <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
                     <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                    <td th:text="${photographer.isAdmin()}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                    <td th:text="${photographer.isBlocked()}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                    <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                    <td th:text="${photographer.isBlocked}" class="p-4 py-5 text-sm text-slate-800 "></td>
                     <td class="p-4 py-5 text-sm ">
                         <a th:href="@{showProfile/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Acessar</a>
                     </td>
@@ -108,7 +108,7 @@ layout:decorate="~{layout/layout}">
                 </div>
             </div>
 
-            <div class="pt-30 text-sm text-slate-500" th:if="${seguidos.size() == 0}">
+            <div class="pt-30 text-sm text-slate-500" th:if="${photographers.size() == 0}">
                 <p><b>Sua plataforma só possui seu registro :(</b></p>
             </div>
         </div>

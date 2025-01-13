@@ -1,26 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt_BR" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout">
 <head layout:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title layout:title="Base Layout">FlashG</title>
-    <link rel="stylesheet" th:href="@{static/css/styles.css}">
-    <script th:src="@{static/js/script.js}"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/lib.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="flex-col min-h-screen items-center justify-center">
-    <!-- Cabeçalho -->
-<!--    <div th:replace="fragments/header :: header"></div>-->
     <div class="flex min-h-screen">
-        <!-- Barra lateral -->
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-
-        <!-- Conteúdo principal -->
         <div class="w-full flex flex-col p-6">
             <div class="mt-4 flex-1" layout:fragment="content">
-                <!-- Aqui o conteúdo será injetado -->
+                <!--/* Aqui o conteúdo será injetado */-->
             </div>
-            <!-- Rodapé -->
             <div th:replace="~{fragments/footer :: footer}"></div>
         </div>
     </div>
