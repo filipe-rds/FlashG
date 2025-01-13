@@ -79,6 +79,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return mav;
     }
 
+    @ExceptionHandler(PhotographerIsBlockedException.class)
+    private ModelAndView handlerPhotographerIsBlockedException(PhotographerIsBlockedException ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signin");
+        mav.addObject("photographer", new LoginDTO());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
 
 
 }
