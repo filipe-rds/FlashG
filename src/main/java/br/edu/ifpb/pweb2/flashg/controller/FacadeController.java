@@ -18,22 +18,9 @@ public class FacadeController {
     @Autowired
     private FacadeService facadeService;
 
-    private Photographer getLoggedPhotographer(HttpSession session) {
-        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
-        if (loggedPhotographer == null) {
-            throw new IllegalStateException("Usuário não está logado.");
-        }
-        return loggedPhotographer;
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public String handleIllegalStateException() {
-        return "redirect:/auth/signin";
-    }
-
     @GetMapping(value = "")
     public ModelAndView index(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         mav.setViewName("home");
         return mav;
     }
@@ -52,7 +39,7 @@ public class FacadeController {
 
     @GetMapping(value = "/findPhotographers")
     public ModelAndView getAllPhotographerStartingWith(ModelAndView mav, @RequestParam("username") String username, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photographer> photographers = facadeService.findByUsernameStartingWith(username);
         facadeService.removePhotographerFromArray(photographers, loggedPhotographer);
         mav.setViewName("application/findPhotographers");
@@ -63,7 +50,7 @@ public class FacadeController {
 
     @GetMapping(value = "/showProfile/{id}")
     public ModelAndView showProfile(ModelAndView mav, @PathVariable("id") Long id, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         Photographer seguido = facadeService.findByIdPhotographer(id);
         String status = facadeService.checkFollowStatus(loggedPhotographer, seguido);
         mav.setViewName("application/showProfilePhotographer");
@@ -74,7 +61,7 @@ public class FacadeController {
 
     @GetMapping(value = "/myProfile")
     public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", loggedPhotographer);
         return mav;
@@ -82,7 +69,7 @@ public class FacadeController {
 
     @PostMapping(value = "/followAction")
     public ModelAndView followAction(ModelAndView mav, @RequestParam("id") Long id, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         facadeService.handleFollowAction(loggedPhotographer.getId(), id);
         Photographer updatedLoggedPhotographer = facadeService.findByIdPhotographer(loggedPhotographer.getId());
         session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
@@ -92,7 +79,7 @@ public class FacadeController {
 
     @GetMapping(value = "/listPhotographerFollowing")
     public ModelAndView listAllFollowing(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photographer> seguidos = facadeService.findAllFollowing(loggedPhotographer.getId());
         mav.setViewName("application/listPhotographerFollowing");
         mav.addObject("seguidos", seguidos);
@@ -101,7 +88,7 @@ public class FacadeController {
 
     @GetMapping(value = "/listPhotographerFollowers")
     public ModelAndView listAllFollowers(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photographer> seguidores = facadeService.findAllFollowers(loggedPhotographer.getId());
         mav.setViewName("application/listPhotographerFollowers");
         mav.addObject("seguidores", seguidores);
@@ -110,7 +97,7 @@ public class FacadeController {
 
     @GetMapping(value = "/showAllPhotographers")
     public ModelAndView listAllPhotographer(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = getLoggedPhotographer(session);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photographer> photographers = facadeService.findAllPhotographers();
         facadeService.removePhotographerFromArray(photographers, loggedPhotographer);
         mav.addObject("photographers", photographers);
@@ -119,11 +106,10 @@ public class FacadeController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        if (session != null) {
-            session.invalidate();
-        }
-        return "redirect:/auth/signin";
+    public ModelAndView logout(ModelAndView mav, HttpSession session) {
+        facadeService.logoutPhotographer(session);
+        mav.setViewName("redirect:/auth/signin");
+        return mav;
     }
 }
 

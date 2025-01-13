@@ -1,7 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollower;
+import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowers;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
@@ -70,9 +70,9 @@ public class PhotographerService {
 
         List<Photographer> photographers = repository.findAllFollowing(id);
 
-//        if(photographers.isEmpty()){
-//            throw new NotFoundAnyFollowing();
-//        }
+        if(photographers.isEmpty()){
+            throw new NotFoundAnyFollowing();
+        }
         return photographers;
     }
 
@@ -80,9 +80,9 @@ public class PhotographerService {
 
         List<Photographer> photographers = repository.findAllFollowers(id);
 
-//        if(photographers.isEmpty()){
-//            throw new NotFoundAnyFollower();
-//        }
+        if(photographers.isEmpty()){
+            throw new NotFoundAnyFollowers();
+        }
         return photographers;
     }
 
