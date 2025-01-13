@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title layout:title="Base Layout">FlashG</title>
-    <link rel="stylesheet" th:href="@{static/css/styles.css}">
-    <script th:src="@{static/js/script.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/lib.js}"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/dialog.js" defer></script>
 </head>
 <body class="flex-col min-h-screen items-center justify-center">
     <!-- Cabeçalho -->
@@ -25,9 +26,9 @@
         </div>
     </div>
     <!-- from node_modules -->
-    <script src="node_modules/@material-tailwind/html@latest/scripts/dialog.js"></script>
+<!--    <script src="node_modules/@material-tailwind/html@latest/scripts/dialog.js"></script>-->
 
     <!-- from cdn -->
-    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/dialog.js"></script>
+
 </body>
 </html>

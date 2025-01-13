@@ -2,6 +2,7 @@
     // Lista de URLs dos scripts JavaScript
     const jsLibraries = [
         'https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js',
+        'node_modules/@material-tailwind/html@latest/scripts/dialog.js',
         // Adicione mais URLs conforme necessário
     ];
 
