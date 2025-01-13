@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import java.util.List;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,11 @@ public class FacadeService {
 
     @Autowired
     private FollowService followService;
-    
+
+    @Autowired
+    private SessionService sessionService;
+
+
     public List<Photographer> findByUsernameStartingWith(String nome){
 
         return photographerService.findByUsernameStartingWith(nome);
@@ -141,15 +146,19 @@ public class FacadeService {
     
 
     public List<Photographer> findAllFollowing(Long id){
-        
-        List<Photographer> photographers  = photographerService.findAllFollowing(id);
-        return photographers;
+        return photographerService.findAllFollowing(id);
     }
 
     public List<Photographer> findAllFollowers(Long id){
+        return photographerService.findAllFollowers(id);
+    }
 
-        List<Photographer> photographers  = photographerService.findAllFollowers(id);
-        return photographers;
+    public Photographer getLoggedPhotographer(HttpSession session){
+        return sessionService.getLoggedPhotographer(session);
+    }
+
+    public void logoutPhotographer(HttpSession session){
+        sessionService.logoutPhotographer(session);
     }
     
 }
