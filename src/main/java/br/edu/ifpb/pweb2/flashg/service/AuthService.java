@@ -4,8 +4,10 @@ import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
+import br.edu.ifpb.pweb2.flashg.exception.NoSessionException;
 import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,4 +51,5 @@ public class AuthService {
             throw new EmailOrPasswordIsIncorrect();
         }
     }
+
 }
