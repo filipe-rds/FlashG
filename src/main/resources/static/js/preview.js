@@ -14,6 +14,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-console.log("Script carregado!");
-console.log("Script carregado!");

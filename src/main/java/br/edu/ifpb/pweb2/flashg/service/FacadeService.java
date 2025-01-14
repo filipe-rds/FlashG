@@ -1,11 +1,10 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import br.edu.ifpb.pweb2.flashg.entity.Photo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import br.edu.ifpb.pweb2.flashg.entity.Follow;
 import br.edu.ifpb.pweb2.flashg.entity.FollowId;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,14 +23,20 @@ public class FacadeService {
     private PhotographerService photographerService;
 
     @Autowired
-    private PhotoService photoService;
-
-    @Autowired
     private PhotographerRepository photographerRepository;
 
     @Autowired
     private FollowService followService;
-    
+
+    @Autowired
+    private SessionService sessionService;
+
+    @Autowired
+    private PhotoService photoService;
+
+
+
+
     public List<Photographer> findByUsernameStartingWith(String nome){
 
         return photographerService.findByUsernameStartingWith(nome);
@@ -150,13 +154,31 @@ public class FacadeService {
     
 
     public List<Photographer> findAllFollowing(Long id){
-        
-        List<Photographer> photographers  =photographerService.findAllFollowing(id);
-        return photographers;
+        return photographerService.findAllFollowing(id);
     }
 
+    public List<Photographer> findAllFollowers(Long id){
+        return photographerService.findAllFollowers(id);
+    }
 
-    public void uploadPhoto(Long id,Photo photo,MultipartFile file) throws Exception {
+    public Photographer getLoggedPhotographer(HttpSession session){
+        return sessionService.getLoggedPhotographer(session);
+    }
+
+    public void logoutPhotographer(HttpSession session){
+        sessionService.logoutPhotographer(session);
+    }
+
+    public String checkBlockedStatus(Photographer photographer){
+        
+        return photographerService.checkBlockedStatus(photographer);
+    }
+
+    public void handleBlockAction(Long id){
+        photographerService.handleBlockAction(id);
+    }
+
+    public void uploadPhoto(Long id, Photo photo, MultipartFile file) throws Exception {
         Photographer photographer = photographerService.findById(id);
 //        Photo photo = new Photo();
         photo.setPhotographer(photographer);
@@ -185,7 +207,5 @@ public class FacadeService {
         }
         return photos;
     }
-
-
-
+    
 }

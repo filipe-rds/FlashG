@@ -20,6 +20,11 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
     List<Photographer> findByUsernameIgnoreCaseStartingWith(String prefix);
     @Query("SELECT f.followed FROM Follow f WHERE f.follower.id = :id")
     List<Photographer> findAllFollowing(@Param("id") Long id);
+    @Query("SELECT f.follower FROM Follow f WHERE f.followed.id = :id")
+    List<Photographer> findAllFollowers(@Param("id") Long id);
+    @Query("SELECT p.isBlocked FROM Photographer p WHERE p.id = :id")
+    Boolean isPhotographerBlocked(@Param("id") Long id);
+    List<Photographer> findAllByOrderByIdAsc();
     @Query("SELECT p.photos FROM Photographer p WHERE p.id = :id")
     List<Photo> findAllPhotos(@Param("id") Long id);
 }

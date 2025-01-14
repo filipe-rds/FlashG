@@ -3,87 +3,87 @@
       xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuida Pai</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuida Pai</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
 <div layout:fragment="content">
 
-    <div class="overflow-auto max-h-[845px] max-w-[1500px] mx-auto p-4">
+  <div class="overflow-auto max-h-[845px] max-w-[1500px] mx-auto p-4">
 
-        <div class="w-full px-4">
-            <div class="mb-6 text-center">
-                <h1 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Minhas Fotos</h1>
-                <p class="text-center text-lg text-gray-600" th:text="'Bem-vindo, ' + ${photographer.firstName}"></p>
-            </div>
+    <div class="w-full px-4">
+      <div class="mb-6 text-center">
+        <h1 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Minhas Fotos</h1>
+        <p class="text-center text-lg text-gray-600" th:text="'Bem-vindo, ' + ${photographer.firstName}"></p>
+      </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
-                <div th:each="photo, iterStat : ${photos}">
-                    <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md" th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
-                        <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}" th:alt="${photo.title}"/>
-                    </div>
-                </div>
-            </div>
-
-            <!--    dialog foto        -->
-            <div th:each="photo, iterStat : ${photos}">
-                <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}" data-dialog-backdrop-close="true"
-                     class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-                    <div class="relative m-4 w-2/4 rounded-lg bg-white shadow-sm" role="dialog" th:data-dialog="'image-dialog-' + ${iterStat.index}">
-                        <div class="flex items-center justify-between p-4">
-                            <div class="flex items-center ">
-                                <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80" alt="foto-perfil" class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
-                                <div class="-mt-px flex flex-col">
-                                    <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}" class="text-sm text-slate-800 font-medium"></p>
-                                    <p th:text="'@'+ ${photographer.username}" class="text-xs font-normal text-slate-500"></p>
-                                </div>
-                            </div>
-                            <div class="flex items-center ">
-                                <button class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                        <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="relative border-b border-t border-b-blue-gray-100 border-t-blue-gray-100 p-0 font-sans text-base font-light leading-relaxed text-blue-gray-500 antialiased">
-                            <img th:alt="${photo.title}" class="h-[30rem] w-full object-cover object-center" th:src="${photo.imageUrl}"/>
-                        </div>
-                        <div class="text-center p-4">
-                            <h1 class="text-xl font-semibold text-slate-800" th:text="${photo.title}"></h1>
-                        </div>
-                        <div class="text-center p-4">
-                            <p class="text-sm text-slate-600" th:text="${photo.description}"></p>
-                        </div>
-                        <div class="flex shrink-0 flex-wrap items-center justify-between p-4 text-blue-gray-500">
-                            <div class="flex items-center gap-16">
-                                <div>
-                                    <p class="text-slate-500 text-sm">Likes</p>
-                                    <p class="text-slate-800 font-medium">44,082,044</p>
-                                </div>
-                                <div>
-                                    <p class="text-slate-500 text-sm">Comments</p>
-                                    <p class="text-slate-800 font-medium">553,031</p>
-                                </div>
-                            </div>
-                            <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-4 w-4 mr-1.5">
-                                    <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd">
-                                    </path>
-                                </svg>
-                                Share
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
+        <div th:each="photo, iterStat : ${photos}">
+          <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md" th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
+            <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}" th:alt="${photo.title}"/>
+          </div>
         </div>
+      </div>
+
+      <!--    dialog foto        -->
+      <div th:each="photo, iterStat : ${photos}">
+        <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}" data-dialog-backdrop-close="true"
+             class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+          <div class="relative m-4 w-2/4 rounded-lg bg-white shadow-sm" role="dialog" th:data-dialog="'image-dialog-' + ${iterStat.index}">
+            <div class="flex items-center justify-between p-4">
+              <div class="flex items-center ">
+                <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80" alt="foto-perfil" class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
+                <div class="-mt-px flex flex-col">
+                  <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}" class="text-sm text-slate-800 font-medium"></p>
+                  <p th:text="'@'+ ${photographer.username}" class="text-xs font-normal text-slate-500"></p>
+                </div>
+              </div>
+              <div class="flex items-center ">
+                <button class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                    <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="relative border-b border-t border-b-blue-gray-100 border-t-blue-gray-100 p-0 font-sans text-base font-light leading-relaxed text-blue-gray-500 antialiased">
+              <img th:alt="${photo.title}" class="h-[30rem] w-full object-cover object-center" th:src="${photo.imageUrl}"/>
+            </div>
+            <div class="text-center p-4">
+              <h1 class="text-xl font-semibold text-slate-800" th:text="${photo.title}"></h1>
+            </div>
+            <div class="text-center p-4">
+              <p class="text-sm text-slate-600" th:text="${photo.description}"></p>
+            </div>
+            <div class="flex shrink-0 flex-wrap items-center justify-between p-4 text-blue-gray-500">
+              <div class="flex items-center gap-16">
+                <div>
+                  <p class="text-slate-500 text-sm">Likes</p>
+                  <p class="text-slate-800 font-medium">44,082,044</p>
+                </div>
+                <div>
+                  <p class="text-slate-500 text-sm">Comments</p>
+                  <p class="text-slate-800 font-medium">553,031</p>
+                </div>
+              </div>
+              <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-4 w-4 mr-1.5">
+                  <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd">
+                  </path>
+                </svg>
+                Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
+
+  </div>
 </div>
 
 

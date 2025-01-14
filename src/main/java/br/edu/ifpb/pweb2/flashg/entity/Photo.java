@@ -20,6 +20,8 @@ public class Photo {
 
     private String description;
 
+
+
     @ManyToOne
     @JoinColumn(name = "photographer_id", nullable = false)
     private Photographer photographer;

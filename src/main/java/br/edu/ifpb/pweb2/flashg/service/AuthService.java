@@ -4,6 +4,7 @@ import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
+import br.edu.ifpb.pweb2.flashg.exception.PhotographerIsBlockedException;
 import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +37,16 @@ public class AuthService {
         return this.photographerRepository.save(photographer);
     }
 
-    public Photographer login(LoginDTO photographer) throws EmailOrPasswordIsIncorrect {
+    public Photographer login(LoginDTO photographer) throws EmailOrPasswordIsIncorrect, PhotographerIsBlockedException {
         Optional<Photographer> optionalPhotographer = this.photographerRepository.findByEmail(photographer.getEmail());
 
         if (optionalPhotographer.isPresent()) {
-            if (optionalPhotographer.get().getPassword().equals(photographer.getPassword())) {
+            Photographer photographerGet = optionalPhotographer.get();
+            
+            if(photographerGet.isBlocked()){
+                throw new PhotographerIsBlockedException();
+            }
+            if (photographerGet.getPassword().equals(photographer.getPassword())) {
                 return optionalPhotographer.get();
             } else {
                 throw new EmailOrPasswordIsIncorrect();
@@ -49,4 +55,5 @@ public class AuthService {
             throw new EmailOrPasswordIsIncorrect();
         }
     }
+
 }

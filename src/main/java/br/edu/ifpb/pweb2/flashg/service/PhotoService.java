@@ -1,14 +1,11 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
-
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +15,7 @@ public class PhotoService {
     @Autowired
     private PhotoRepository repository;
 
-    public List<Photo>FindAll(){
+    public List<Photo> FindAll(){
         return repository.findAll();
     }
 
@@ -40,11 +37,6 @@ public class PhotoService {
     public void delete(Long id){
         repository.deleteById(id);
     }
-
-//    public List<Photo> findByPhotographer(Long id){
-//        return repository.FindByPhotographerId(id);
-//    }
-
 
 
 }

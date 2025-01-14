@@ -2,17 +2,11 @@ package br.edu.ifpb.pweb2.flashg.infra;
 
 import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
-import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
+import br.edu.ifpb.pweb2.flashg.exception.*;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundPhotoException;
-import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -20,7 +14,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundPhotoException.class)
     private ModelAndView handlerNotFoundPhotoException(NotFoundPhotoException ex) {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("error/404");
+        mav.setViewName("redirect:/error/404");
+        mav.addObject("error", ex.getMessage());
         return mav;
     }
 
@@ -37,6 +32,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         // Exibe a mensagem de erro e redireciona para a página de "listPhotographerFollowing"
         ModelAndView mav = new ModelAndView("application/listPhotographerFollowing");
         //ModelAndView mav = new ModelAndView("application/findPhotographers2");
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(NotFoundAnyFollowers.class)
+    private ModelAndView handlerNotFoundAnyFollowers(NotFoundAnyFollowers ex) {
+        ModelAndView mav = new ModelAndView("application/listPhotographerFollowers");
         mav.addObject("error", ex.getMessage());
         return mav;
     }
@@ -68,6 +70,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         mav.addObject("error", ex.getMessage());
         return mav;
     }
+
+    @ExceptionHandler(NoSessionException.class)
+    private ModelAndView handlerNoSessionException(NoSessionException ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:/auth/signin");
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(PhotographerIsBlockedException.class)
+    private ModelAndView handlerPhotographerIsBlockedException(PhotographerIsBlockedException ex) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("auth/signin");
+        mav.addObject("photographer", new LoginDTO());
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
+
+
 
 }
 
