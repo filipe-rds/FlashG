@@ -32,7 +32,7 @@ public class FacadeService {
     private SessionService sessionService;
 
     @Autowired
-    private PhotographerService photoService;
+    private PhotoService photoService;
 
 
 

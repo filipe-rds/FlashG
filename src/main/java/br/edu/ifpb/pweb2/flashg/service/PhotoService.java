@@ -3,11 +3,13 @@ package br.edu.ifpb.pweb2.flashg.service;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PhotoService {
 
     @Autowired
