@@ -2,9 +2,11 @@ package br.edu.ifpb.pweb2.flashg.controller;
 
 import java.util.List;
 
+import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
@@ -118,6 +120,35 @@ public class FacadeController {
         //session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
         facadeService.handleBlockAction(id);
         mav.setViewName("redirect:/showAllPhotographers");
+        return mav;
+    }
+
+    @GetMapping(value = "/uploadPhotos")
+    public ModelAndView uploadPage(ModelAndView mav) {
+        mav.addObject("photo", new Photo());
+        mav.setViewName("application/uploadPhotos");
+        return mav;
+    }
+
+    @PostMapping(value = "/uploadPhotos")
+    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session, @RequestParam("image") MultipartFile file, @ModelAttribute("photo")Photo photo) throws Exception {
+        if (file.isEmpty()) {
+            mav.setViewName("application/uploadPhotos");
+            return mav;
+        }
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file);
+        mav.setViewName("redirect:/myPhotos");
+        return mav;
+    }
+
+    @GetMapping(value = "/myPhotos")
+    public ModelAndView showPhotographerPhotos(ModelAndView mav,HttpSession session) {
+        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
+        mav.setViewName("application/myPhotos");
+        mav.addObject("photographer", loggedPhotographer);
+        mav.addObject("photos", photos);
         return mav;
     }
 

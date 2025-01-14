@@ -1,5 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import jakarta.servlet.http.HttpSession;
@@ -11,6 +13,7 @@ import br.edu.ifpb.pweb2.flashg.entity.FollowId;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -27,6 +30,11 @@ public class FacadeService {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private PhotographerService photoService;
+
+
 
 
     public List<Photographer> findByUsernameStartingWith(String nome){
@@ -168,6 +176,36 @@ public class FacadeService {
 
     public void handleBlockAction(Long id){
         photographerService.handleBlockAction(id);
+    }
+
+    public void uploadPhoto(Long id, Photo photo, MultipartFile file) throws Exception {
+        Photographer photographer = photographerService.findById(id);
+//        Photo photo = new Photo();
+        photo.setPhotographer(photographer);
+        //chama metodo que vai inserir a foto no banco
+        photoService.create(photo,file);
+        //adiciona a foto a lista de fotos do fotografo
+        List<Photo> lista = photographer.getPhotos();
+        lista.add(photo);
+        photographer.setPhotos(lista);
+        photographerRepository.save(photographer);
+
+    }
+
+    public String convertPhotoToBase64(Photo photo) {
+        return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
+    }
+
+    public List<Photo> showPhotos(Long id){
+        Photographer photographer = photographerService.findById(id);
+        List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
+        List<String> photoUrls = new ArrayList<>();
+
+        for (Photo photo : photos) {
+            photoUrls.add(convertPhotoToBase64(photo));
+            photo.setImageUrl(convertPhotoToBase64(photo));
+        }
+        return photos;
     }
     
 }

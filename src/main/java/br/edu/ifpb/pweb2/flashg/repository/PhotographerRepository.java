@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.repository;
 
 
+import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,6 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
     @Query("SELECT p.isBlocked FROM Photographer p WHERE p.id = :id")
     Boolean isPhotographerBlocked(@Param("id") Long id);
     List<Photographer> findAllByOrderByIdAsc();
+    @Query("SELECT p.photos FROM Photographer p WHERE p.id = :id")
+    List<Photo> findAllPhotos(@Param("id") Long id);
 }
