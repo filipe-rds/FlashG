@@ -110,6 +110,17 @@ public class FacadeController {
         facadeService.logoutPhotographer(session);
         mav.setViewName("redirect:/auth/signin");
         return mav;
+    } 
+
+    @PostMapping(value = "/blockAction")
+    public ModelAndView blockAction(ModelAndView mav, @RequestParam("id") Long id) {
+        //facadeService.handleBlockAction(loggedPhotographer.getId(), id);
+        //session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
+        facadeService.handleBlockAction(id);
+        mav.setViewName("redirect:/showAllPhotographers");
+        return mav;
     }
+
+
 }
 

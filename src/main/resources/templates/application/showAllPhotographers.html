@@ -7,6 +7,7 @@ layout:decorate="~{layout/layout}">
 </head>
 <body>
     <div layout:fragment="content">
+        <div class="overflow-auto max-h-[700px] max-w-[1500px] mx-auto p-4">
         <div class="flex justify-center items-center w-3/4 bg-red-200 text-red-600 w-full p-4 rounded text-center border border-gray-100 rounded-lg" role="alert" th:if="${error}" th:text="${error}"></div>
         <div th:if="!${error}">
             <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
@@ -69,7 +70,7 @@ layout:decorate="~{layout/layout}">
                             </th>
                             <th class="p-4 border-b border-slate-200 bg-slate-50">
                                 <p class="text-sm font-normal leading-none text-slate-500">
-                                    Bloqueado
+                                    Bloqueio
                                 </p>
                             </th>
                             <th class="p-4 border-b border-slate-200 bg-slate-50">
@@ -87,7 +88,15 @@ layout:decorate="~{layout/layout}">
                             <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
                             <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
                             <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <td th:text="${photographer.isBlocked}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                            <form th:action="@{/blockAction}" method="POST">
+                                <td class="p-4 py-5 text-sm">
+                                    <input type="hidden" name="id" th:value="${photographer.id}" />
+                                    <button type="submit" 
+                                            th:text="${photographer.isBlocked ? 'Desbloquear' : 'Bloquear'}" 
+                                            class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
+                                    </button>
+                                </td>
+                            </form>                                                 
                             <td class="p-4 py-5 text-sm ">
                                 <a th:href="@{showProfile/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Acessar</a>
                             </td>
@@ -113,6 +122,7 @@ layout:decorate="~{layout/layout}">
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>

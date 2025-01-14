@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhotographerService {
@@ -63,7 +64,7 @@ public class PhotographerService {
     }
 
     public List<Photographer> findAllPhotographers(){
-        return repository.findAll();
+        return repository.findAllByOrderByIdAsc();
     }
 
     public List<Photographer> findAllFollowing(Long id){
@@ -100,6 +101,37 @@ public class PhotographerService {
     public void delete(Long id)throws Exception{
         repository.deleteById(id);
     }
+
+    public String checkBlockedStatus(Photographer photographer){
+        return repository.isPhotographerBlocked(photographer.getId()) ? "Desbloquear" : "Bloquear";
+    }  
+    
+    public void handleBlockAction(Long id) {
+
+        Optional<Photographer> photographerOptional = repository.findById(id);
+        
+        if (photographerOptional.isPresent()) {
+            Photographer photographer = photographerOptional.get();
+            boolean isBlocked = photographer.isBlocked(); 
+            photographer.setBlocked(!isBlocked);
+            repository.save(photographer);
+        } else {
+            throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
+        }
+    }
+    
+
+
+    //     if(photographer.isPresent()){
+    //         if(photographer.get().isBlocked()){ {
+    //             photographer.get().setBlocked(false);
+    //         }
+    //         else {
+    //             photographer.get().setBlocked(true);
+    //         }
+    //     }
+
+    // }
 
 
 }

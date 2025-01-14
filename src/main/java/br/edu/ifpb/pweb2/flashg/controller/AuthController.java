@@ -4,6 +4,7 @@ import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
+import br.edu.ifpb.pweb2.flashg.exception.PhotographerIsBlockedException;
 import br.edu.ifpb.pweb2.flashg.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("photographer") LoginDTO photographer,
                         BindingResult result,
-                        HttpSession session) throws EmailOrPasswordIsIncorrect {
+                        HttpSession session) throws EmailOrPasswordIsIncorrect, PhotographerIsBlockedException {
         if (result.hasErrors()) {
             return "auth/signin";
         }
