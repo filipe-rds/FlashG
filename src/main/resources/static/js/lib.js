@@ -1,28 +1,26 @@
-(function () {
-    // Lista de URLs dos scripts JavaScript
+document.addEventListener("DOMContentLoaded", function () {
     const jsLibraries = [
-        'https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js',
+        'https://unpkg.com/@material-tailwind/html@latest/scripts/dialog.js',
         // Adicione mais URLs conforme necessário
     ];
 
-    // Função para adicionar os scripts JavaScript ao documento
+    // Função para carregar um script de forma dinâmica
     function addScriptInOrder(url) {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
             script.src = url;
-            script.defer = true; // Carrega de forma assíncrona
             script.onload = () => resolve(`Script carregado: ${url}`);
             script.onerror = () => reject(`Erro ao carregar o script: ${url}`);
             document.body.appendChild(script);
         });
     }
 
-    // Reduz a lista de scripts a uma cadeia de Promises
+    // Carregar scripts dinamicamente na ordem correta
     jsLibraries
         .reduce(
             (prevPromise, currentUrl) =>
                 prevPromise.then(() => addScriptInOrder(currentUrl)),
-            Promise.resolve() // Promise inicial resolvida
+            Promise.resolve()
         )
         .then(() => {
             console.log('Todos os scripts foram carregados com sucesso!');
@@ -30,7 +28,7 @@
         .catch((error) => {
             console.error('Erro ao carregar os scripts:', error);
         });
-})();
+});
 
 
 
