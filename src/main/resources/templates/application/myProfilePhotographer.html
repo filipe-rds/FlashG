@@ -9,55 +9,60 @@
 <body>
 <div layout:fragment="content">
   <div th:if="${photographer}" class="overflow-auto max-w-full max-h-screen" >
-    <div class="flex justify-center items-center pt-4">
-      <div class="w-3/4">
-        <!-- Card de exibição do perfil -->
-        <div class="shadow-lg border border-gray-300 rounded-lg">
-          <div class="bg-gray-500 text-white rounded-t-lg p-4">
-            <h3 class="text-lg font-bold">Perfil do Fotógrafo</h3>
-          </div>
-          <div class="flex bg-white p-6 justify-between">
-            <!-- Informações do fotógrafo -->
-            <div class="mb-4">
-              <div class="flex items-center gap-4">
-                <img src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" alt="avatar"
-                     class="inline-block relative object-cover object-center !rounded-full w-12 h-12" />
-                <div>
-                  <h6 class="text-2xl font-semibold text-gray-800"
-                      th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"></h6>
-                  <p class="text-lg text-gray-600" th:text="'@' + ${photographer.username}"></p>
-                </div>
-              </div>
+
+
+    <div class="bg-gray-100 h-auto px-12 lg:px-48 py-8">
+      <div class="flex md:flex-row-reverse flex-wrap">
+        <!-- Informações do usuário -->
+        <div class="w-full md:w-3/4 p-4">
+          <div class="text-left pl-4 pt-3 flex justify-between items-center">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800"
+                  th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"></h1>
+              <p class="text-lg text-gray-600" th:text="'@' + ${photographer.username}"></p>
             </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Email:</span>
-              <p class="text-gray-600" th:text="${photographer.email}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Seguidores:</span>
-              <p class="text-gray-600"
-                 th:text="${photographer.followers != null ? photographer.followers.size() : 0}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Seguindo:</span>
-              <p class="text-gray-600"
-                 th:text="${photographer.following != null ? photographer.following.size() : 0}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Aceita seguidores?</span>
-              <p class="text-gray-600"
-                 th:text="${photographer.acceptsFollowers ? 'Sim' : 'Não'}"></p>
-            </div>
-            <!-- Botão de edição, visível apenas para o próprio usuário -->
-            <div class="mt-6">
-              <a href="#" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-500">
+            <div class="flex gap-4">
+              <!-- Botão de editar -->
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                 Editar Perfil
-              </a>
+              </button>
             </div>
+          </div>
+
+          <div class="text-left pl-4 pt-3">
+        <span class="text-base font-semibold text-gray-700 mr-4">
+          <b th:text="${photos.size()}"></b> posts
+        </span>
+            <span class="text-base font-semibold text-gray-700 mr-4">
+          <b th:text="${photographer.followers.size()}"></b> seguidores
+        </span>
+            <span class="text-base font-semibold text-gray-700">
+          <b th:text="${photographer.following.size()}"></b> seguindo
+        </span>
+          </div>
+
+          <div class="text-left pl-4 pt-3">
+            <p class="text-base font-medium text-blue-700"></p>
+            <p class="text-base font-medium text-gray-700">
+              Bio
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod.</p>
+          </div>
+        </div>
+
+        <!-- Avatar -->
+        <div class="w-full md:w-1/4 p-4 text-center">
+          <div class="relative mt-8">
+            <img
+                    class="h-40 w-40 rounded-full object-cover mx-auto"
+                    alt="Avatar do fotógrafo"
+                    src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" />
           </div>
         </div>
       </div>
     </div>
+
+
     <div th:if="${photos}" class="overflow-auto mx-auto p-4">
       <div class="w-full px-4">
         <div class="mb-6 text-center">
