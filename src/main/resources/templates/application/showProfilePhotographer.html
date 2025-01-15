@@ -24,7 +24,7 @@
                             <div class="flex items-center">
                                 <form th:action="@{/followAction}" method="POST" th:if="${photographer.acceptsFollowers}">
                                     <input type="hidden" name="id" th:value="${photographer.id}" />
-                                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
+                                    <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
                                             type="submit" th:text="${status}">
                                     </button>
                                 </form>

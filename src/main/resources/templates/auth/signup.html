@@ -7,7 +7,7 @@
     <header class="flex justify-between relative">
         <h1 class="text-5xl font-bold">FlashG</h1>
 
-        <a th:href="@{/auth/signin}" class="w-[212px] h-[56px] flex justify-center items-center bg-indigo-700 text-white text-xl rounded hover:bg-indigo-500 transition-colors" role="button">Fazer Login</a>
+        <a th:href="@{/auth/signin}" class="w-[212px] h-[56px] flex justify-center items-center bg-gray-700 text-white text-xl rounded hover:bg-gray-800 transition-colors" role="button">Fazer Login</a>
     </header>
 
     <main class="mt-10 flex gap-5 justify-center">
@@ -64,7 +64,7 @@
                     <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                 </div>
 
-                <button class="flex justify-center items-center bg-indigo-700 w-full py-3 text-white text-xl rounded hover:bg-indigo-500 transition-colors mt-2">
+                <button class="flex justify-center items-center bg-gray-700 w-full py-3 text-white text-xl rounded hover:bg-gray-800 transition-colors mt-2">
                     Cadastrar-se
                 </button>
             </form>
