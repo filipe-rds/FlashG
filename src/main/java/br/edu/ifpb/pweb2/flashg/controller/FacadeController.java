@@ -23,7 +23,7 @@ public class FacadeController {
     @GetMapping(value = "")
     public ModelAndView index(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        mav.setViewName("home");
+        mav.setViewName("redirect:/home");
         return mav;
     }
 
@@ -136,7 +136,7 @@ public class FacadeController {
             mav.setViewName("application/uploadPhotos");
             return mav;
         }
-        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file);
         mav.setViewName("redirect:/myPhotos");
         return mav;
@@ -144,7 +144,7 @@ public class FacadeController {
 
     @GetMapping(value = "/myPhotos")
     public ModelAndView showPhotographerPhotos(ModelAndView mav,HttpSession session) {
-        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         mav.setViewName("application/myPhotos");
         mav.addObject("photographer", loggedPhotographer);
