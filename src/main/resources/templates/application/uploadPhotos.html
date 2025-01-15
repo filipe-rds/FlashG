@@ -5,11 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuida Pai</title>
+    <title>FlashG</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="w-full h-full flex flex-col justify-center items-center mb-3 mt-1 pl-3 " >
+        <div class="w-full h-full flex flex-col justify-center items-center mb-3 mt-1 pl-3 " >
 
         <div class="text-center mb-4">
             <h4 class="block text-2xl font-medium text-slate-800">
@@ -20,7 +20,7 @@
         <div class="relative flex flex-row rounded-xl bg-transparent max-w-7xl mx-auto px-6 sm:px-12">
 
             <!-- Preview da Imagem -->
-            <div class="w-96 h-96 relative mr-6">
+            <div class="w-96 aspect-square relative mr-6">
                 <img
                         id="image-preview"
                         th:src="@{/assets/Preview.jpg}"
@@ -29,7 +29,7 @@
             </div>
 
             <form th:action="@{/uploadPhotos}" method="POST" enctype="multipart/form-data" class=" mt-8 mb-2 w-full h-full max-w-3xl sm:max-w-5xl mx-auto">
-                <div class="mb-4 flex flex-col gap-6">
+                <div class="mb-4 flex flex-col justify-center gap-6">
 
                     <div class="w-full">
                         <label for="photo" class="block mb-2 text-sm text-slate-600">
@@ -52,13 +52,14 @@
                         </label>
                     </div>
                 </div>
-
-                <button class="mt-4 w-full justify-center rounded-md bg-slate-800 py-3 px-6 max-w-sm mx-auto border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="submit">
-                    Postar Foto
-                </button>
-                <p class="flex justify-center mt-6 text-sm text-slate-600">
-                    Formatos aceitos: JPEG, PNG
-                </p>
+                <div class="w-full">
+                    <button class="flex mt-4 w-full justify-center rounded-md bg-gray-700 py-3 px-6 max-w-sm mx-auto border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-gray-800 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="submit">
+                        Postar Foto
+                    </button>
+                    <p class="flex justify-center mt-6 text-sm text-slate-600">
+                        Formatos aceitos: JPEG, PNG
+                    </p>
+                </div>
             </form>
         </div>
 

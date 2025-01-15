@@ -23,7 +23,7 @@ public class FacadeController {
     @GetMapping(value = "")
     public ModelAndView index(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        mav.setViewName("home");
+        mav.setViewName("redirect:/home");
         return mav;
     }
 
@@ -53,19 +53,23 @@ public class FacadeController {
     @GetMapping(value = "/showProfile/{id}")
     public ModelAndView showProfile(ModelAndView mav, @PathVariable("id") Long id, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        Photographer seguido = facadeService.findByIdPhotographer(id);
-        String status = facadeService.checkFollowStatus(loggedPhotographer, seguido);
+        Photographer searchedPhotographer = facadeService.findByIdPhotographer(id);
+        String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
+        List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
-        mav.addObject("photographer", seguido);
+        mav.addObject("photographer", searchedPhotographer);
+        mav.addObject("photos", photos);
         return mav;
     }
 
     @GetMapping(value = "/myProfile")
     public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", loggedPhotographer);
+        mav.addObject("photos", photos);
         return mav;
     }
 
@@ -136,22 +140,11 @@ public class FacadeController {
             mav.setViewName("application/uploadPhotos");
             return mav;
         }
-        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file);
-        mav.setViewName("redirect:/myPhotos");
+        mav.setViewName("redirect:/myProfile");
         return mav;
     }
-
-    @GetMapping(value = "/myPhotos")
-    public ModelAndView showPhotographerPhotos(ModelAndView mav,HttpSession session) {
-        Photographer loggedPhotographer = (Photographer) session.getAttribute("loggedPhotographer");
-        List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
-        mav.setViewName("application/myPhotos");
-        mav.addObject("photographer", loggedPhotographer);
-        mav.addObject("photos", photos);
-        return mav;
-    }
-
 
 }
 

@@ -1,57 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt_BR"
-      xmlns:th="http://www.thymeleaf.org"  xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
   <title>FlashG</title>
 </head>
 <body>
 <div layout:fragment="content">
-  <div class="overflow-auto" style="max-height:700px; max-width: 1500px;">
-    <div class="flex justify-center items-center">
-      <div class="w-3/4">
-        <!-- Card de exibição do perfil -->
-        <div class="shadow-lg border border-gray-300 rounded-lg">
-          <div class="bg-gray-500 text-white rounded-t-lg p-4">
-            <h3 class="text-lg font-bold">Perfil do Fotógrafo</h3>
-          </div>
-          <div class="flex bg-white p-6 justify-between">
-            <!-- Informações do fotógrafo -->
-            <div class="mb-4">
-              <h3 class="text-2xl font-semibold text-gray-800" th:text="${photographer.firstName + ' ' + photographer.lastName}"></h3>
+  <div th:if="${photographer}" class="overflow-auto max-w-full max-h-screen" >
+
+
+    <div class="bg-gray-100 h-auto px-12 lg:px-48 py-8">
+      <div class="flex md:flex-row-reverse flex-wrap">
+        <!-- Informações do usuário -->
+        <div class="w-full md:w-3/4 p-4">
+          <div class="text-left pl-4 pt-3 flex justify-between items-center">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800"
+                  th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"></h1>
               <p class="text-lg text-gray-600" th:text="'@' + ${photographer.username}"></p>
             </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Email:</span>
-              <p class="text-gray-600" th:text="${photographer.email}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Seguidores:</span>
-              <p class="text-gray-600" th:text="${photographer.followers.size()}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Seguindo:</span>
-              <p class="text-gray-600" th:text="${photographer.following.size()}"></p>
-            </div>
-            <div class="mb-4">
-              <span class="text-gray-700 font-semibold">Aceita seguidores?</span>
-              <p class="text-gray-600" th:text="${photographer.acceptsFollowers ? 'Sim' : 'Não'}"></p>
-            </div>
-            <!-- Botão de edição, visível apenas para o próprio usuário -->
-            <div class="mt-6">
-              <a href="#" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-500">
+            <div class="flex gap-4">
+              <!-- Botão de editar -->
+              <button class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg">
                 Editar Perfil
-              </a>
+              </button>
             </div>
+          </div>
 
+          <div class="text-left pl-4 pt-3">
+        <span class="text-base font-semibold text-gray-700 mr-4">
+          <b th:if="${photos}" th:text="${photos.size()}"></b> posts
+        </span>
+            <span class="text-base font-semibold text-gray-700 mr-4">
+          <b th:text="${photographer.followers.size()}"></b> seguidores
+        </span>
+            <span class="text-base font-semibold text-gray-700">
+          <b th:text="${photographer.following.size()}"></b> seguindo
+        </span>
+          </div>
+
+          <div class="text-left pl-4 pt-3">
+            <p class="text-base font-medium text-blue-700"></p>
+            <p class="text-base font-medium text-gray-700">
+              Bio
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod.</p>
+          </div>
+        </div>
+
+        <!-- Avatar -->
+        <div class="w-full md:w-1/4 p-4 text-center">
+          <div class="relative mt-8">
+            <img
+                    class="h-40 w-40 rounded-full object-cover mx-auto"
+                    alt="Avatar do fotógrafo"
+                    src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div th:if="${photos}" class="overflow-auto mx-auto p-4">
+      <div class="w-full px-4">
+        <div class="mb-6 text-center">
+          <h2 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Suas Fotos</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
+          <div th:each="photo, iterStat : ${photos}">
+            <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md"
+                 th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
+              <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}"
+                   th:alt="${photo.title}"/>
+            </div>
+          </div>
+        </div>
+        <!-- Dialog foto -->
+        <div th:each="photo, iterStat : ${photos}">
+          <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+               data-dialog-backdrop-close="true"
+               class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+            <div class="relative m-4 w-2/4 rounded-lg bg-white shadow-sm" role="dialog"
+                 th:data-dialog="'image-dialog-' + ${iterStat.index}">
+              <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                  <img src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg"
+                       alt="foto-perfil"
+                       class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
+                  <div class="pl-1 -mt-px flex flex-col">
+                    <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"
+                       class="text-sm text-slate-800 font-medium"></p>
+                    <p th:text="'@'+ ${photographer.username}"
+                       class="text-xs font-normal text-slate-500"></p>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <button class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                          type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                         class="w-4 h-4">
+                      <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="relative border-b border-t border-b-blue-gray-100 border-t-blue-gray-100 p-0 font-sans text-base font-light leading-relaxed text-blue-gray-500 antialiased">
+                <img th:alt="${photo.title}" class="object-scale-down h-[30rem] w-full object-cover object-center"
+                     th:src="${photo.imageUrl}"/>
+              </div>
+              <div class="text-center p-4">
+                <h1 class="text-xl font-semibold text-slate-800" th:text="${photo.title}"></h1>
+              </div>
+              <div class="text-center p-4">
+                <p class="text-sm text-slate-600" th:text="${photo.description}"></p>
+              </div>
+              <div class="flex shrink-0 flex-wrap items-center justify-between p-4 text-blue-gray-500">
+                <div class="flex items-center gap-16">
+                  <div>
+                    <p class="text-slate-500 text-sm">Likes</p>
+                    <p class="text-slate-800 font-medium">x</p>
+                  </div>
+                  <div>
+                    <p class="text-slate-500 text-sm">Comments</p>
+                    <p class="text-slate-800 font-medium">y</p>
+                  </div>
+                </div>
+                <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                        type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                       aria-hidden="true" class="h-4 w-4 mr-1.5">
+                    <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z"
+                          clip-rule="evenodd"></path>
+                  </svg>
+                  Share
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
 </body>
-
 </html>

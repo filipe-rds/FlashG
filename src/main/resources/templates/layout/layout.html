@@ -12,11 +12,10 @@
 <body class="flex-col min-h-screen items-center justify-center">
     <div class="flex min-h-screen">
         <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-        <div class="w-full flex flex-col p-6">
-            <div class="mt-4 flex-1" layout:fragment="content">
+        <div class="w-full flex flex-col ">
+            <div class="flex-1" layout:fragment="content">
                 <!--/* Aqui o conteúdo será injetado */-->
             </div>
-            <div th:replace="~{fragments/footer :: footer}"></div>
         </div>
     </div>
 </body>
