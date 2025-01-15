@@ -39,7 +39,7 @@
             </div>
             <!-- Botão de edição, visível apenas para o próprio usuário -->
             <div class="mt-6">
-              <a href="#" class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-500">
+              <a th:href="@{showEditProfilePhotographer/{id}(id=${session.loggedPhotographer.id})}"class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-500">
                 Editar Perfil
               </a>
             </div>

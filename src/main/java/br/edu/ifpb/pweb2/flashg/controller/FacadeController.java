@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("")
@@ -60,9 +64,13 @@ public class FacadeController {
     }
 
     @GetMapping(value = "/myProfile")
-    public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
-        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+    public ModelAndView myProfile( HttpSession session) {
+        ModelAndView mav = new ModelAndView();
+        Photographer logged = facadeService.getLoggedPhotographer(session);
+        //Photographer logged = (Photographer) session.getAttribute("loggedPhotographer");
+        Photographer loggedPhotographer = facadeService.findByIdPhotographer(logged.getId());
         mav.setViewName("application/myProfilePhotographer");
+        session.setAttribute("loggedPhotographer", loggedPhotographer);
         mav.addObject("photographer", loggedPhotographer);
         return mav;
     }
@@ -120,6 +128,40 @@ public class FacadeController {
         mav.setViewName("redirect:/showAllPhotographers");
         return mav;
     }
+
+    @GetMapping(value="/showEditProfilePhotographer/{id}")
+    public ModelAndView editProfilePhotographer(ModelAndView mav, @PathVariable("id") Long id) {
+        Photographer photographer = facadeService.findByIdPhotographer(id);
+        mav.addObject("photographer", photographer);
+        mav.setViewName("application/editProfilePhotographer");
+        return mav;
+    }
+
+    @PostMapping(value="/editProfilePhotographer")
+    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result,HttpSession session) throws EmailAlreadyExists {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (result.hasErrors()) {
+            mav.addObject("photographer", photographer);
+            mav.setViewName("application/editProfilePhotographer");
+            return mav;
+        }
+
+        System.out.println("OPAAAAAAAAAAAAAAAA");
+        System.out.println(photographer.getPassword());
+
+        facadeService.updatePhotographer(photographer);
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        Photographer updatedLoggedPhotographer = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+        session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
+        mav.addObject("photographer", updatedLoggedPhotographer);
+        mav.setViewName("redirect:/myProfile");
+        
+        return mav;
+    }
+
+
 
 
 }

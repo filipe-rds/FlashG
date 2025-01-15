@@ -120,6 +120,9 @@ public class PhotographerService {
         }
     }
     
+    public void updatePhotographer(Photographer photographer) {
+        repository.save(photographer);
+    }
 
 
     //     if(photographer.isPresent()){

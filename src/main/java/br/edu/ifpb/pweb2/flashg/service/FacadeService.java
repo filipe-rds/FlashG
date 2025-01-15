@@ -169,5 +169,9 @@ public class FacadeService {
     public void handleBlockAction(Long id){
         photographerService.handleBlockAction(id);
     }
+
+    public void updatePhotographer(Photographer photographer){
+        photographerService.updatePhotographer(photographer);
+    }
     
 }
