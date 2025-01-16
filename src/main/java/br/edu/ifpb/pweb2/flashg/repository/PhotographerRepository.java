@@ -24,4 +24,10 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
     @Query("SELECT p.isBlocked FROM Photographer p WHERE p.id = :id")
     Boolean isPhotographerBlocked(@Param("id") Long id);
     List<Photographer> findAllByOrderByIdAsc();
+    @Query("SELECT p FROM Photographer p WHERE p.id = :id AND p.email = :email")
+    Optional<Photographer> findPhotographerByIdAndEmail(@Param("id") Long id, @Param("email") String email);
+
+    
+
+
 }

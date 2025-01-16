@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExistsUpdate;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowers;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
@@ -119,9 +120,23 @@ public class PhotographerService {
             throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
         }
     }
+
+
+    private boolean isEmailAlreadyRegistered(String email) {
+        return repository.findByEmail(email).isPresent();
+    }
+
+    private boolean isEmailOfPhotographer(String email, Long id) {
+        return repository.findPhotographerByIdAndEmail(id, email).isPresent();
+    }
     
     public void updatePhotographer(Photographer photographer) {
+
+        if(isEmailAlreadyRegistered(photographer.getEmail()) && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())){
+            throw new EmailAlreadyExistsUpdate(photographer.getId());
+        }
         repository.save(photographer);
+
     }
 
 

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
-import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -138,7 +138,7 @@ public class FacadeController {
     }
 
     @PostMapping(value="/editProfilePhotographer")
-    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result,HttpSession session) throws EmailAlreadyExists {
+    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result,HttpSession session , RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
 
         ModelAndView mav = new ModelAndView();
 
@@ -148,15 +148,26 @@ public class FacadeController {
             return mav;
         }
 
-        System.out.println("OPAAAAAAAAAAAAAAAA");
-        System.out.println(photographer.getPassword());
-
+        // Faz o update do cara
         facadeService.updatePhotographer(photographer);
+
+        // Resgata o fotógrafo que acabou de realizar o update
+        Photographer updatedLoggedPhotographer = facadeService.findByIdPhotographer(photographer.getId());
+
+        // Resgata o fotógrafo da sessão
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        Photographer updatedLoggedPhotographer = facadeService.findByIdPhotographer(loggedPhotographer.getId());
-        session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
-        mav.addObject("photographer", updatedLoggedPhotographer);
-        mav.setViewName("redirect:/myProfile");
+
+        // Resgata o fotógrafo da sessão atualizado com o update
+        Photographer updatedLoggedPhotographerSession = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+
+        // Atualiza o fotógrafo da sessão
+        session.setAttribute("loggedPhotographer", updatedLoggedPhotographerSession);
+
+        //mav.addObject("photographer", updatedLoggedPhotographer);
+        redirectAttributes.addFlashAttribute("success", "Perfil atualizado com sucesso!");
+
+        long id = updatedLoggedPhotographer.getId();
+        mav.setViewName("redirect:/showEditProfilePhotographer/" + id );
         
         return mav;
     }
