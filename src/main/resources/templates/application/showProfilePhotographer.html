@@ -50,15 +50,15 @@
                     </div>
 
                     <div class="text-left pl-4 pt-3">
-        <span class="text-base font-semibold text-gray-700 mr-4">
-          <b th:text="${photos.size()}"></b> posts
-        </span>
                         <span class="text-base font-semibold text-gray-700 mr-4">
-          <b th:text="${photographer.followers.size()}"></b> seguidores
-        </span>
-                        <span class="text-base font-semibold text-gray-700">
-          <b th:text="${photographer.following.size()}"></b> seguindo
-        </span>
+                          <b th:if="${photos}" th:text="${photos.size()}"></b> posts
+                        </span>
+                                        <span class="text-base font-semibold text-gray-700 mr-4">
+                          <b th:text="${photographer.followers.size()}"></b> seguidores
+                        </span>
+                                        <span class="text-base font-semibold text-gray-700">
+                          <b th:text="${photographer.following.size()}"></b> seguindo
+                        </span>
                     </div>
 
                     <div class="text-left pl-4 pt-3">

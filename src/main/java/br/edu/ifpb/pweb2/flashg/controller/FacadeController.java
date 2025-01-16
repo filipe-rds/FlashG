@@ -67,8 +67,10 @@ public class FacadeController {
     public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
+        Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+        session.setAttribute("loggedPhotographer", myProfile);
         mav.setViewName("application/myProfilePhotographer");
-        mav.addObject("photographer", loggedPhotographer);
+        mav.addObject("photographer", myProfile);
         mav.addObject("photos", photos);
         return mav;
     }
