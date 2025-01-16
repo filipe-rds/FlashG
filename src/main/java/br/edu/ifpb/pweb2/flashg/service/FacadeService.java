@@ -207,5 +207,9 @@ public class FacadeService {
         }
         return photos;
     }
+
+    public void updatePhotographer(Photographer photographer){
+        photographerService.updatePhotographer(photographer);
+    }
     
 }

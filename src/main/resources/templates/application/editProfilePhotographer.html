@@ -7,68 +7,115 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="overflow-auto" style="max-height:700px; max-width: 1500px;">
+    <div class="overflow-auto max-w-full max-h-screen">
         <div class="flex justify-center items-center">
             <div class="w-3/4">
                 <!-- Card para edição do perfil -->
                 <div class="shadow-lg border border-gray-300 rounded-lg">
                     <div class="bg-gray-800 text-white rounded-t-lg p-4">
-                        <h3 class="text-lg font-bold">Meu Perfil</h3>
+                        <h3 class="text-lg font-bold" th:text="${session.loggedPhotographer.isAdmin and session.loggedPhotographer.id != photographer.id } ? 'Perfil de ' + ${photographer.username} : 'Meu perfil'"></h3>
                     </div>
                     <div class="bg-white p-6">
-                        <form th:action="@{/updateProfile}" method="POST">
-                            <!-- Campo Username (somente leitura) -->
+                        <form th:action="@{/editProfilePhotographer}" th:object="${photographer}" method="POST">
+
+                            <div class="mb-4">
+                                <input type="hidden" id="id" th:field="*{id}" />
+                            </div>
+                            <!-- Campo Username -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-semibold mb-2" for="username">Username</label>
-                                <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                                       type="text" id="username" name="username" th:value="${photographer.username}" readonly />
+                                <input class="w-full p-2 border border-gray-300 rounded "
+                                       type="text" id="username" th:field="*{username}" />
                             </div>
+
                             <!-- Nome Completo -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-semibold mb-2" for="firstName">Nome</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
-                                       type="text" id="firstName" name="firstName" th:value="${photographer.firstName}" />
+                                       type="text" id="firstName" th:field="*{firstName}" />
+                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-semibold mb-2" for="lastName">Sobrenome</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
-                                       type="text" id="lastName" name="lastName" th:value="${photographer.lastName}" />
+                                       type="text" id="lastName" th:field="*{lastName}" />
+                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
                             </div>
+
                             <!-- Email -->
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
-                                       type="email" id="email" name="email" th:value="${photographer.email}" />
+                                       type="email" id="email" th:field="*{email}" />
+                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
                             </div>
+
                             <!-- Senha -->
-                            <div class="mb-4">
+
+                            <div class="mb-4" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="senha">Nova Senha</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           id="password" th:field="*{password}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                                </div>
+                            </div>
+                            <div th:if="${not(!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id)}">
+                                <input type="hidden" id="password" th:field="*{password}"  />
+                            </div>
+
+
+                            <!-- Senha
+                            <div class="mb-4" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
                                 <label class="block text-gray-700 font-semibold mb-2" for="password">Nova Senha</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
-                                       type="password" id="password" name="password" placeholder="Deixe em branco para manter a senha atual" />
+                                        id="password" th:field="*{password}" placeholder="Deixe em branco para manter a senha atual" />
                                 <small class="text-gray-500">A senha precisa ter ao menos 8 caracteres.</small>
+                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                             </div>
+                            <div th:else class="mb-4">
+                                <input type="hidden" id="password" th:field="*{password}"  />
+                            </div>
+                            -->
+
                             <!-- Aceita seguidores -->
                             <div class="mb-4 flex items-center">
-                                <label class="block text-gray-700 font-semibold mr-4" for="acceptsFollowers">Aceita Seguidores?</label>
+                                <label class="block text-gray-700 font-semibold mr-4" for="acceptsFollowers">Aceita Seguidores</label>
                                 <input class="form-checkbox h-5 w-5 text-blue-600"
-                                       type="checkbox" id="acceptsFollowers" name="acceptsFollowers" th:checked="${photographer.acceptsFollowers}" />
+                                       type="checkbox" id="acceptsFollowers" th:field="*{acceptsFollowers}" />
                             </div>
 
-                            <!-- Campo isBlock (visível somente para admins) -->
-                            <div th:if="${loggedPhotographer.isAdmin}" class="mb-4 flex items-center">
-                                <label class="block text-gray-700 font-semibold mr-4" for="isBlock">Bloqueado?</label>
-                                <input class="form-checkbox h-5 w-5 text-red-600"
-                                       type="checkbox" id="isBlock" name="isBlock" th:checked="${photographer.isBlock}" />
+                            <!-- Administrador (somente para admins) -->
+                            <div th:if="${session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id}" class="mb-4 flex items-center">
+                                <label class="block text-gray-700 font-semibold mr-4" for="isAdmin">Administrador</label>
+                                <input class="form-checkbox h-5 w-5 text-blue-600"
+                                       type="checkbox" id="isAdmin" th:field="*{Admin}" />
+                            </div>
+                            <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
+                                <input type="hidden" id="Admin" th:field="*{Admin}"  />
                             </div>
 
-                            <!-- Botões de ação -->
-                            <div class="flex space-x-4">
-                                <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500" type="submit">Salvar Alterações</button>
-                                <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500" type="reset">Redefinir</button>
+                            <!-- Bloqueado (somente para admins) -->
+                            <div th:if="${session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id}" class="mb-4 flex items-center">
+                                <label class="block text-gray-700 font-semibold mr-4" for="isBlocked">Bloqueado</label>
+                                <input class="form-checkbox h-5 w-5 text-blue-600"
+                                       type="checkbox" id="isBlocked" th:field="*{Blocked}" />
+                            </div>
+                            <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
+                                <input type="hidden" id="isBlocked" th:field="*{Blocked}"  />
+                            </div>
+
+                            <!-- Botão de submissão -->
+                            <div class="mt-6">
+                                <button type="submit" class="px-4 py-2 text-white font-semibold rounded bg-gray-700 hover:bg-gray-800">
+                                    Atualizar Perfil
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
+                <div class="flex justify-center items-center w-3/4 bg-red-200 text-red-600 w-full p-4 rounded text-center border border-gray-100 rounded-lg mt-4" role="alert" th:if="${error}" th:text="${error}"></div>
+                <div class="flex justify-center items-center w-3/4 bg-green-200 text-green-600 w-full p-4 rounded text-center border border-gray-100 rounded-lg  mt-4" role="alert" th:if="${success}" th:text="${success}"></div>
             </div>
         </div>
     </div>
