@@ -27,4 +27,6 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
     List<Photographer> findAllByOrderByIdAsc();
     @Query("SELECT p.photos FROM Photographer p WHERE p.id = :id")
     List<Photo> findAllPhotos(@Param("id") Long id);
+    @Query("SELECT p FROM Photographer p WHERE p.id = :id AND p.email = :email")
+    Optional<Photographer> findPhotographerByIdAndEmail(@Param("id") Long id, @Param("email") String email);
 }

@@ -7,7 +7,7 @@ layout:decorate="~{layout/layout}">
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="overflow-auto max-h-[700px] max-w-[1500px] mx-auto p-4">
+        <div class="overflow-auto max-w-full max-h-screen mx-auto p-4">
         <div class="flex justify-center items-center w-3/4 bg-red-200 text-red-600 w-full p-4 rounded text-center border border-gray-100 rounded-lg" role="alert" th:if="${error}" th:text="${error}"></div>
         <div th:if="!${error}">
             <div class="w-full flex justify-between items-center mb-3 mt-1 pl-3">
@@ -98,7 +98,7 @@ layout:decorate="~{layout/layout}">
                                 </td>
                             </form>                                                 
                             <td class="p-4 py-5 text-sm ">
-                                <a th:href="@{showProfile/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Acessar</a>
+                                <a th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Editar</a>
                             </td>
                         </tr>
                     </tbody>

@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExistsUpdate;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowers;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
 import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
@@ -28,40 +29,7 @@ public class PhotographerService {
     }
 
     public Photographer findById(Long id){
-        // Vai ser arrumado depois.
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
-    }
-    public Photographer update(Long id,Photographer updatedPhotographer) throws Exception{
-        Photographer existPhotographer = repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
-        String name = updatedPhotographer.getFirstName();
-        String email = existPhotographer.getEmail();
-
-        if(name != null){
-            if(name.isBlank() || name.length() < 2 || name.length() > 100){
-                throw new Exception("Name is invalid");
-            }
-            existPhotographer.setFirstName(updatedPhotographer.getFirstName());
-        }
-
-        // verificar caso de problema ao atualizar o usuario com o mesmo email
-        if(email != null){
-            if(!email.isBlank() || email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")){
-                    //Photographer photographerWithSameEmail = repository.findByEmail(email).orElseThrow(() -> new Exception("Photographer not found"));
-                    if(repository.findByEmail(email).isEmpty()){
-                        existPhotographer.setEmail(email);
-                    }
-                    else {
-                        throw new Exception("Email already exists");
-                    }
-            }
-            else {
-                throw new Exception("Email is invalid");
-            }
-        }
-        else {
-            throw new Exception("Email is null");
-        }
-        return repository.save(existPhotographer);
     }
 
     public List<Photographer> findAllPhotographers(){
@@ -88,18 +56,27 @@ public class PhotographerService {
         return photographers;
     }
 
-
-    public Photographer readById(Long id)throws Exception{
-        return repository.findById(id).orElseThrow(() -> new Exception("Photographer not found"));
+    public void updatePhotographer(Photographer photographer) {
+        if(isEmailAlreadyRegistered(photographer.getEmail()) && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())){
+            throw new EmailAlreadyExistsUpdate(photographer.getId());
+        }
+        repository.save(photographer);
     }
 
-    //codigo para ser otimizado depois
-    public Photographer readByEmail(String email)throws Exception{
-        return repository.findByEmail(email).orElseThrow(() -> new Exception("Photographer not found"));
+    private boolean isEmailAlreadyRegistered(String email) {
+        return repository.findByEmail(email).isPresent();
+    }
+
+    private boolean isEmailOfPhotographer(String email, Long id) {
+        return repository.findPhotographerByIdAndEmail(id, email).isPresent();
     }
 
 
-    public void delete(Long id)throws Exception{
+    public Photographer findByEmail(String email)throws Exception{
+        return repository.findByEmail(email).orElseThrow(() -> new Exception("Fotógrafo não encontrado"));
+    }
+
+    public void deleteById(Long id)throws Exception{
         repository.deleteById(id);
     }
 
@@ -124,19 +101,7 @@ public class PhotographerService {
     public List<Photo> findAllPhotos(Long id){
         return repository.findAllPhotos(id);
     }
-    
 
-
-    //     if(photographer.isPresent()){
-    //         if(photographer.get().isBlocked()){ {
-    //             photographer.get().setBlocked(false);
-    //         }
-    //         else {
-    //             photographer.get().setBlocked(true);
-    //         }
-    //     }
-
-    // }
 
 
 }

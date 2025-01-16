@@ -3,8 +3,11 @@ package br.edu.ifpb.pweb2.flashg.controller;
 import java.util.List;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
+import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("")
@@ -113,22 +117,6 @@ public class FacadeController {
         return mav;
     }
 
-    @GetMapping("/logout")
-    public ModelAndView logout(ModelAndView mav, HttpSession session) {
-        facadeService.logoutPhotographer(session);
-        mav.setViewName("redirect:/auth/signin");
-        return mav;
-    } 
-
-    @PostMapping(value = "/blockAction")
-    public ModelAndView blockAction(ModelAndView mav, @RequestParam("id") Long id) {
-        //facadeService.handleBlockAction(loggedPhotographer.getId(), id);
-        //session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
-        facadeService.handleBlockAction(id);
-        mav.setViewName("redirect:/showAllPhotographers");
-        return mav;
-    }
-
     @GetMapping(value = "/uploadPhotos")
     public ModelAndView uploadPage(ModelAndView mav) {
         mav.addObject("photo", new Photo());
@@ -148,5 +136,64 @@ public class FacadeController {
         return mav;
     }
 
+    @PostMapping(value = "/blockAction")
+    public ModelAndView blockAction(ModelAndView mav, @RequestParam("id") Long id) {
+        //facadeService.handleBlockAction(loggedPhotographer.getId(), id);
+        //session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
+        facadeService.handleBlockAction(id);
+        mav.setViewName("redirect:/showAllPhotographers");
+        return mav;
+    }
+
+    @GetMapping(value="/showEditProfilePhotographer/{id}")
+    public ModelAndView editProfilePhotographer(ModelAndView mav, @PathVariable("id") Long id) {
+        Photographer photographer = facadeService.findByIdPhotographer(id);
+        mav.addObject("photographer", photographer);
+        mav.setViewName("application/editProfilePhotographer");
+        return mav;
+    }
+
+
+    @PostMapping(value="/editProfilePhotographer")
+    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result, HttpSession session , RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (result.hasErrors()) {
+            mav.addObject("photographer", photographer);
+            mav.setViewName("application/editProfilePhotographer");
+            return mav;
+        }
+
+        // Faz o update do cara
+        facadeService.updatePhotographer(photographer);
+
+        // Resgata o fotógrafo que acabou de realizar o update
+        Photographer updatedLoggedPhotographer = facadeService.findByIdPhotographer(photographer.getId());
+
+        // Resgata o fotógrafo da sessão
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+
+        // Resgata o fotógrafo da sessão atualizado com o update
+        Photographer updatedLoggedPhotographerSession = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+
+        // Atualiza o fotógrafo da sessão
+        session.setAttribute("loggedPhotographer", updatedLoggedPhotographerSession);
+
+        //mav.addObject("photographer", updatedLoggedPhotographer);
+        redirectAttributes.addFlashAttribute("success", "Perfil atualizado com sucesso!");
+
+        long id = updatedLoggedPhotographer.getId();
+        mav.setViewName("redirect:/showEditProfilePhotographer/" + id );
+
+        return mav;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout(ModelAndView mav, HttpSession session) {
+        facadeService.logoutPhotographer(session);
+        mav.setViewName("redirect:/auth/signin");
+        return mav;
+    }
 }
 

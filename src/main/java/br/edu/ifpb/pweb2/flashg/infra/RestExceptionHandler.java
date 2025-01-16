@@ -3,6 +3,8 @@ package br.edu.ifpb.pweb2.flashg.infra;
 import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.*;
+import br.edu.ifpb.pweb2.flashg.service.PhotographerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,6 +12,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @Autowired
+    private PhotographerService photographerService;
 
     @ExceptionHandler(NotFoundPhotoException.class)
     private ModelAndView handlerNotFoundPhotoException(NotFoundPhotoException ex) {
@@ -88,7 +93,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return mav;
     }
 
-
+    @ExceptionHandler(EmailAlreadyExistsUpdate.class)
+    private ModelAndView handlerEmailAlreadyExistsUpdate(EmailAlreadyExistsUpdate ex) {
+        ModelAndView mav = new ModelAndView();
+        Long photographerId = ex.getPhotographerId();
+        Photographer photographerParam = photographerService.findById(photographerId);
+        mav.setViewName("application/editProfilePhotographer");
+        mav.addObject("photographer", photographerParam);
+        mav.addObject("error", ex.getMessage());
+        return mav;
+    }
 
 }
 
