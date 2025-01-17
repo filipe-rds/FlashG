@@ -14,3 +14,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+// Função para atualizar o preview da imagem
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+        const output = document.getElementById('avatar-preview');
+        output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+// // Função para confirmar o upload (simples placeholder para implementação futura)
+// function confirmUpload() {
+//     alert('Alteração confirmada! A foto será atualizada.');
+//     // Lógica para envio do formulário ou requisição aqui
+// }

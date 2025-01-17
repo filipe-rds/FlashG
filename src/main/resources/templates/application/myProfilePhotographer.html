@@ -52,15 +52,56 @@
 
         <!-- Avatar -->
         <div class="w-full md:w-1/4 p-4 text-center">
-          <div class="relative mt-8">
-            <img
-                    class="h-40 w-40 rounded-full object-cover mx-auto"
-                    alt="Avatar do fotógrafo"
-                    src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" />
+          <div class="relative mt-8" data-dialog-target="dialog-avatar">
+            <img th:src="${photographer.profilePictureUrl}" class="h-40 w-40 rounded-full object-cover mx-auto" alt="Avatar do fotógrafo"/>
+<!--            <img th:if="${photographer.profilePicture != null and !photographer.profilePicture.length == 0}"-->
+<!--                 th:src="${profileAvatar}"-->
+<!--                 class="h-40 w-40 rounded-full object-cover mx-auto"-->
+<!--                 alt="Avatar do fotógrafo" />-->
           </div>
         </div>
       </div>
     </div>
+
+    <!--  dialog para  alterar o avatar -->
+    <div data-dialog-backdrop="dialog-avatar" data-dialog-backdrop-close="true"
+         class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+      <div class="relative flex flex-col md:flex-row items-center gap-6 m-4 w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg" role="dialog" th:data-dialog="dialog-avatar">
+
+        <!-- Avatar Preview -->
+        <div class="text-center flex flex-col items-center gap-4">
+          <div class="relative">
+            <img
+                    id="avatar-preview"
+                    th:src="${photographer.profilePictureUrl}"
+                    class="h-40 w-40 rounded-full object-cover border border-gray-300"
+                    alt="Avatar do fotógrafo"
+            />
+          </div>
+          <span class="text-sm text-gray-600">Pré-visualização da foto</span>
+        </div>
+
+        <!-- Upload & Confirm Section -->
+        <form th:action="@{/myProfile}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center gap-6 w-full">
+          <!-- Upload -->
+          <label for="avatar" class="flex flex-col items-center gap-2 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-gray-500 stroke-gray-700" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="text-gray-600 font-medium">Upload Foto</span>
+          </label>
+          <input type="file" class="hidden" id="avatar" th:name="avatar" accept="image/*" required
+                 onchange="previewImage(event)" />
+
+          <!-- Confirm Button -->
+          <button type="submit" class="px-6 py-2 rounded-lg bg-gray-800 text-white font-semibold hover:bg-gray-900 transition">
+            Confirmar Alteração
+          </button>
+        </form>
+      </div>
+    </div>
+
+
 
 
     <div th:if="${photos}" class="overflow-auto mx-auto p-4">
@@ -86,7 +127,7 @@
                  th:data-dialog="'image-dialog-' + ${iterStat.index}">
               <div class="flex items-center justify-between p-4">
                 <div class="flex items-center">
-                  <img src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg"
+                  <img th:src="${photographer.profilePictureUrl}"
                        alt="foto-perfil"
                        class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
                   <div class="pl-1 -mt-px flex flex-col">

@@ -32,8 +32,11 @@ public class FacadeController {
     }
 
     @GetMapping(value = "/home")
-    public ModelAndView home(ModelAndView mav) {
+    public ModelAndView home(ModelAndView mav, HttpSession session) {
         mav.setViewName("home");
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        loggedPhotographer.setProfilePictureUrl(facadeService.convertAvatarToBase64(loggedPhotographer));
+        session.setAttribute("loggedPhotographer", loggedPhotographer);
         return mav;
     }
 
@@ -60,6 +63,7 @@ public class FacadeController {
         Photographer searchedPhotographer = facadeService.findByIdPhotographer(id);
         String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
         List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
+        searchedPhotographer.setProfilePictureUrl(facadeService.convertAvatarToBase64(searchedPhotographer));
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
         mav.addObject("photographer", searchedPhotographer);
@@ -72,6 +76,7 @@ public class FacadeController {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
+        myProfile.setProfilePictureUrl(facadeService.convertAvatarToBase64(myProfile));
         session.setAttribute("loggedPhotographer", myProfile);
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", myProfile);
@@ -195,5 +200,17 @@ public class FacadeController {
         mav.setViewName("redirect:/auth/signin");
         return mav;
     }
+
+    @PostMapping(value = "/myProfile")
+    public ModelAndView handleProfileAvatar(ModelAndView mav, @RequestParam("avatar") MultipartFile file, HttpSession session) throws Exception {
+        if (file.isEmpty()) {
+            mav.setViewName("redirect:/myProfile");
+        }
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        facadeService.updateAvatar(loggedPhotographer,file);
+        mav.setViewName("redirect:/myProfile");
+        return mav;
+    }
+
 }
 

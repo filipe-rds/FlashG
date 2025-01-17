@@ -19,5 +19,6 @@ public class SessionService {
 
     public void logoutPhotographer(HttpSession session) {
         session.removeAttribute("loggedPhotographer");
+        session.removeAttribute("profileAvatar");
     }
 }

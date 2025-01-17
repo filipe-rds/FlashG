@@ -38,6 +38,11 @@ public class Photographer {
     @Size(min = 8, max = 64)
     private String password;
 
+    private byte[] profilePicture;
+
+    @Transient
+    private String profilePictureUrl;
+
     @Column(nullable = false)
     private boolean acceptsFollowers = true;
 

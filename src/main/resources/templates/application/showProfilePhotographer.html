@@ -76,7 +76,7 @@
                         <img
                                 class="h-40 w-40 rounded-full object-cover mx-auto"
                                 alt="Avatar do fotógrafo"
-                                src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" />
+                                th:src="${photographer.profilePictureUrl}" />
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                              th:data-dialog="'image-dialog-' + ${iterStat.index}">
                             <div class="flex items-center justify-between p-4">
                                 <div class="flex items-center">
-                                    <img src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg"
+                                    <img th:src="${photographer.profilePictureUrl}"
                                          alt="foto-perfil" class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
                                     <div class="pl-1 -mt-px flex flex-col">
                                         <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"

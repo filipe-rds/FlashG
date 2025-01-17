@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -196,6 +197,14 @@ public class FacadeService {
         return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
     }
 
+    public String convertAvatarToBase64(Photographer photographer) {
+        if(photographer.getProfilePicture() == null){
+            return "https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg";
+        }
+        return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photographer.getProfilePicture());
+    }
+
+
     public List<Photo> showPhotos(Long id){
         Photographer photographer = photographerService.findById(id);
         List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
@@ -211,5 +220,13 @@ public class FacadeService {
     public void updatePhotographer(Photographer photographer){
         photographerService.updatePhotographer(photographer);
     }
-    
+
+    public Photographer updateAvatar(Photographer photographer,MultipartFile file) throws IOException {
+        photographer.setProfilePicture(file.getBytes());
+        photographerService.updatePhotographer(photographer);
+        //photographer.setProfilePictureUrl(convertAvatarToBase64(file.getBytes()));
+
+        return photographer;
+    }
+
 }
