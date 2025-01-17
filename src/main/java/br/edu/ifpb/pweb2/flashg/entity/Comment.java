@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,9 +21,10 @@ public class Comment {
     @Column(nullable = false, length = 255)
     private String commentText;
 
-    @Column(nullable = false)
+    @Column(nullable = false) 
     private LocalDateTime createdAt;
 
+    //@JsonManagedReference
     @ManyToOne
     @JoinColumn(nullable = false)
     private Photographer photographer;

@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,6 +54,7 @@ public class Photographer {
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Comment> comments;
 

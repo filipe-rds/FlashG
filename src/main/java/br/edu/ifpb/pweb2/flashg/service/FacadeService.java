@@ -3,11 +3,13 @@ package br.edu.ifpb.pweb2.flashg.service;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.edu.ifpb.pweb2.flashg.entity.Comment;
 import br.edu.ifpb.pweb2.flashg.entity.Follow;
 import br.edu.ifpb.pweb2.flashg.entity.FollowId;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
@@ -34,8 +36,8 @@ public class FacadeService {
     @Autowired
     private PhotoService photoService;
 
-
-
+    @Autowired
+    private CommentService comentarioService;
 
     public List<Photographer> findByUsernameStartingWith(String nome){
 
@@ -211,5 +213,23 @@ public class FacadeService {
     public void updatePhotographer(Photographer photographer){
         photographerService.updatePhotographer(photographer);
     }
+
+    public Photo findPhotoById(Long id){
+
+         Photo p = photoService.FindById(id);
+
+         return p;
+
+    }
+
+    public void saveComentario(Comment comment){
+        comentarioService.save(comment);
+    }
+
+    public List<Comment> findAllCommentOfPhoto(Photo photo){
+        return comentarioService.findByPhotoOrderByCreatedAtDesc(photo);
+    }
+
+
     
 }

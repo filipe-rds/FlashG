@@ -19,8 +19,8 @@ public class PhotoService {
         return repository.findAll();
     }
 
-    public Optional<Photo> FindById(Long id){
-        return repository.findById(id);
+    public Photo FindById(Long id){
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Foto não encontrada"));
     }
 
     public Photo save(Photo photo){
