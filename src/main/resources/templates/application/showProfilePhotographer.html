@@ -70,12 +70,11 @@
                 </div>
 
                 <!-- Avatar -->
-                <div class="w-full md:w-1/4 p-4 text-center">
-                    <div class="relative mt-8">
-                        <img
-                                class="h-40 w-40 rounded-full object-cover mx-auto"
-                                alt="Avatar do fotógrafo"
-                                th:src="${photographer.profilePictureUrl}" />
+                <div class="w-full h-full md:w-1/4 text-center">
+                    <div class="relative mt-8 cursor-pointer">
+                        <img class="h-50 w-50 rounded-full object-cover mx-auto"
+                             alt="Avatar do fotógrafo"
+                             th:src="${photographer.profilePictureUrl}"/>
                     </div>
                 </div>
             </div>
@@ -101,7 +100,7 @@
                     <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
                          data-dialog-backdrop-close="true"
                          class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-                        <div class="relative m-4 w-4/5 h-[80vh] flex rounded-lg bg-white shadow-sm" role="dialog"
+                        <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
                              th:data-dialog="'image-dialog-' + ${iterStat.index}">
 
                             <!-- Main Content -->
