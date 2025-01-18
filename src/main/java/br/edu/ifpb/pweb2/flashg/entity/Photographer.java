@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,7 +43,7 @@ public class Photographer {
 
     private byte[] profilePicture;
 
-    @Transient
+    @Column(columnDefinition = "TEXT")
     private String profilePictureUrl;
 
     @Column(nullable = false)
@@ -55,6 +58,7 @@ public class Photographer {
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Comment> comments;
 

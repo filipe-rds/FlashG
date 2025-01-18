@@ -34,6 +34,8 @@ public class AuthService {
             throw new UsernameAlreadyExists();
         }
 
+        photographer.setProfilePictureUrl("https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg");
+
         return this.photographerRepository.save(photographer);
     }
 

@@ -97,7 +97,7 @@
                 </div>
                 <!-- Dialog foto -->
                 <div th:each="photo, iterStat : ${photos}">
-                    <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+                    <div th:id="'dialog-' + ${iterStat.index}" th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
                          data-dialog-backdrop-close="true"
                          class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
                         <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
@@ -123,7 +123,7 @@
                                 <!-- Image -->
                                 <div class="relative border-b border-t border-blue-gray-100 my-4">
                                     <img th:alt="${photo.title}" class="object-scale-down h-[30rem] w-full object-cover object-center"
-                                         th:src="${photo.imageUrl}"/>
+                                         th:src="${photo.imageUrl}" />
                                 </div>
 
                                 <!-- Title -->
@@ -141,7 +141,7 @@
                                         </div>
                                         <div>
                                             <p class="text-slate-500 text-sm">Comentários</p>
-                                            <p class="text-slate-800 font-medium">y</p>
+                                            <p th:id="'sizeComment-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
                                         </div>
                                     </div>
                                     <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
@@ -155,51 +155,36 @@
 
                             <!-- Comments Section -->
                             <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
-                                <div class="overflow-y-auto flex-grow h-0">
+                                <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
                                     <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
                                     <!-- Comentários fictícios -->
 
-                                    <!--                  <div th:each="comment : ${photo.comments}" class="mb-4">-->
-                                    <!--                    <div class="flex items-start gap-3">-->
-                                    <!--                      <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">-->
-                                    <!--                      <div>-->
-                                    <!--                        <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>-->
-                                    <!--                        <p th:text="${comment.commentText}" class="text-sm text-slate-600"></p>-->
-                                    <!--                      </div>-->
-                                    <!--                    </div>-->
-                                    <!--                  </div>-->
-
-                                    <div class="mb-4">
+                                    <div th:each="comment : ${photo.comments}" class="mb-4">
                                         <div class="flex items-start gap-3">
-                                            <img src="https://via.placeholder.com/40" alt="perfil" class="h-8 w-8 rounded-full object-cover">
+                                            <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
                                             <div>
-                                                <p class="text-sm font-medium text-slate-800">Carlos Lima</p>
-                                                <p class="text-sm text-slate-600">Essa paisagem é simplesmente surreal. Parabéns!</p>
+                                                <div class="flex flex-row justify-between gap-6">
+                                                    <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
+                                                    <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
+                                                </div>
+                                                <p th:text="${comment.commentText}" class="text-sm text-slate-600"></p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="mb-4">
-                                        <div class="flex items-start gap-3">
-                                            <img src="https://via.placeholder.com/40" alt="perfil" class="h-8 w-8 rounded-full object-cover">
-                                            <div>
-                                                <p class="text-sm font-medium text-slate-800">Carlos Lima</p>
-                                                <p class="text-sm text-slate-600">Essa paisagem é simplesmente surreal. Parabéns!</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="flex items-start gap-3">
-                                            <img src="https://via.placeholder.com/40" alt="perfil" class="h-8 w-8 rounded-full object-cover">
-                                            <div>
-                                                <p class="text-sm font-medium text-slate-800">Carlos Lima</p>
-                                                <p class="text-sm text-slate-600">Essa paisagem é simplesmente surreal. Parabéns!</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
-                                <form class="mt-4">
-                                    <textarea placeholder="Escreva seu comentário..." class="w-full p-2 rounded-md border text-sm"></textarea>
+                                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
+                  <textarea
+                          th:id="'textArea-' + ${iterStat.index}"
+                          placeholder="Escreva seu comentário..."
+                          class="w-full p-2 rounded-md border text-sm"
+                          name="commentText"
+                          th:value="${commentText}">
+                  </textarea>
+                                    <div>
+                                        <input type="hidden" id="createdAt" name="createdAt" />
+                                        <input type="hidden"  name="photo" id="photo" th:value="${photo.id}" />
+                                        <input type="hidden"  name="photographer" id="photographer" th:value="${session.loggedPhotographer.id}" />
+                                    </div>
                                     <button type="submit" class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">Enviar</button>
                                 </form>
                             </div>
@@ -212,3 +197,5 @@
 </div>
 </body>
 </html>
+
+<script th:src="@{/js/commentProcess.js}"></script>
