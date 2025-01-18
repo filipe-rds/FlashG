@@ -10,7 +10,21 @@ $("[id^='form-']").on("submit", function(event) {
     const formData = new FormData(this);  // 'this' refere-se ao formulário
 
     // Preenche o campo de data com a data e hora atual
-    const createdAt = new Date().toISOString();
+
+    // Cria uma data atual
+    const currentDate = new Date();
+
+    // Obtém o deslocamento de fuso horário do horário de Brasília (em minutos)
+    const timeZoneOffset = -180; // Brasília está a -3 horas UTC
+
+    // Ajusta a data para o fuso horário de Brasília
+    const adjustedDate = new Date(currentDate.getTime() + (timeZoneOffset * 60 * 1000));
+
+    // Converte a data ajustada para uma string ISO
+    const createdAt = adjustedDate.toISOString();
+
+    console.log(createdAt);
+
     formData.set("createdAt", createdAt);  // Adiciona ou atualiza o campo createdAt
 
     // Obtém os dados do comentário
@@ -66,7 +80,7 @@ function atualizarHTMLPosComentario(data, id) {
     textAreaElement.val('');
 
     const novoComentario = `
-        <div class="flex items-start gap-3">
+        <div class="flex items-start gap-3 mb-4">
             <img src="${data.imageUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
             <div>
                 <div class="flex flex-row justify-between gap-6">
