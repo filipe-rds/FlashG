@@ -79,7 +79,7 @@
         </div>
         <!-- Dialog foto -->
         <div th:each="photo, iterStat : ${photos}">
-          <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+          <div th:id="'dialog-' + ${iterStat.index}"   th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
                data-dialog-backdrop-close="true"
                class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
               <div class="relative m-4 w-3/4 rounded-lg bg-white shadow-sm flex" role="dialog"
@@ -126,7 +126,8 @@
                               </div>
                               <div>
                                   <p class="text-slate-500 text-sm">Comments</p>
-                                  <p class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
+                                  <!-- Identificador da quantidade de comentários -->
+                                  <p th:id="'sizeComment-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
                               </div>
                           </div>
                           <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -140,15 +141,11 @@
                           </button>
                       </div>
                   </div>
-
-
-
-      
                   <!-- Barra lateral de comentários -->
-
                   <div class="bg-gray-100 p-6">
                       <h2 class="text-lg font-bold mb-4">Commentário</h2>
-                      <div class="flex flex-col space-y-4">
+                       <!-- Identificador para comentário-->
+                      <div th:id="'listComment-' + ${iterStat.index}"  class="flex flex-col space-y-4">
                         <div th:if="${photo.comments}">
                           <div th:each="c : ${photo.comments}" th:id="'comment-' + ${c.id}">
                               <div class="bg-white p-4 rounded-lg shadow-md">
@@ -159,24 +156,7 @@
                           </div>
                       </div>                      
                           </div>
-                         <!--  <form th:id="'form-' + ${iterStat.index}" class="bg-white p-4 rounded-lg shadow-md">
-                            <h3 class="text-lg font-bold mb-2">Adicione um comentário a esta postagem.</h3>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 font-bold mb-2" for="commentText">
-                                    Comentário
-                                </label>
-                                <div>
-                                    <textarea name="commentText"
-                                              th:value="${c.commentText}"
-                                              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                              id="commentText" rows="3" placeholder="Insira seu comentário"></textarea>
-                                </div>
-                            </div>
-                            <button class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                                Submit
-                            </button>
-                        </form> -->
-
+                        <!-- Identificador do form para comentário-->
                         <form th:id="'form-' + ${iterStat.index}"  action="">
                           <h3 class="text-lg font-bold mb-2">Adicione um comentário a esta postagem.</h3>
                           <label class="block text-gray-700 font-bold mb-2" for="commentText">
@@ -186,7 +166,7 @@
                               <textarea name="commentText"
                                         th:value="${commentText}"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        id="commentText" rows="3" placeholder="Insira seu comentário">
+                                        th:id="'textArea-' + ${iterStat.index}" rows="3" placeholder="Insira seu comentário">
                               </textarea>
                           </div>
                           <div>
@@ -214,66 +194,4 @@
 </body>
 </html>
 
-
-<script>
-  // Seleciona o formulário com ID dinâmico
-  $("[id^='form-']").on("submit", function(event) {
-    event.preventDefault();  // Evita o envio do formulário
-
-    // Cria um objeto FormData a partir do formulário
-    const formData = new FormData(this);  // 'this' refere-se ao formulário
-
-    // Preenche o campo de data com a data e hora atual
-    const createdAt = new Date().toISOString();
-    formData.set("createdAt", createdAt);  // Adiciona ou atualiza o campo createdAt
-
-    // Obtém os dados do comentário
-    const commentText = formData.get("commentText");
-    console.log(commentText);
-    const commentDate = new Date().toLocaleString();  // Data do comentário
-    const photographerId = formData.get("photographer");  // ID do fotógrafo
-    console.log(photographerId);
-    const photoId = formData.get("photo");  // ID da foto
-
-    // Prepara os dados para o envio via AJAX
-    const data = {
-      commentText: commentText,
-      createdAt: createdAt,
-      photographer: photographerId,  // Envia o ID do fotógrafo
-      photo: photoId,  // Envia o ID da foto
-    };
-
-    // Envia os dados via AJAX (usando jQuery)
-    $.ajax({
-      url: '/FlashG/addComment',
-      method: 'POST',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-      success: function(response) {
-        // Aqui você pode tratar a resposta do backend, se necessário
-        console.log('Comentário enviado com sucesso:', response);
-
-        // Cria o novo comentário dinamicamente (caso queira mostrar imediatamente na página)
-        const commentContainer = $("<div>", { class: "bg-white p-4 rounded-lg shadow-md", id: "comment-" + response.commentId });
-
-        //const commentHeader = $("<h3>", { class: "text-lg font-bold", text: photographerName });
-        const commentDateText = $("<p>", { class: "text-gray-700 text-sm mb-2", text: commentDate });
-        const commentBody = $("<p>", { class: "text-gray-700", text: commentText });
-
-        // Adiciona o comentário ao container
-        commentContainer.append(commentHeader, commentDateText, commentBody);
-
-        // Adiciona o comentário ao início da lista de comentários
-        $("#commentSection").prepend(commentContainer);
-
-        // Limpa o campo de comentário
-        formData.set("commentText", "");  // Limpa o campo de comentário
-      },
-      error: function(xhr, status, error) {
-        console.log('Resposta do servidor:', xhr.responseText);
-        console.log(error);
-        console.error('Erro ao enviar o comentário:', error);
-      }
-    });
-  });
-</script>
+<script th:src="@{/js/commentProcess.js}"></script>

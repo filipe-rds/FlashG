@@ -221,7 +221,6 @@ public class FacadeController {
     comment.setPhotographer(photographer );
     comment.setPhoto(photo);
     facadeService.saveComentario(comment);
-
     facadeService.findAllCommentOfPhoto(photo);
     Photo photoBanco = facadeService.findPhotoById(photo.getId());
     CommentDTO commentDTO = new CommentDTO(comment.getCommentText(), comment.getCreatedAt(), comment.getPhotographer().getUsername(),photoBanco.getComments().size()); 
