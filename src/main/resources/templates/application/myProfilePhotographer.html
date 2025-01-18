@@ -179,8 +179,8 @@
                   <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
                   <!-- Comentários fictícios -->
 
-                  <div th:each="comment : ${photo.comments}" class="mb-4">
-                    <div class="flex items-start gap-3">
+                  <div th:each="comment : ${photo.comments}">
+                    <div class="flex items-start gap-3 mb-4">
                       <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
                       <div>
                         <div class="flex flex-row justify-between gap-6">
