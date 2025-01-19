@@ -8,7 +8,6 @@
 <div layout:fragment="content">
     <div th:if="${photographer}" class="overflow-auto max-w-full max-h-screen">
 
-
         <div class="bg-gray-100 h-auto px-12 lg:px-48 py-8">
             <div class="flex md:flex-row-reverse flex-wrap">
                 <!-- Informações do usuário -->
@@ -71,12 +70,11 @@
                 </div>
 
                 <!-- Avatar -->
-                <div class="w-full md:w-1/4 p-4 text-center">
+                <div class="w-full h-full md:w-1/4 text-center">
                     <div class="relative mt-8">
-                        <img
-                                class="h-40 w-40 rounded-full object-cover mx-auto"
-                                alt="Avatar do fotógrafo"
-                                src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg" />
+                        <img class="h-40 w-40 rounded-full object-cover mx-auto"
+                             alt="Avatar do fotógrafo"
+                             th:src="${photographer.profilePictureUrl}"/>
                     </div>
                 </div>
             </div>
@@ -99,61 +97,96 @@
                 </div>
                 <!-- Dialog foto -->
                 <div th:each="photo, iterStat : ${photos}">
-                    <div th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}" data-dialog-backdrop-close="true"
+                    <div th:id="'dialog-' + ${iterStat.index}" th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+                         data-dialog-backdrop-close="true"
                          class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-                        <div class="relative m-4 w-2/4 rounded-lg bg-white shadow-sm" role="dialog"
+                        <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
                              th:data-dialog="'image-dialog-' + ${iterStat.index}">
-                            <div class="flex items-center justify-between p-4">
-                                <div class="flex items-center">
-                                    <img src="https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg"
-                                         alt="foto-perfil" class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
-                                    <div class="pl-1 -mt-px flex flex-col">
-                                        <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"
-                                           class="text-sm text-slate-800 font-medium"></p>
-                                        <p th:text="'@'+ ${photographer.username}"
-                                           class="text-xs font-normal text-slate-500"></p>
+
+                            <!-- Main Content -->
+                            <div class="flex flex-col justify-between flex-1 p-4 overflow-hidden">
+                                <!-- Header -->
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img th:src="${photographer.profilePictureUrl}"
+                                             alt="foto-perfil"
+                                             class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
+                                        <div class="pl-1 -mt-px flex flex-col">
+                                            <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"
+                                               class="text-sm text-slate-800 font-medium"></p>
+                                            <p th:text="'@'+ ${photographer.username}"
+                                               class="text-xs font-normal text-slate-500"></p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex items-center">
-                                    <button class="rounded-md border border-transparent p-2.5 text-center text-sm transition-all text-slate-600 hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                            type="button">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                             class="w-4 h-4">
-                                            <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001Z" />
+
+                                <!-- Image -->
+                                <div class="relative border-b border-t border-blue-gray-100 my-4">
+                                    <img th:alt="${photo.title}" class="object-scale-down h-[30rem] w-full object-cover object-center"
+                                         th:src="${photo.imageUrl}" />
+                                </div>
+
+                                <!-- Title -->
+                                <h1 class="text-xl font-semibold text-slate-800 text-center" th:text="${photo.title}"></h1>
+
+                                <!-- Description -->
+                                <p class="text-sm text-slate-600 text-center mt-2" th:text="${photo.description}"></p>
+
+                                <!-- Footer -->
+                                <div class="flex shrink-0 flex-wrap items-center justify-between mt-4 text-blue-gray-500">
+                                    <div class="flex items-center gap-16">
+                                        <div>
+                                            <p class="text-slate-500 text-sm">Curtidas</p>
+                                            <p class="text-slate-800 font-medium">x</p>
+                                        </div>
+                                        <div>
+                                            <p class="text-slate-500 text-sm">Comentários</p>
+                                            <p th:id="'sizeComment-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
+                                        </div>
+                                    </div>
+                                    <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                            <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
                                         </svg>
+                                        <a>Curtir</a>
                                     </button>
                                 </div>
                             </div>
-                            <div class="relative border-b border-t border-b-blue-gray-100 border-t-blue-gray-100 p-0 font-sans text-base font-light leading-relaxed text-blue-gray-500 antialiased">
-                                <img th:alt="${photo.title}" class="object-scale-down h-[30rem] w-full object-cover object-center"
-                                     th:src="${photo.imageUrl}" />
-                            </div>
-                            <div class="text-center p-4">
-                                <h1 class="text-xl font-semibold text-slate-800" th:text="${photo.title}"></h1>
-                            </div>
-                            <div class="text-center p-4">
-                                <p class="text-sm text-slate-600" th:text="${photo.description}"></p>
-                            </div>
-                            <div class="flex shrink-0 flex-wrap items-center justify-between p-4 text-blue-gray-500">
-                                <div class="flex items-center gap-16">
-                                    <div>
-                                        <p class="text-slate-500 text-sm">Likes</p>
-                                        <p class="text-slate-800 font-medium">x</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-slate-500 text-sm">Comments</p>
-                                        <p class="text-slate-800 font-medium">y</p>
+
+                            <!-- Comments Section -->
+                            <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
+                                <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
+                                    <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
+                                    <!-- Comentários fictícios -->
+
+                                    <div th:each="comment : ${photo.comments}">
+                                        <div class="flex items-start gap-3 mb-4">
+                                            <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
+                                            <div>
+                                                <div class="flex flex-row justify-between gap-6">
+                                                    <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
+                                                    <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
+                                                </div>
+                                                <p th:text="${comment.commentText}" class="text-sm text-slate-600"></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <button class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                        type="button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                         aria-hidden="true" class="h-4 w-4 mr-1.5">
-                                        <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z"
-                                              clip-rule="evenodd"></path>
-                                    </svg>
-                                    Share
-                                </button>
+                                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
+                  <textarea
+                          th:id="'textArea-' + ${iterStat.index}"
+                          placeholder="Escreva seu comentário..."
+                          class="w-full p-2 rounded-md border text-sm"
+                          name="commentText"
+                          th:value="${commentText}">
+                  </textarea>
+                                    <div>
+                                        <input type="hidden" id="createdAt" name="createdAt" />
+                                        <input type="hidden"  name="photo" id="photo" th:value="${photo.id}" />
+                                        <input type="hidden"  name="photographer" id="photographer" th:value="${session.loggedPhotographer.id}" />
+                                    </div>
+                                    <button type="submit" class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">Enviar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -164,3 +197,5 @@
 </div>
 </body>
 </html>
+
+<script th:src="@{/js/commentProcess.js}"></script>

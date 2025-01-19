@@ -1,17 +1,15 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import br.edu.ifpb.pweb2.flashg.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.edu.ifpb.pweb2.flashg.entity.Follow;
-import br.edu.ifpb.pweb2.flashg.entity.FollowId;
-import br.edu.ifpb.pweb2.flashg.entity.Photo;
-import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,13 +32,13 @@ public class FacadeService {
     @Autowired
     private PhotoService photoService;
 
+    @Autowired
+    private CommentService commentService;
 
 
 
     public List<Photographer> findByUsernameStartingWith(String nome){
-
         return photographerService.findByUsernameStartingWith(nome);
-    
     }
 
     public Photographer findByIdPhotographer(Long id){
@@ -196,6 +194,14 @@ public class FacadeService {
         return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
     }
 
+    public String convertAvatarToBase64(Photographer photographer) {
+        if(photographer.getProfilePicture() == null){
+            return "https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg";
+        }
+        return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photographer.getProfilePicture());
+    }
+
+
     public List<Photo> showPhotos(Long id){
         Photographer photographer = photographerService.findById(id);
         List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
@@ -211,5 +217,26 @@ public class FacadeService {
     public void updatePhotographer(Photographer photographer){
         photographerService.updatePhotographer(photographer);
     }
-    
+
+    public Photographer updateAvatar(Photographer photographer,MultipartFile file) throws IOException {
+        photographer.setProfilePicture(file.getBytes());
+        photographer.setProfilePictureUrl(convertAvatarToBase64(photographer));
+        photographerService.updatePhotographer(photographer);
+        return photographer;
+    }
+
+    public Photo findPhotoById(Long id){
+        Photo p = photoService.findById(id);
+        return p;
+    }
+
+    public void saveComment(Comment comment){
+        commentService.save(comment);
+    }
+
+    public List<Comment> findAllCommentOfPhoto(Photo photo){
+        return commentService.findByPhotoOrderByCreatedAtDesc(photo);
+    }
+
+
 }

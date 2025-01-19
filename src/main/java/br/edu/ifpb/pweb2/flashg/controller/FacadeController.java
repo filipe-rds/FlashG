@@ -1,11 +1,18 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
+import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
+import br.edu.ifpb.pweb2.flashg.entity.Comment;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +39,17 @@ public class FacadeController {
     }
 
     @GetMapping(value = "/home")
-    public ModelAndView home(ModelAndView mav) {
+    public ModelAndView home(ModelAndView mav, HttpSession session) {
         mav.setViewName("home");
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        session.setAttribute("loggedPhotographer", loggedPhotographer);
+        return mav;
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout(ModelAndView mav, HttpSession session) {
+        facadeService.logoutPhotographer(session);
+        mav.setViewName("redirect:/auth/signin");
         return mav;
     }
 
@@ -189,11 +205,40 @@ public class FacadeController {
         return mav;
     }
 
-    @GetMapping("/logout")
-    public ModelAndView logout(ModelAndView mav, HttpSession session) {
-        facadeService.logoutPhotographer(session);
-        mav.setViewName("redirect:/auth/signin");
+
+    @PostMapping(value = "/myProfile")
+    public ModelAndView handleProfileAvatar(ModelAndView mav, @RequestParam("avatar") MultipartFile file, HttpSession session) throws Exception {
+        if (file.isEmpty()) {
+            mav.setViewName("redirect:/myProfile");
+        }
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        facadeService.updateAvatar(loggedPhotographer,file);
+        mav.setViewName("redirect:/myProfile");
         return mav;
     }
+
+    @PostMapping(value = "/addComment")
+    public ResponseEntity<CommentDTO> addComment(@RequestBody Map<String, Object> commentData) {
+        String commentText = (String) commentData.get("commentText"); //OK
+        Long photographerId = Long.valueOf((String) commentData.get("photographer"));
+        Long photoId = Long.valueOf((String) commentData.get("photo"));
+        String createdAt = (String) commentData.get("createdAt");
+        createdAt = createdAt.replace("Z", "");
+        LocalDateTime createdAtDateTime = LocalDateTime.parse(createdAt, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        Photographer photographer = facadeService.findByIdPhotographer(photographerId);
+        Photo photo = facadeService.findPhotoById(photoId);
+        // Cria uma instância do comentário e preenche os dados
+        Comment comment = new Comment();
+        comment.setCommentText(commentText);
+        comment.setCreatedAt(createdAtDateTime);
+        comment.setPhotographer(photographer);
+        comment.setPhoto(photo);
+        facadeService.saveComment(comment);
+        facadeService.findAllCommentOfPhoto(photo);
+        Photo photoBanco = facadeService.findPhotoById(photo.getId());
+        CommentDTO commentDTO = new CommentDTO(comment.getPhotographer().getProfilePictureUrl(),comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(),photoBanco.getComments().size());
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentDTO);
+    }
+
 }
 

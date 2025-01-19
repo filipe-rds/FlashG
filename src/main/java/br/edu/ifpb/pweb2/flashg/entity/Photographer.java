@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,6 +41,11 @@ public class Photographer {
     @Size(min = 8, max = 64)
     private String password;
 
+    private byte[] profilePicture;
+
+    @Column(columnDefinition = "TEXT")
+    private String profilePictureUrl;
+
     @Column(nullable = false)
     private boolean acceptsFollowers = true;
 
@@ -50,6 +58,7 @@ public class Photographer {
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Comment> comments;
 

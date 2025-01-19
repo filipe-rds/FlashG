@@ -15,12 +15,12 @@ public class PhotoService {
     @Autowired
     private PhotoRepository repository;
 
-    public List<Photo> FindAll(){
+    public List<Photo> findAll(){
         return repository.findAll();
     }
 
-    public Optional<Photo> FindById(Long id){
-        return repository.findById(id);
+    public Photo findById(Long id){
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Foto não encontrada"));
     }
 
     public Photo save(Photo photo){
@@ -28,7 +28,6 @@ public class PhotoService {
     }
 
     public Photo create(Photo photo, MultipartFile file) throws Exception {
-//        byte[] fileData = file.getBytes();
         photo.setImageData(file.getBytes());
         photo.setImageUrl(file.getOriginalFilename());
         return repository.save(photo);

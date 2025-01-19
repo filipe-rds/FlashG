@@ -18,24 +18,24 @@
                     <div class="bg-white p-6">
                         <form th:action="@{/editProfilePhotographer}" th:object="${photographer}" method="POST">
 
-                            <div class="mb-4">
+                            <div class="mb-4 form-group">
                                 <input type="hidden" id="id" th:field="*{id}" />
                             </div>
                             <!-- Campo Username -->
-                            <div class="mb-4">
+                            <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="username">Username</label>
                                 <input class="w-full p-2 border border-gray-300 rounded "
                                        type="text" id="username" th:field="*{username}" />
                             </div>
 
                             <!-- Nome Completo -->
-                            <div class="mb-4">
+                            <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="firstName">Nome</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
                                        type="text" id="firstName" th:field="*{firstName}" />
                                 <p class="text-red-600 text-md" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="lastName">Sobrenome</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
                                        type="text" id="lastName" th:field="*{lastName}" />
@@ -43,7 +43,7 @@
                             </div>
 
                             <!-- Email -->
-                            <div class="mb-4">
+                            <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
                                        type="email" id="email" th:field="*{email}" />
@@ -52,16 +52,16 @@
 
                             <!-- Senha -->
 
-                            <div class="mb-4" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
+                            <div class="mb-4 form-group" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
                                 <div class="mb-4">
-                                    <label class="block text-gray-700 font-semibold mb-2" for="senha">Nova Senha</label>
+                                    <label class="block text-gray-700 font-semibold mb-2" for="password">Nova Senha</label>
                                     <input class="w-full p-2 border border-gray-300 rounded"
                                            id="password" th:field="*{password}" />
                                     <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                                 </div>
                             </div>
                             <div th:if="${not(!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id)}">
-                                <input type="hidden" id="password" th:field="*{password}"  />
+                                <input type="hidden"  th:field="*{password}"  />
                             </div>
 
 
@@ -92,7 +92,7 @@
                                        type="checkbox" id="isAdmin" th:field="*{Admin}" />
                             </div>
                             <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
-                                <input type="hidden" id="Admin" th:field="*{Admin}"  />
+                                <input type="hidden"  th:field="*{Admin}"  />
                             </div>
 
                             <!-- Bloqueado (somente para admins) -->
@@ -102,7 +102,7 @@
                                        type="checkbox" id="isBlocked" th:field="*{Blocked}" />
                             </div>
                             <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
-                                <input type="hidden" id="isBlocked" th:field="*{Blocked}"  />
+                                <input type="hidden"  th:field="*{Blocked}"  />
                             </div>
 
                             <!-- Botão de submissão -->
