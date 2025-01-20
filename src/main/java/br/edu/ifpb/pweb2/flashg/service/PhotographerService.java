@@ -2,14 +2,15 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExistsUpdate;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowers;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyFollowing;
-import br.edu.ifpb.pweb2.flashg.exception.NotFoundAnyPhotograferWithName;
+import br.edu.ifpb.pweb2.flashg.exception.*;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class PhotographerService {
     }
 
     public Photographer findById(Long id){
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Fotógrafo não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
     }
 
     public List<Photographer> findAllPhotographers(){
@@ -56,12 +57,25 @@ public class PhotographerService {
         return photographers;
     }
 
-    public void updatePhotographer(Photographer photographer) {
-        if(isEmailAlreadyRegistered(photographer.getEmail()) && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())){
+    public void updatePhotographer(Photographer photographer)  {
+        // Valida se o e-mail já está sendo usado por outro fotógrafo
+        if (isEmailAlreadyRegistered(photographer.getEmail())
+                && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())) {
             throw new EmailAlreadyExistsUpdate(photographer.getId());
         }
-        repository.save(photographer);
+
+        // Verifica se o fotógrafo existe antes de realizar o update
+        Photographer existingPhotographer = repository.findById(photographer.getId())
+                .orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
+
+
+        // Atualiza somente os campos que não são nulos
+        copyNonNullProperties(photographer, existingPhotographer);
+
+        // Persiste as alterações no banco de dados
+        repository.save(existingPhotographer);
     }
+
 
     private boolean isEmailAlreadyRegistered(String email) {
         return repository.findByEmail(email).isPresent();
@@ -100,6 +114,28 @@ public class PhotographerService {
 
     public List<Photo> findAllPhotos(Long id){
         return repository.findAllPhotos(id);
+    }
+
+    // Copia propriedades não nulas de um objeto de origem para um objeto de destino.
+    private void copyNonNullProperties(Object source, Object target) {
+        // Usa o método utilitário do Spring BeanUtils para copiar as propriedades,
+        // excluindo aquelas que estão nulas no objeto de origem.
+        BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
+    }
+
+    // Retorna os nomes das propriedades nulas de um objeto.
+    private String[] getNullPropertyNames(Object source) {
+        // Cria um BeanWrapper para inspecionar as propriedades do objeto fonte
+        final BeanWrapper src = new BeanWrapperImpl(source);
+
+        // Obtém a lista de todas as propriedades do objeto
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        // Filtra as propriedades que têm valor nulo e retorna seus nomes
+        return Arrays.stream(pds)
+                .filter(pd -> src.getPropertyValue(pd.getName()) == null) // Filtra as propriedades com valor nulo
+                .map(java.beans.PropertyDescriptor::getName)             // Extrai o nome da propriedade
+                .toArray(String[]::new);                                // Converte o stream em um array de strings
     }
 
 

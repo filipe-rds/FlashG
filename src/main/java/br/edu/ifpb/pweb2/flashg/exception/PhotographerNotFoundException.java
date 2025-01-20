@@ -1,6 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.exception;
 
-public class PhotographerNotFoundException extends Exception {
+public class PhotographerNotFoundException extends RuntimeException {
 
     public PhotographerNotFoundException() {
         super("Photographer not found");
