@@ -104,7 +104,7 @@
                              th:data-dialog="'image-dialog-' + ${iterStat.index}">
 
                             <!-- Main Content -->
-                            <div class="flex flex-col justify-between flex-1 p-4 overflow-hidden">
+                            <div class="flex flex-col justify-between flex-1 p-4 overflow-y-scroll">
                                 <!-- Header -->
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
@@ -168,14 +168,14 @@
                                     <!-- Comentários fictícios -->
 
                                     <div th:each="comment : ${photo.comments}">
-                                        <div class="flex items-start gap-3 mb-4">
+                                        <div class="flex items-start gap-3 mb-4 max-w-[294px]">
                                             <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
-                                            <div>
+                                            <div class="">
                                                 <div class="flex flex-row justify-between gap-6">
                                                     <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
                                                     <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
                                                 </div>
-                                                <p th:text="${comment.commentText}" class="text-sm text-slate-600"></p>
+                                                <p th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -184,10 +184,9 @@
                   <textarea
                           th:id="'textArea-' + ${iterStat.index}"
                           placeholder="Escreva seu comentário..."
-                          class="w-full p-2 rounded-md border text-sm"
+                          class="w-full p-2 rounded-md border text-sm" maxlength="512"
                           name="commentText"
-                          th:value="${commentText}">
-                  </textarea>
+                          th:value="${commentText}"></textarea>
                                     <div>
                                         <input type="hidden" id="createdAt" name="createdAt" />
                                         <input type="hidden"  name="photo" id="photo" th:value="${photo.id}" />

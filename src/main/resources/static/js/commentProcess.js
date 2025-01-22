@@ -80,14 +80,14 @@ function atualizarHTMLPosComentario(data, id) {
     textAreaElement.val('');
 
     const novoComentario = `
-        <div class="flex items-start gap-3 mb-4">
+        <div class="flex items-start gap-3 mb-4 max-w-[294px]">
             <img src="${data.imageUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
             <div>
                 <div class="flex flex-row justify-between gap-6">
                     <p class="text-sm font-medium text-slate-800">${data.photographerName}</p>
                     <p class="text-sm font-medium text-slate-800">${data.createdAt}</p>
                 </div>
-                <p class="text-sm text-slate-600">${data.commentText}</p>
+                <p class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
             </div>
         </div>
     `;

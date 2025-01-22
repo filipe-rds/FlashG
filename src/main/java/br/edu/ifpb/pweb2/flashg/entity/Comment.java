@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 512)
+    @Size(max = 512)
     private String commentText;
 
     @Column(nullable = false)
