@@ -35,6 +35,9 @@ public class FacadeService {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private LikeService LikeService;
+
 
 
     public List<Photographer> findByUsernameStartingWith(String nome){
@@ -237,6 +240,56 @@ public class FacadeService {
     public List<Comment> findAllCommentOfPhoto(Photo photo){
         return commentService.findByPhotoOrderByCreatedAtDesc(photo);
     }
+
+    public String handleLikeAction(long photoid, Long photographerid){
+        return LikeService.handleLikeAction(photoid, photographerid) ? "Descurtir" : "Curtir";
+    }
+
+    public Integer getLikeCountOfPhoto(Long idPhoto){
+        return LikeService.getLikeCount(idPhoto);
+    }
+
+
+    //public List<String> getLikeStatusOfPhotos(Long idPhotographer){
+
+
+       //return LikeService.getLikeStatus(idPhotographer);
+    //}
+
+    public List<String> getStatusLikeOfPhotos(Long idPhotographer){
+
+        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer); 
+
+        List<String> status = new ArrayList<>();
+
+        for(Photo p : photos){
+            if(LikeService.isLiked(p.getId(), idPhotographer)){
+                status.add("Descurtir");
+            }else{
+                status.add("Curtir");
+            }
+        }
+
+        return status;
+    }
+
+    public List<String> getStatusLikeOfPhotosOtherPhotographer(Long idPhotographer,Long PhotographerSessionId){
+
+        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer); 
+
+        List<String> status = new ArrayList<>();
+
+        for(Photo p : photos){
+            if(LikeService.isLiked(p.getId(), PhotographerSessionId)){
+                status.add("Descurtir");
+            }else{
+                status.add("Curtir");
+            }
+        }
+
+        return status;
+    }
+
 
 
 }
