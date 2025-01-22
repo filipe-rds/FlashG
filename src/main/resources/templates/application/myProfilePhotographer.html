@@ -193,14 +193,14 @@
                   <!-- Comentários fictícios -->
 
                   <div th:each="comment : ${photo.comments}">
-                    <div class="flex items-start gap-3 mb-4">
+                    <div class="flex items-start gap-3 mb-4 max-w-[294px]">
                       <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
                       <div>
                         <div class="flex flex-row justify-between gap-6">
                             <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
                             <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
                         </div>
-                        <p th:text="${comment.commentText}" class="text-sm text-slate-600"></p>
+                        <p th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
                       </div>
                     </div>
                   </div>
