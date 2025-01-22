@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
+import br.edu.ifpb.pweb2.flashg.dtos.LikeDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Comment;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
@@ -76,10 +77,12 @@ public class FacadeController {
         Photographer searchedPhotographer = facadeService.findByIdPhotographer(id);
         String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
         List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
+        List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(),loggedPhotographer.getId() );
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
         mav.addObject("photographer", searchedPhotographer);
         mav.addObject("photos", photos);
+        mav.addObject("statusLikes", statusLikes);
         return mav;
     }
 
@@ -89,9 +92,11 @@ public class FacadeController {
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
         session.setAttribute("loggedPhotographer", myProfile);
+        List<String> statusLikes= facadeService.getStatusLikeOfPhotos(myProfile.getId());
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", myProfile);
         mav.addObject("photos", photos);
+        mav.addObject("statusLikes", statusLikes);
         return mav;
     }
 
@@ -239,6 +244,25 @@ public class FacadeController {
         CommentDTO commentDTO = new CommentDTO(comment.getPhotographer().getProfilePictureUrl(),comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(),photoBanco.getComments().size());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentDTO);
     }
+
+    @PostMapping(value = "/likeAction")
+    public ResponseEntity<LikeDTO> likeAction(@RequestBody Map<String, Object> commentData) {
+        Long photographerId = Long.valueOf((String) commentData.get("photographer"));
+        Long photoId = Long.valueOf((String) commentData.get("photo"));
+        //Photographer photographer = facadeService.findByIdPhotographer(photographerId);
+        //Photo photo = facadeService.findPhotoById(photoId);
+        System.out.println("-----------------------");
+        System.out.println(photoId);
+        System.out.println(photographerId);
+        String response = facadeService.handleLikeAction(photoId, photographerId);
+        Integer sizeLikes = facadeService.getLikeCountOfPhoto(photoId);
+        System.out.println(sizeLikes);
+        System.out.println("-----------------------");
+        LikeDTO likeDTO = new LikeDTO(response, sizeLikes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
+    }
+
+
 
 }
 

@@ -14,13 +14,13 @@ public class Likee {
     @EmbeddedId
     private LikeId id;
 
-
     @ManyToOne
     @MapsId("photoId")
     private Photo photo;
 
-
     @ManyToOne
     @MapsId("photographerId")
     private Photographer photographer;
+
+    
 }

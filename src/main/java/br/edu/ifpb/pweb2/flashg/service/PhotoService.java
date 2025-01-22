@@ -37,5 +37,10 @@ public class PhotoService {
         repository.deleteById(id);
     }
 
+    public List<Photo> getLikesByPhotographerId(Long id){
+        return repository.getPhotosByPhotographerId(id);
+    }
+
+
 
 }

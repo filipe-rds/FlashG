@@ -68,4 +68,8 @@ public class Photographer {
     @OneToMany(mappedBy = "followed", fetch = FetchType.EAGER)
     private List<Follow> followers;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
+    private List<Likee> likes;
+
 }
