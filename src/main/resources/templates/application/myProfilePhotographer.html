@@ -210,7 +210,7 @@
                           th:id="'textArea-' + ${iterStat.index}"
                           placeholder="Escreva seu comentário..."
                           class="w-full p-2 rounded-md border text-sm"
-                          name="commentText"
+                          name="commentText" maxlength="512"
                           th:value="${commentText}"></textarea>
                   <div>
                       <input type="hidden" id="createdAt" name="createdAt" />
