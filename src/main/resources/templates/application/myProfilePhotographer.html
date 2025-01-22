@@ -157,7 +157,7 @@
                   <div class="flex items-center gap-16">
                     <div>
                       <p class="text-slate-500 text-sm">Curtidas</p>
-                      <p class="text-slate-800 font-medium">x</p>
+                      <p th:id="'sizeLikes-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.likes.size()}"></p>
                     </div>
                     <div>
                       <p class="text-slate-500 text-sm">Comentários</p>
