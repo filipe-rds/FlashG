@@ -16,12 +16,24 @@ public class CommentService {
     private CommentRepository repository;
 
 
-    public void save(Comment comment){
+    public void save(Comment comment) {
         repository.save(comment);
     }
 
-    public List<Comment> findByPhotoOrderByCreatedAtDesc(Photo photo){
+    public List<Comment> findByPhotoOrderByCreatedAtDesc(Photo photo) {
         return repository.findByPhotoOrderByCreatedAtDesc(photo);
+    }
+
+    public Comment findCommentById(Long commentId) {
+        return repository.findById(commentId).orElse(null);
+    }
+
+    public void updateComment(Comment comment) {
+        repository.save(comment);
+    }
+
+    public void deleteComment(Long commentId) {
+        repository.deleteById(commentId);
     }
 
 }
