@@ -39,6 +39,7 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/home")
     public ModelAndView home(ModelAndView mav, HttpSession session) {
         mav.setViewName("home");
@@ -47,6 +48,7 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping("/logout")
     public ModelAndView logout(ModelAndView mav, HttpSession session) {
         facadeService.logoutPhotographer(session);
@@ -54,11 +56,13 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/searchPhotographers")
     public ModelAndView searchPhotographers(ModelAndView mav) {
         mav.setViewName("application/findPhotographers");
         return mav;
     }
+
 
     @GetMapping(value = "/findPhotographers")
     public ModelAndView getAllPhotographerStartingWith(ModelAndView mav, @RequestParam("username") String username, HttpSession session) {
@@ -71,13 +75,14 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/showProfile/{id}")
     public ModelAndView showProfile(ModelAndView mav, @PathVariable("id") Long id, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         Photographer searchedPhotographer = facadeService.findByIdPhotographer(id);
         String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
         List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
-        List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(),loggedPhotographer.getId() );
+        List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(), loggedPhotographer.getId());
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
         mav.addObject("photographer", searchedPhotographer);
@@ -86,19 +91,59 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/myProfile")
     public ModelAndView myProfile(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
         session.setAttribute("loggedPhotographer", myProfile);
-        List<String> statusLikes= facadeService.getStatusLikeOfPhotos(myProfile.getId());
+        List<String> statusLikes = facadeService.getStatusLikeOfPhotos(myProfile.getId());
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", myProfile);
         mav.addObject("photos", photos);
         mav.addObject("statusLikes", statusLikes);
         return mav;
     }
+
+
+    @PostMapping("/comment/edit")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> editComment(@RequestBody Map<String, String> payload, HttpSession session) {
+        Long commentId = Long.parseLong(payload.get("commentId"));
+        String newCommentText = payload.get("newCommentText").trim();
+
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        Comment comment = facadeService.findCommentById(commentId);
+
+        if (comment == null || !comment.getPhotographer().getId().equals(loggedPhotographer.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Ação não permitida"));
+        }
+
+        comment.setCommentText(newCommentText);
+        facadeService.updateComment(comment);
+
+        return ResponseEntity.ok(Map.of("updatedText", newCommentText));
+    }
+
+
+    @PostMapping("/comment/delete")
+    @ResponseBody
+    public ResponseEntity<String> deleteComment(@RequestBody Map<String, String> payload, HttpSession session) {
+        Long commentId = Long.parseLong(payload.get("commentId"));
+
+        Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
+        Comment comment = facadeService.findCommentById(commentId);
+
+        if (comment == null || !comment.getPhotographer().getId().equals(loggedPhotographer.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Ação não permitida");
+        }
+
+        facadeService.deleteComment(commentId);
+        return ResponseEntity.ok("Comentário excluído");
+    }
+
+
 
     @PostMapping(value = "/followAction")
     public ModelAndView followAction(ModelAndView mav, @RequestParam("id") Long id, HttpSession session) {
@@ -110,6 +155,7 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/listPhotographerFollowing")
     public ModelAndView listAllFollowing(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
@@ -119,6 +165,7 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/listPhotographerFollowers")
     public ModelAndView listAllFollowers(ModelAndView mav, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
@@ -127,6 +174,7 @@ public class FacadeController {
         mav.addObject("seguidores", seguidores);
         return mav;
     }
+
 
     @GetMapping(value = "/showAllPhotographers")
     public ModelAndView listAllPhotographer(ModelAndView mav, HttpSession session) {
@@ -138,6 +186,7 @@ public class FacadeController {
         return mav;
     }
 
+
     @GetMapping(value = "/uploadPhotos")
     public ModelAndView uploadPage(ModelAndView mav) {
         mav.addObject("photo", new Photo());
@@ -145,17 +194,19 @@ public class FacadeController {
         return mav;
     }
 
+
     @PostMapping(value = "/uploadPhotos")
-    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session, @RequestParam("image") MultipartFile file, @ModelAttribute("photo")Photo photo) throws Exception {
+    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session, @RequestParam("image") MultipartFile file, @ModelAttribute("photo") Photo photo) throws Exception {
         if (file.isEmpty()) {
             mav.setViewName("application/uploadPhotos");
             return mav;
         }
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file);
+        facadeService.uploadPhoto(loggedPhotographer.getId(), photo, file);
         mav.setViewName("redirect:/myProfile");
         return mav;
     }
+
 
     @PostMapping(value = "/blockAction")
     public ModelAndView blockAction(ModelAndView mav, @RequestParam("id") Long id) {
@@ -166,7 +217,8 @@ public class FacadeController {
         return mav;
     }
 
-    @GetMapping(value="/showEditProfilePhotographer/{id}")
+
+    @GetMapping(value = "/showEditProfilePhotographer/{id}")
     public ModelAndView editProfilePhotographer(ModelAndView mav, @PathVariable("id") Long id) {
         Photographer photographer = facadeService.findByIdPhotographer(id);
         mav.addObject("photographer", photographer);
@@ -175,8 +227,8 @@ public class FacadeController {
     }
 
 
-    @PostMapping(value="/editProfilePhotographer")
-    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result, HttpSession session , RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
+    @PostMapping(value = "/editProfilePhotographer")
+    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
 
         ModelAndView mav = new ModelAndView();
 
@@ -205,7 +257,7 @@ public class FacadeController {
         redirectAttributes.addFlashAttribute("success", "Perfil atualizado com sucesso!");
 
         long id = updatedLoggedPhotographer.getId();
-        mav.setViewName("redirect:/showEditProfilePhotographer/" + id );
+        mav.setViewName("redirect:/showEditProfilePhotographer/" + id);
 
         return mav;
     }
@@ -217,10 +269,11 @@ public class FacadeController {
             mav.setViewName("redirect:/myProfile");
         }
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        facadeService.updateAvatar(loggedPhotographer,file);
+        facadeService.updateAvatar(loggedPhotographer, file);
         mav.setViewName("redirect:/myProfile");
         return mav;
     }
+
 
     @PostMapping(value = "/addComment")
     public ResponseEntity<CommentDTO> addComment(@RequestBody Map<String, Object> commentData) {
@@ -241,9 +294,10 @@ public class FacadeController {
         facadeService.saveComment(comment);
         facadeService.findAllCommentOfPhoto(photo);
         Photo photoBanco = facadeService.findPhotoById(photo.getId());
-        CommentDTO commentDTO = new CommentDTO(comment.getPhotographer().getProfilePictureUrl(),comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(),photoBanco.getComments().size());
+        CommentDTO commentDTO = new CommentDTO(comment.getPhotographer().getProfilePictureUrl(), comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(), photoBanco.getComments().size());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentDTO);
     }
+
 
     @PostMapping(value = "/likeAction")
     public ResponseEntity<LikeDTO> likeAction(@RequestBody Map<String, Object> commentData) {
@@ -261,8 +315,4 @@ public class FacadeController {
         LikeDTO likeDTO = new LikeDTO(response, sizeLikes);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
-
-
-
 }
-

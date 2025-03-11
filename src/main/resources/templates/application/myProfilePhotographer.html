@@ -98,9 +98,6 @@
           </div>
       </div>
 
-
-
-
     <div th:if="${photos}" class="overflow-auto mx-auto p-4">
       <div class="w-full px-4">
         <div class="mb-6 text-center">
@@ -115,6 +112,7 @@
             </div>
           </div>
         </div>
+
         <!-- Dialog foto -->
         <div th:each="photo, iterStat : ${photos}">
           <div th:id="'dialog-' + ${iterStat.index}" th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
@@ -173,16 +171,9 @@
                   <input type="hidden" id="photographer" name="photographer" th:value="${session.loggedPhotographer.id}"/>
 
                   <button  th:id="'buttonLike-' + ${iterStat.index}" type="submit" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
-                    <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                      <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
-                    </svg> -->
                     <a th:text="${statusLikes[iterStat.index]}"></a>
                   </button>
                 </form>
-
-
-
-
                 </div>
               </div>
 
@@ -190,17 +181,36 @@
               <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
                 <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
                   <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
-                  <!-- Comentários fictícios -->
 
                   <div th:each="comment : ${photo.comments}">
                     <div class="flex items-start gap-3 mb-4 max-w-[294px]">
                       <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
                       <div>
-                        <div class="flex flex-row justify-between gap-6">
+                        <div class="flex flex-row justify-between items-center gap-6">
                             <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
                             <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
+                            <!-- Botão de editar (somente para o dono do comentário) -->
+                            <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="mt-2">
+                                <button th:attr="onclick='enableEdit(' + ${comment.id} + ')'"
+                                        class="text-blue-600 text-sm hover:underline">
+                                    <img th:src="@{/assets/icons/pen.svg}" alt="User icon" class="w-[18px] h-[18px]">
+                                </button>
+                            </div>
                         </div>
-                        <p th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
+
+                        <!-- Exibição do comentário -->
+                        <p th:id="'commentText-' + ${comment.id}" th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
+
+                        <!-- Formulário de edição (oculto por padrão) -->
+                        <form th:id="'editForm-' + ${comment.id}" class="hidden mt-2">
+                            <textarea th:id="'editTextArea-' + ${comment.id}" class="w-full p-2 rounded-md border text-sm" maxlength="512"
+                                th:text="${comment.commentText}"></textarea>
+                              <div class="flex gap-2 mt-2">
+                                  <button type="submit" th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">Salvar</button>
+                                  <button type="button" class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                          th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">Cancelar</button>
+                              </div>
+                          </form>
                       </div>
                     </div>
                   </div>
@@ -223,13 +233,57 @@
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
 </div>
 </body>
 </html>
+<script>
+    function enableEdit(commentId) {
+        document.getElementById('commentText-' + commentId).classList.add('hidden');
+        document.getElementById('editForm-' + commentId).classList.remove('hidden');
+    }
+
+    function cancelEdit(commentId) {
+        document.getElementById('commentText-' + commentId).classList.remove('hidden');
+        document.getElementById('editForm-' + commentId).classList.add('hidden');
+    }
+
+    function submitEdit(event, commentId) {
+        event.preventDefault();
+        const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
+
+        if (newCommentText === "") {
+            deleteComment(commentId);
+            return;
+        }
+
+        fetch('/FlashG/comment/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ commentId, newCommentText })
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('commentText-' + commentId).innerText = data.updatedText;
+                document.getElementById('commentText-' + commentId).classList.remove('hidden');
+                document.getElementById('editForm-' + commentId).classList.add('hidden');
+            })
+            .catch(error => console.error('Erro ao atualizar comentário:', error));
+    }
+
+    function deleteComment(commentId) {
+        fetch('/FlashG/comment/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ commentId })
+        })
+            .then(() => {
+                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
+            })
+            .catch(error => console.error('Erro ao excluir comentário:', error));
+    }
+</script>
 <script th:src="@{/js/commentProcess.js}"></script>
 <script th:src="@{/js/likeProcess.js}"></script>
