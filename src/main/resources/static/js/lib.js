@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const jsLibraries = [
-        'https://unpkg.com/@material-tailwind/html@latest/scripts/dialog.js',
+        'https://unpkg.com/@material-tailwind/html@2.3.2/scripts/dialog.js',
         // Adicione mais URLs conforme necessário
     ];
 
