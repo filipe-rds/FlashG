@@ -4,7 +4,6 @@ $("[id^='form-']").on("submit", function(event) {
     // Cria um objeto FormData a partir do formulário
     const formId = $(this).attr("id");  // Obtém o ID do formulário
     const idPart = formId.split('-')[1];
-    console.log(idPart);
 
     //const formData = new FormData(this);  // 'this' refere-se ao formulário
     const formData = new FormData(this);  // 'this' refere-se ao formulário
@@ -22,8 +21,6 @@ $("[id^='form-']").on("submit", function(event) {
 
     // Converte a data ajustada para uma string ISO
     const createdAt = adjustedDate.toISOString();
-
-    console.log(createdAt);
 
     formData.set("createdAt", createdAt);  // Adiciona ou atualiza o campo createdAt
 
@@ -86,8 +83,11 @@ function atualizarHTMLPosComentario(data, id) {
                 <div class="flex flex-row justify-between gap-6">
                     <p class="text-sm font-medium text-slate-800">${data.photographerName}</p>
                     <p class="text-sm font-medium text-slate-800">${data.createdAt}</p>
+                    <button id="editButton-${data.id}" onclick="enableEdit(${data.id})" class="text-blue-600 text-sm">
+                        <img src="/static/assets/icons/edit.svg" alt="Editar comentário" class="w-[18px] h-[18px]">
+                    </button>
                 </div>
-                <p class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
+                <p id="commentText-${data.id}" class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
             </div>
         </div>
     `;
