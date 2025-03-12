@@ -1,5 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.*;
@@ -33,8 +35,8 @@ public class PhotographerService {
         return repository.findById(id).orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
     }
 
-    public List<Photographer> findAllPhotographers(){
-        return repository.findAllByOrderByIdAsc();
+    public Page<Photographer> findAllPhotographers(Pageable page){
+        return repository.findAllByOrderByIdAsc(page);
     }
 
     public List<Photographer> findAllFollowing(Long id){

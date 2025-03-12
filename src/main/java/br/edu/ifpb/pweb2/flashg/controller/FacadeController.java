@@ -1,17 +1,18 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-
 import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
 import br.edu.ifpb.pweb2.flashg.dtos.LikeDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Comment;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
+import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
+import br.edu.ifpb.pweb2.flashg.service.FacadeService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-
-import br.edu.ifpb.pweb2.flashg.entity.Photographer;
-import br.edu.ifpb.pweb2.flashg.service.FacadeService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("")
@@ -144,7 +147,6 @@ public class FacadeController {
     }
 
 
-
     @PostMapping(value = "/followAction")
     public ModelAndView followAction(ModelAndView mav, @RequestParam("id") Long id, HttpSession session) {
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
@@ -177,11 +179,25 @@ public class FacadeController {
 
 
     @GetMapping(value = "/showAllPhotographers")
-    public ModelAndView listAllPhotographer(ModelAndView mav, HttpSession session) {
+    public ModelAndView listAllPhotographer(
+            ModelAndView mav,
+            HttpSession session,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "2") int size
+    ) {
+        Pageable paging = PageRequest.of(page - 1, size);
+
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        List<Photographer> photographers = facadeService.findAllPhotographers();
+        Page<Photographer> photographersPaged = facadeService.findAllPhotographers(paging);
+
+        ArrayList<Photographer> photographers = new ArrayList<>(photographersPaged.toList());
         facadeService.removePhotographerFromArray(photographers, loggedPhotographer);
+
         mav.addObject("photographers", photographers);
+        mav.addObject("currentPage", photographersPaged.getNumber() + 1);
+        mav.addObject("totalItems", photographersPaged.getTotalElements() - 1);
+        mav.addObject("totalPages", photographersPaged.getTotalPages());
+        mav.addObject("pageSize", size);
         mav.setViewName("application/showAllPhotographers");
         return mav;
     }

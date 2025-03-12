@@ -8,6 +8,8 @@ import java.util.List;
 import br.edu.ifpb.pweb2.flashg.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
@@ -43,13 +45,14 @@ public class FacadeService {
         return photographerService.findByUsernameStartingWith(nome);
     }
 
+
     public Photographer findByIdPhotographer(Long id) {
         return photographerService.findById(id);
     }
 
 
-    public List<Photographer> findAllPhotographers() {
-        return photographerService.findAllPhotographers();
+    public Page<Photographer> findAllPhotographers(Pageable page) {
+        return photographerService.findAllPhotographers(page);
     }
 
 
