@@ -83,9 +83,6 @@ function atualizarHTMLPosComentario(data, id) {
                 <div class="flex flex-row justify-between gap-6">
                     <p class="text-sm font-medium text-slate-800">${data.photographerName}</p>
                     <p class="text-sm font-medium text-slate-800">${data.createdAt}</p>
-                    <button id="editButton-${data.id}" onclick="enableEdit(${data.id})" class="text-blue-600 text-sm">
-                        <img src="/static/assets/icons/edit.svg" alt="Editar comentário" class="w-[18px] h-[18px]">
-                    </button>
                 </div>
                 <p id="commentText-${data.id}" class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
             </div>
