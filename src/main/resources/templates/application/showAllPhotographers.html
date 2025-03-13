@@ -65,7 +65,7 @@ layout:decorate="~{layout/layout}">
                             </th>
                             <th class="p-4 border-b border-slate-200 bg-slate-50">
                                 <p class="text-sm font-normal leading-none text-slate-500">
-                                    Administrador
+                                    Privilégios
                                 </p>
                             </th>
                             <th class="p-4 border-b border-slate-200 bg-slate-50">
@@ -85,14 +85,14 @@ layout:decorate="~{layout/layout}">
                             <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
                             <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
                             <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
-                            <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
+                            <td th:text="${photographer.user.email}" class="p-4 py-5 text-sm text-slate-800"></td>
                             <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                            <td th:text="${photographer.user.role}" class="p-4 py-5 text-sm text-slate-800 "></td>
                             <form th:action="@{/blockAction}" method="POST">
                                 <td class="p-4 py-5 text-sm">
                                     <input type="hidden" name="id" th:value="${photographer.id}" />
                                     <button type="submit" 
-                                            th:text="${photographer.isBlocked ? 'Desbloquear' : 'Bloquear'}" 
+                                            th:text="${photographer.user.enabled ? 'Bloquear' : 'Desbloquear'}"
                                             class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
                                     </button>
                                 </td>

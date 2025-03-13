@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt_BR"
-      xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 <head>
     <title>FlashG</title>
@@ -13,7 +15,15 @@
                 <!-- Card para edição do perfil -->
                 <div class="shadow-lg border border-gray-300 rounded-lg">
                     <div class="bg-gray-800 text-white rounded-t-lg p-4">
-                        <h3 class="text-lg font-bold" th:text="${session.loggedPhotographer.isAdmin and session.loggedPhotographer.id != photographer.id } ? 'Perfil de ' + ${photographer.username} : 'Meu perfil'"></h3>
+                        <!-- Título dinâmico -->
+                        <h3 class="text-lg font-bold">
+                            <span sec:authorize="hasRole('ADMIN')" th:if="${photographer.id != session.loggedPhotographer.id}">
+                                Perfil de <span th:text="${photographer.username}"></span>
+                            </span>
+                            <span sec:authorize="!hasRole('ADMIN')" th:if="${photographer.id == session.loggedPhotographer.id}">
+                                Meu perfil
+                            </span>
+                        </h3>
                     </div>
                     <div class="bg-white p-6">
                         <form th:action="@{/editProfilePhotographer}" th:object="${photographer}" method="POST">
@@ -21,10 +31,11 @@
                             <div class="mb-4 form-group">
                                 <input type="hidden" id="id" th:field="*{id}" />
                             </div>
+
                             <!-- Campo Username -->
                             <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="username">Username</label>
-                                <input class="w-full p-2 border border-gray-300 rounded "
+                                <input class="w-full p-2 border border-gray-300 rounded"
                                        type="text" id="username" th:field="*{username}" />
                             </div>
 
@@ -46,37 +57,22 @@
                             <div class="mb-4 form-group">
                                 <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
                                 <input class="w-full p-2 border border-gray-300 rounded"
-                                       type="email" id="email" th:field="*{email}" />
-                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                                       type="email" id="email" th:field="*{user.email}" />
+                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></p>
                             </div>
 
                             <!-- Senha -->
-
-                            <div class="mb-4 form-group" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
-                                <div class="mb-4">
+                            <div class="mb-4 form-group">
+                                <div sec:authorize="!hasRole('ADMIN') or #vars.loggedPhotographer.id == photographer.id">
                                     <label class="block text-gray-700 font-semibold mb-2" for="password">Nova Senha</label>
-                                    <input class="w-full p-2 border border-gray-300 rounded"
-                                           id="password" th:field="*{password}" />
-                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                                    <input type="password" class="w-full p-2 border border-gray-300 rounded"
+                                           id="password" th:field="*{user.password}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.password')}" th:errors="*{user.password}"></p>
+                                </div>
+                                <div sec:authorize="hasRole('ADMIN') and #vars.loggedPhotographer.id != photographer.id">
+                                    <input type="hidden" th:field="*{user.password}" />
                                 </div>
                             </div>
-                            <div th:if="${not(!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id)}">
-                                <input type="hidden"  th:field="*{password}"  />
-                            </div>
-
-
-                            <!-- Senha
-                            <div class="mb-4" th:if="${!session.loggedPhotographer.isAdmin or photographer.id == session.loggedPhotographer.id}">
-                                <label class="block text-gray-700 font-semibold mb-2" for="password">Nova Senha</label>
-                                <input class="w-full p-2 border border-gray-300 rounded"
-                                        id="password" th:field="*{password}" placeholder="Deixe em branco para manter a senha atual" />
-                                <small class="text-gray-500">A senha precisa ter ao menos 8 caracteres.</small>
-                                <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-                            </div>
-                            <div th:else class="mb-4">
-                                <input type="hidden" id="password" th:field="*{password}"  />
-                            </div>
-                            -->
 
                             <!-- Aceita seguidores -->
                             <div class="mb-4 flex items-center">
@@ -86,23 +82,23 @@
                             </div>
 
                             <!-- Administrador (somente para admins) -->
-                            <div th:if="${session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id}" class="mb-4 flex items-center">
+                            <div sec:authorize="hasRole('ADMIN') and #vars.loggedPhotographer.id != photographer.id" class="mb-4 flex items-center">
                                 <label class="block text-gray-700 font-semibold mr-4" for="isAdmin">Administrador</label>
                                 <input class="form-checkbox h-5 w-5 text-blue-600"
-                                       type="checkbox" id="isAdmin" th:field="*{Admin}" />
+                                       type="checkbox" id="isAdmin" th:field="*{user.role}" />
                             </div>
-                            <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
-                                <input type="hidden"  th:field="*{Admin}"  />
+                            <div sec:authorize="!hasRole('ADMIN') or #vars.loggedPhotographer.id == photographer.id">
+                                <input type="hidden" th:field="*{user.role}" />
                             </div>
 
-                            <!-- Bloqueado (somente para admins) -->
-                            <div th:if="${session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id}" class="mb-4 flex items-center">
-                                <label class="block text-gray-700 font-semibold mr-4" for="isBlocked">Bloqueado</label>
+                            <!-- Ativo (somente para admins) -->
+                            <div sec:authorize="hasRole('ADMIN') and #vars.loggedPhotographer.id != photographer.id" class="mb-4 flex items-center">
+                                <label class="block text-gray-700 font-semibold mr-4">Ativo</label>
                                 <input class="form-checkbox h-5 w-5 text-blue-600"
-                                       type="checkbox" id="isBlocked" th:field="*{Blocked}" />
+                                       type="checkbox" th:field="*{user.enabled}" />
                             </div>
-                            <div th:if="${not(session.loggedPhotographer.isAdmin and photographer.id != session.loggedPhotographer.id)}">
-                                <input type="hidden"  th:field="*{Blocked}"  />
+                            <div sec:authorize="!hasRole('ADMIN') or #vars.loggedPhotographer.id == photographer.id">
+                                <input type="hidden" th:field="*{user.enabled}" />
                             </div>
 
                             <!-- Botão de submissão -->

@@ -29,7 +29,7 @@
                                 </form>
                             </div>
                             <!-- Ícone de configurações -->
-                            <a role="button" th:if="${session.loggedPhotographer.isAdmin()}" th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"
+                            <a role="button" sec:authorize="hasRole('ADMIN')" th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"
                                     class="p-2 border-transparent text-gray-700 rounded-full hover:text-blue-600 focus:outline-none"
                                     aria-label="Configurações">
                                 <svg

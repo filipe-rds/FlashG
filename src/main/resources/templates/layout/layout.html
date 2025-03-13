@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout">
+<html lang="pt_BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head layout:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title layout:title="Base Layout">FlashG</title>
-    <script th:src="@{/libs/jquery-3.7.1.min.js}" defer></script>
     <script th:src="@{/libs/tailwindcss-4.0.8.global.js}" defer></script>
-    <script th:src="@{/libs/dialog.js}" defer></script>
+    <script th:src="@{/libs/jquery-3.7.1.min.js}" defer></script>
+    <script th:src="@{/libs/cdns.js}" defer></script>
+<!--    <script th:src="@{/libs/dialog.js}" defer></script>-->
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="flex-col min-h-screen items-center justify-center">
