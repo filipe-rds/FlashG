@@ -1,9 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 import br.edu.ifpb.pweb2.flashg.entity.*;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +35,12 @@ public class FacadeService {
 
     @Autowired
     private LikeService LikeService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private PhotoTagService photoTagService;
 
 
 
@@ -179,18 +183,25 @@ public class FacadeService {
         photographerService.handleBlockAction(id);
     }
 
-    public void uploadPhoto(Long id, Photo photo, MultipartFile file) throws Exception {
+    public void uploadPhoto(Long id, Photo photo, MultipartFile file, List<String> tagNames) throws Exception {
         Photographer photographer = photographerService.findById(id);
-//        Photo photo = new Photo();
         photo.setPhotographer(photographer);
-        //chama metodo que vai inserir a foto no banco
+
         photoService.create(photo,file);
-        //adiciona a foto a lista de fotos do fotografo
+        System.out.println("Photo ID after save: " + photo.getId());
+
+        if (photo.getId() == null) {
+            throw new RuntimeException("Photo ID is null after saving!");
+        }
+
         List<Photo> lista = photographer.getPhotos();
         lista.add(photo);
         photographer.setPhotos(lista);
         photographerRepository.save(photographer);
 
+        List<Tag> tags = getOrCreateTags(tagNames);
+
+        createPhotoTags(photo, tags);
     }
 
     public String convertPhotoToBase64(Photo photo) {
@@ -289,6 +300,84 @@ public class FacadeService {
 
         return status;
     }
+
+    public Tag addTag(String text){
+        Tag tag = new Tag();
+        tag.setTagName(text);
+        return tagService.AddTag(tag);
+    }
+
+    public void createPhotoTags(Photo photo, List<Tag> tags) {
+        for (Tag tag : tags) {
+            PhotoTagId photoTagId = new PhotoTagId(photo.getId(), tag.getId());
+            PhotoTag photoTag = new PhotoTag(photoTagId, photo, tag);
+
+            photoTag = photoTagService.create(photoTag); // Verifica duplicatas antes de salvar
+
+            // Adiciona à lista existente para evitar substituição
+            if (!photo.getPhotoTags().contains(photoTag)) {
+                photo.getPhotoTags().add(photoTag);
+            }
+
+            if (!tag.getPhotoTags().contains(photoTag)) {
+                tag.getPhotoTags().add(photoTag);
+            }
+        }
+
+        // Atualiza as entidades no banco
+        photoService.save(photo);
+        for (Tag tag : tags) {
+            tagService.save(tag);
+        }
+    }
+
+
+
+
+
+    public List<Tag> getAllTags() {
+        return tagService.GetAllTags();
+    }
+
+    public List<Tag> GetTagsAlike(String name){
+        return tagService.GetTagsAlike(name);
+    }
+
+    public List<Tag> getOrCreateTags(List<String> tagNames) {
+        List<Tag> tags = new ArrayList<>();
+
+        for (String tagName : tagNames) {
+            // Busca a tag existente, se não existir, cria uma nova e garante que foi salva corretamente
+            Optional<Tag> existingTag = tagService.GetTag(tagName);
+            Tag tag;
+
+            if (existingTag.isPresent()) {
+                tag = existingTag.get();
+            } else {
+                tag = new Tag();
+                tag.setTagName(tagName);
+                tag = tagService.AddTag(tag); // Deve retornar a tag salva com ID preenchido
+            }
+
+            // Garante que a tag tenha um ID antes de adicionar à lista
+            if (tag.getId() != null) {
+                tags.add(tag);
+                System.out.println("Tag criada: " + tag.getTagName() + " | ID: " + tag.getId());
+            } else {
+                throw new IllegalStateException("Erro ao criar tag: ID não foi gerado.");
+            }
+        }
+
+        return tags;
+    }
+
+
+
+
+
+
+
+
 
 
 

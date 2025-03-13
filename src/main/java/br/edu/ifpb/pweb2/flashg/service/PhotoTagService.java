@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PhotoTagService {
@@ -24,14 +25,16 @@ public class PhotoTagService {
         return repository.findByTagId(tagId);
     }
 
-    public PhotoTag create(Tag tag , Photo photo) {
+    public PhotoTag create(PhotoTag photoTag) {
+        // Verifica se a relação já existe
+        Optional<PhotoTag> existingPhotoTag = repository.findById(photoTag.getId());
 
-        PhotoTag photoTag = new PhotoTag();
-        photoTag.setTag(tag);
-        photoTag.setPhoto(photo);
+        // Se não existir, salva um novo
+        // Se já existir, retorna o existente
+        return existingPhotoTag.orElseGet(() -> repository.save(photoTag));
 
-        return repository.save(photoTag);
     }
+
 
     public void delete(PhotoTag photoTag) {
         repository.delete(photoTag);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TagService {
@@ -13,8 +14,8 @@ public class TagService {
     @Autowired
     private TagRepository repository;
 
-    public Tag GetTag(String name){
-        return repository.findByTagName(name).orElseThrow(()->new RuntimeException("Tag not found"));
+    public Optional<Tag> GetTag(String name){
+        return repository.findByTagName(name);
     }
 
     public List<Tag> GetAllTags(){
@@ -34,6 +35,10 @@ public class TagService {
     }
 
     public Tag AddTag(Tag tag){
+        return repository.save(tag);
+    }
+
+    public Tag save(Tag tag){
         return repository.save(tag);
     }
 
