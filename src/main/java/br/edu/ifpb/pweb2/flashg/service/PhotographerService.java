@@ -4,6 +4,7 @@ import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.*;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import br.edu.ifpb.pweb2.flashg.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -19,6 +20,7 @@ public class PhotographerService {
 
     @Autowired
     private  PhotographerRepository repository;
+
 
     public List<Photographer> findByUsernameStartingWith(String username) throws NotFoundAnyPhotograferWithName {
 
@@ -59,8 +61,8 @@ public class PhotographerService {
 
     public void updatePhotographer(Photographer photographer)  {
         // Valida se o e-mail já está sendo usado por outro fotógrafo
-        if (isEmailAlreadyRegistered(photographer.getEmail())
-                && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())) {
+        if (isEmailAlreadyRegistered(photographer.getUser().getEmail())
+                && !isEmailOfPhotographer(photographer.getUser().getEmail(), photographer.getId())) {
             throw new EmailAlreadyExistsUpdate(photographer.getId());
         }
 
@@ -95,7 +97,7 @@ public class PhotographerService {
     }
 
     public String checkBlockedStatus(Photographer photographer){
-        return repository.isPhotographerBlocked(photographer.getId()) ? "Desbloquear" : "Bloquear";
+        return repository.isPhotographerEnabled(photographer.getId()) ? "Bloquear" : "Desbloquear";
     }  
     
     public void handleBlockAction(Long id) {
@@ -104,8 +106,8 @@ public class PhotographerService {
         
         if (photographerOptional.isPresent()) {
             Photographer photographer = photographerOptional.get();
-            boolean isBlocked = photographer.isBlocked(); 
-            photographer.setBlocked(!isBlocked);
+            boolean isEnabled = photographer.getUser().isEnabled();
+            photographer.getUser().setEnabled(!isEnabled);
             repository.save(photographer);
         } else {
             throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
