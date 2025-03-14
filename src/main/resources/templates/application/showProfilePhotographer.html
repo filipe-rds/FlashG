@@ -159,7 +159,7 @@
                                                th:value="${session.loggedPhotographer.id}"/>
 
                                         <div th:if="${photo.comments.size() > 0 and session.loggedPhotographer.isAdmin()}">
-                                            <button type="button" th:attr="onclick='generatepdf(' + ${photo.comments} + ')'" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">Comentários em PDF</button>
+                                            <button type="button" th:attr="onclick='generatepdf(' + ${photo.id} + ')'" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">Comentários em PDF</button>
                                         </div>
 
                                         <button th:id="'buttonLike-' + ${iterStat.index}" type="submit"
@@ -342,6 +342,10 @@
                 document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
             })
             .catch(error => console.error('Erro ao excluir comentário:', error));
+    }
+
+    async function generatepdf(photoId) {
+        await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
     }
 
 </script>

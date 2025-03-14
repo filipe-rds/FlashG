@@ -331,4 +331,10 @@ public class FacadeController {
         LikeDTO likeDTO = new LikeDTO(response, sizeLikes);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/generatePDF")
+    public String generatePDF(@RequestParam("photoId") String photoId) {
+        
+    }
 }
