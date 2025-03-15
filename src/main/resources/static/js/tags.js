@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function addTag(tagName) {
         let existingTags = Array.from(selectedTagsContainer.children).map(tag =>
-            tag.textContent.replace("x", "").trim()
+            tag.textContent.trim()
         );
 
         if (existingTags.length >= 4) {
@@ -73,28 +73,27 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        let tagElement = document.createElement("span");
+        let tagElement = document.createElement("button"); // Alterado para um botão
         tagElement.textContent = tagName;
-        tagElement.classList.add( "bg-blue-500", "text-white", "px-3", "py-1", "rounded-full",
-            "text-sm", "mr-2", "w-1/4", "truncate", "text-center");
+        tagElement.classList.add(
+            "bg-blue-500", "text-white", "px-3", "py-1", "rounded-full",
+            "text-sm", "mr-2", "w-1/4", "truncate", "text-center",
+            "hover:bg-red-500", "transition-colors", "duration-200"
+        );
 
-        let removeButton = document.createElement("button");
-        removeButton.textContent = "x";
-        removeButton.classList.add("ml-2", "text-xs", "text-white", "cursor-pointer");
-        removeButton.onclick = function () {
+        // Tornando a tag inteira clicável para remover
+        tagElement.onclick = function () {
             selectedTagsContainer.removeChild(tagElement);
             updateHiddenInput();
         };
 
-        tagElement.appendChild(removeButton);
         selectedTagsContainer.appendChild(tagElement);
-
         updateHiddenInput();
     }
 
     function updateHiddenInput() {
         let selectedTags = Array.from(selectedTagsContainer.children).map(tag =>
-            tag.textContent.replace("x", "").trim()
+            tag.textContent.trim()
         );
         hiddenInput.value = selectedTags.join(",");
     }
