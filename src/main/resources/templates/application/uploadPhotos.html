@@ -56,17 +56,25 @@
                     <label for="tagInput" class="block mb-2 text-sm text-slate-600">Tags</label>
 
                     <!-- Campo de entrada para digitar a tag -->
-                    <input type="text" id="tagInput" name="tagInput"
-                           class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                           placeholder="Digite uma tag...">
+                    <div class="flex items-center gap-2">
+                        <!-- Campo de entrada para digitar a tag -->
+                        <input type="text" id="tagInput" name="tagInput"
+                               class="flex-1 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                               placeholder="Digite uma tag...">
+
+                        <!-- Botão ao lado do input -->
+                        <button type="button" id="addTagButton"
+                                class="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                            Adicionar
+                        </button>
+                    </div>
 
                     <!-- Área onde as sugestões de tags serão exibidas -->
-                    <div id="tagSuggestions" class="border border-gray-300 rounded-md mt-2 bg-white shadow-sm hidden"></div>
-                    <button type="button" id="addTagButton" class="rounded-md bg-slate-800 py-2 px-4 border mt-2 border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
-                        Adicionar</button>
+                    <div id="tagSuggestions" class="absolute w-full rounded-md mt-1 bg-white shadow-md hidden max-h-48 overflow-y-auto z-10"></div>
+
 
                     <input type="hidden" id="selectedTags" name="tags">
-                    <div id="selectedTagsContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                    <div id="selectedTagsContainer" class="mt-2 flex flex-wrap gap-2 max-w-full overflow-hidden"></div>
                 </div>
 
 

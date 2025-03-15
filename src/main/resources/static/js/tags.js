@@ -4,6 +4,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const selectedTagsContainer = document.getElementById("selectedTagsContainer");
     const hiddenInput = document.getElementById("selectedTags");
 
+    // Posicionamento correto do dropdown
+    tagInput.addEventListener("focus", () => {
+        suggestionsContainer.classList.remove("hidden");
+    });
+
+    tagInput.addEventListener("blur", () => {
+        setTimeout(() => {
+            suggestionsContainer.classList.add("hidden");
+        }, 200); // Pequeno delay para permitir o clique nas sugestões
+    });
+
     tagInput.addEventListener("input", async function () {
         let input = tagInput.value.trim();
 
@@ -20,16 +31,17 @@ document.addEventListener("DOMContentLoaded", function () {
             suggestionsContainer.innerHTML = "";
             suggestionsContainer.classList.remove("hidden");
 
-            // Exibir sugestões do banco de dados, caso existam
             tags.forEach(tag => {
                 let tagElement = document.createElement("div");
                 tagElement.textContent = tag;
                 tagElement.classList.add("cursor-pointer", "p-2", "hover:bg-gray-200");
+
                 tagElement.onclick = function () {
                     addTag(tag);
                     tagInput.value = "";
                     suggestionsContainer.classList.add("hidden");
                 };
+
                 suggestionsContainer.appendChild(tagElement);
             });
 
@@ -52,13 +64,19 @@ document.addEventListener("DOMContentLoaded", function () {
             tag.textContent.replace("x", "").trim()
         );
 
+        if (existingTags.length >= 4) {
+            alert("Você pode adicionar no máximo 4 tags.");
+            return;
+        }
+
         if (existingTags.includes(tagName)) {
             return;
         }
 
         let tagElement = document.createElement("span");
         tagElement.textContent = tagName;
-        tagElement.classList.add("bg-blue-500", "text-white", "px-3", "py-1", "rounded-full", "text-sm", "mr-2");
+        tagElement.classList.add( "bg-blue-500", "text-white", "px-3", "py-1", "rounded-full",
+            "text-sm", "mr-2", "w-1/4", "truncate", "text-center");
 
         let removeButton = document.createElement("button");
         removeButton.textContent = "x";
