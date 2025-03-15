@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import br.edu.ifpb.pweb2.flashg.entity.*;
 import jakarta.servlet.http.HttpSession;
@@ -312,9 +313,8 @@ public class FacadeService {
             PhotoTagId photoTagId = new PhotoTagId(photo.getId(), tag.getId());
             PhotoTag photoTag = new PhotoTag(photoTagId, photo, tag);
 
-            photoTag = photoTagService.create(photoTag); // Verifica duplicatas antes de salvar
+            photoTag = photoTagService.create(photoTag);
 
-            // Adiciona à lista existente para evitar substituição
             if (!photo.getPhotoTags().contains(photoTag)) {
                 photo.getPhotoTags().add(photoTag);
             }
@@ -324,7 +324,6 @@ public class FacadeService {
             }
         }
 
-        // Atualiza as entidades no banco
         photoService.save(photo);
         for (Tag tag : tags) {
             tagService.save(tag);
@@ -347,7 +346,7 @@ public class FacadeService {
         List<Tag> tags = new ArrayList<>();
 
         for (String tagName : tagNames) {
-            // Busca a tag existente, se não existir, cria uma nova e garante que foi salva corretamente
+
             Optional<Tag> existingTag = tagService.GetTag(tagName);
             Tag tag;
 
@@ -356,10 +355,10 @@ public class FacadeService {
             } else {
                 tag = new Tag();
                 tag.setTagName(tagName);
-                tag = tagService.AddTag(tag); // Deve retornar a tag salva com ID preenchido
+                tag = tagService.AddTag(tag);
             }
 
-            // Garante que a tag tenha um ID antes de adicionar à lista
+
             if (tag.getId() != null) {
                 tags.add(tag);
                 System.out.println("Tag criada: " + tag.getTagName() + " | ID: " + tag.getId());
@@ -369,6 +368,19 @@ public class FacadeService {
         }
 
         return tags;
+    }
+
+    public Map<Long, List<Tag>> getTagsForPhotos(List<Photo> photos) {
+        Map<Long, List<Tag>> photoTagsMap = new HashMap<>();
+
+        for (Photo photo : photos) {
+            List<Tag> tags = photo.getPhotoTags().stream()
+                    .map(PhotoTag::getTag)
+                    .collect(Collectors.toList());
+            photoTagsMap.put(photo.getId(), tags);
+        }
+
+        return photoTagsMap;
     }
 
 

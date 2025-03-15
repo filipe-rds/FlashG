@@ -95,10 +95,13 @@ public class FacadeController {
         Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
         session.setAttribute("loggedPhotographer", myProfile);
         List<String> statusLikes= facadeService.getStatusLikeOfPhotos(myProfile.getId());
+        Map<Long, List<Tag>> photoTagsMap = facadeService.getTagsForPhotos(photos);
+
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", myProfile);
         mav.addObject("photos", photos);
         mav.addObject("statusLikes", statusLikes);
+        mav.addObject("photoTagsMap", photoTagsMap);
         return mav;
     }
 
