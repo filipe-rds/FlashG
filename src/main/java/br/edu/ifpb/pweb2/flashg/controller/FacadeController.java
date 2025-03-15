@@ -80,11 +80,14 @@ public class FacadeController {
         String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
         List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
         List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(),loggedPhotographer.getId() );
+        Map<Long, List<Tag>> photoTagsMap = facadeService.getTagsForPhotos(photos);
+
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
         mav.addObject("photographer", searchedPhotographer);
         mav.addObject("photos", photos);
         mav.addObject("statusLikes", statusLikes);
+        mav.addObject("photoTagsMap", photoTagsMap);
         return mav;
     }
 
