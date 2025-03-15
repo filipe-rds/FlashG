@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import br.edu.ifpb.pweb2.flashg.entity.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
@@ -44,78 +46,84 @@ public class FacadeService {
     private PhotoTagService photoTagService;
 
 
-
-    public List<Photographer> findByUsernameStartingWith(String nome){
+    public List<Photographer> findByUsernameStartingWith(String nome) {
         return photographerService.findByUsernameStartingWith(nome);
     }
 
-    public Photographer findByIdPhotographer(Long id){
+
+    public Photographer findByIdPhotographer(Long id) {
         return photographerService.findById(id);
     }
 
-    public List<Photographer> findAllPhotographers(){
-        return photographerService.findAllPhotographers();
+
+    public Page<Photographer> findAllPhotographers(Pageable page) {
+        return photographerService.findAllPhotographers(page);
     }
 
-    public String checkFollowStatus(Photographer seguidor, Photographer seguido ){
+
+    public String checkFollowStatus(Photographer seguidor, Photographer seguido) {
 
         Follow existingFollow = isFollowed(seguidor, seguido);
         return (existingFollow) != null ? "Deixar de seguir" : "Seguir";
     }
 
+
     // Executa a açao de seguir ou deixar de seguir
-    public boolean handleFollowAction(Long id, Long id2){
+    public boolean handleFollowAction(Long id, Long id2) {
 
         // 01 -> Quem vai seguir
         Photographer Seguidor = photographerService.findById(id);
         // 02 -> Quem vai ser seguido
         Photographer Seguido = photographerService.findById(id2);
-        
+
         Follow Follow = isFollowed(Seguidor, Seguido); // Seguido 
 
-        if(Follow == null){
+        if (Follow == null) {
             follow(Seguidor, Seguido);
             return true;
-        }
-        else{
-            unfollow(Seguidor,Seguido,Follow);
+        } else {
+            unfollow(Seguidor, Seguido, Follow);
             return false;
         }
     }
-    
-     // Seguido 
-     public Follow isFollowed(Photographer Seguidor,Photographer Seguido){ 
+
+
+    // Seguido
+    public Follow isFollowed(Photographer Seguidor, Photographer Seguido) {
 
         List<Follow> listaDeSeguidos = Seguidor.getFollowing();
 
         if (listaDeSeguidos == null) {
             return null;
-        } 
-    
-        for(Follow f : listaDeSeguidos){
-            if(f.getFollowed().getId().equals(Seguido.getId())){
+        }
+
+        for (Follow f : listaDeSeguidos) {
+            if (f.getFollowed().getId().equals(Seguido.getId())) {
                 return f;
             }
         }
         return null;
     }
 
+
     // Seguidor
-    public Follow isFollower(Photographer Seguido,Photographer Seguidor){
+    public Follow isFollower(Photographer Seguido, Photographer Seguidor) {
         List<Follow> listaDeSeguidores = Seguido.getFollowers();
 
         if (listaDeSeguidores == null) {
             return null;
         }
-        
-        for(Follow f : listaDeSeguidores){
-            if(f.getFollower().getId().equals(Seguidor.getId())){
+
+        for (Follow f : listaDeSeguidores) {
+            if (f.getFollower().getId().equals(Seguidor.getId())) {
                 return f;
             }
         }
         return null;
     }
-    public void unfollow(Photographer p1,Photographer p2,Follow follow){
+
+
+    public void unfollow(Photographer p1, Photographer p2, Follow follow) {
 
         List<Follow> listaDeSeguindo = p1.getFollowing();
         List<Follow> listaDeSeguidores = p2.getFollowers();
@@ -127,7 +135,8 @@ public class FacadeService {
 
     }
 
-    public void follow(Photographer Seguidor, Photographer Seguido){
+
+    public void follow(Photographer Seguidor, Photographer Seguido) {
 
         List<Follow> listaDeSeguindo = Seguidor.getFollowing();
         List<Follow> listaDeSeguidores = Seguido.getFollowers();
@@ -148,39 +157,45 @@ public class FacadeService {
 
     }
 
+
     public void removePhotographerFromArray(List<Photographer> photographers, Photographer photographer) {
         Long idPhotographer = photographer.getId();
-        photographers.removeIf(p -> p.getId().equals(idPhotographer)); 
+        photographers.removeIf(p -> p.getId().equals(idPhotographer));
     }
+
 
     public boolean removePhotographerAdminFromArray(List<Photographer> photographers, Photographer photographer) {
         Long idPhotographer = photographer.getId();
-        return photographers.removeIf(p -> p.getId().equals(idPhotographer)); 
+        return photographers.removeIf(p -> p.getId().equals(idPhotographer));
     }
-    
 
-    public List<Photographer> findAllFollowing(Long id){
+
+    public List<Photographer> findAllFollowing(Long id) {
         return photographerService.findAllFollowing(id);
     }
 
-    public List<Photographer> findAllFollowers(Long id){
+
+    public List<Photographer> findAllFollowers(Long id) {
         return photographerService.findAllFollowers(id);
     }
 
-    public Photographer getLoggedPhotographer(HttpSession session){
+
+    public Photographer getLoggedPhotographer(HttpSession session) {
         return sessionService.getLoggedPhotographer(session);
     }
 
-    public void logoutPhotographer(HttpSession session){
+
+    public void logoutPhotographer(HttpSession session) {
         sessionService.logoutPhotographer(session);
     }
 
-    public String checkBlockedStatus(Photographer photographer){
-        
+
+    public String checkBlockedStatus(Photographer photographer) {
         return photographerService.checkBlockedStatus(photographer);
     }
 
-    public void handleBlockAction(Long id){
+
+    public void handleBlockAction(Long id) {
         photographerService.handleBlockAction(id);
     }
 
@@ -205,19 +220,21 @@ public class FacadeService {
         createPhotoTags(photo, tags);
     }
 
+
     public String convertPhotoToBase64(Photo photo) {
         return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photo.getImageData());
     }
 
+
     public String convertAvatarToBase64(Photographer photographer) {
-        if(photographer.getProfilePicture() == null){
+        if (photographer.getProfilePicture() == null) {
             return "https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg";
         }
         return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(photographer.getProfilePicture());
     }
 
 
-    public List<Photo> showPhotos(Long id){
+    public List<Photo> showPhotos(Long id) {
         Photographer photographer = photographerService.findById(id);
         List<Photo> photos = photographerService.findAllPhotos(photographer.getId());
         List<String> photoUrls = new ArrayList<>();
@@ -229,35 +246,42 @@ public class FacadeService {
         return photos;
     }
 
-    public void updatePhotographer(Photographer photographer){
+
+    public void updatePhotographer(Photographer photographer) {
         photographerService.updatePhotographer(photographer);
     }
 
-    public Photographer updateAvatar(Photographer photographer,MultipartFile file) throws IOException {
+
+    public Photographer updateAvatar(Photographer photographer, MultipartFile file) throws IOException {
         photographer.setProfilePicture(file.getBytes());
         photographer.setProfilePictureUrl(convertAvatarToBase64(photographer));
         photographerService.updatePhotographer(photographer);
         return photographer;
     }
 
-    public Photo findPhotoById(Long id){
+
+    public Photo findPhotoById(Long id) {
         Photo p = photoService.findById(id);
         return p;
     }
 
-    public void saveComment(Comment comment){
+
+    public void saveComment(Comment comment) {
         commentService.save(comment);
     }
 
-    public List<Comment> findAllCommentOfPhoto(Photo photo){
+
+    public List<Comment> findAllCommentOfPhoto(Photo photo) {
         return commentService.findByPhotoOrderByCreatedAtDesc(photo);
     }
 
-    public String handleLikeAction(long photoid, Long photographerid){
+
+    public String handleLikeAction(long photoid, Long photographerid) {
         return LikeService.handleLikeAction(photoid, photographerid) ? "Descurtir" : "Curtir";
     }
 
-    public Integer getLikeCountOfPhoto(Long idPhoto){
+
+    public Integer getLikeCountOfPhoto(Long idPhoto) {
         return LikeService.getLikeCount(idPhoto);
     }
 
@@ -265,19 +289,20 @@ public class FacadeService {
     //public List<String> getLikeStatusOfPhotos(Long idPhotographer){
 
 
-       //return LikeService.getLikeStatus(idPhotographer);
+    //return LikeService.getLikeStatus(idPhotographer);
     //}
 
-    public List<String> getStatusLikeOfPhotos(Long idPhotographer){
 
-        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer); 
+    public List<String> getStatusLikeOfPhotos(Long idPhotographer) {
+
+        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer);
 
         List<String> status = new ArrayList<>();
 
-        for(Photo p : photos){
-            if(LikeService.isLiked(p.getId(), idPhotographer)){
+        for (Photo p : photos) {
+            if (LikeService.isLiked(p.getId(), idPhotographer)) {
                 status.add("Descurtir");
-            }else{
+            } else {
                 status.add("Curtir");
             }
         }
@@ -285,16 +310,17 @@ public class FacadeService {
         return status;
     }
 
-    public List<String> getStatusLikeOfPhotosOtherPhotographer(Long idPhotographer,Long PhotographerSessionId){
 
-        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer); 
+    public List<String> getStatusLikeOfPhotosOtherPhotographer(Long idPhotographer, Long PhotographerSessionId) {
+
+        List<Photo> photos = photoService.getLikesByPhotographerId(idPhotographer);
 
         List<String> status = new ArrayList<>();
 
-        for(Photo p : photos){
-            if(LikeService.isLiked(p.getId(), PhotographerSessionId)){
+        for (Photo p : photos) {
+            if (LikeService.isLiked(p.getId(), PhotographerSessionId)) {
                 status.add("Descurtir");
-            }else{
+            } else {
                 status.add("Curtir");
             }
         }
@@ -392,5 +418,17 @@ public class FacadeService {
 
 
 
+    public Comment findCommentById(Long commentId) {
+        return commentService.findCommentById(commentId);
+    }
 
+
+    public void updateComment(Comment comment) {
+        commentService.save(comment);
+    }
+
+
+    public void deleteComment(Long commentId) {
+        commentService.deleteComment(commentId);
+    }
 }

@@ -1,0 +1,8 @@
+<a th:fragment="paging(pageNum, label, tooltip, style)"
+   th:href="@{'/showAllPhotographers?' + 'page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}"
+   rel="tooltip"
+   th:class="${style}"
+>
+    [[${label}]]
+</a>
