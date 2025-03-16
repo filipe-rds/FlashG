@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +19,9 @@ public class Tag {
     private Long id; 
 
     @Column(nullable = false)
-    private String tagName; 
+    private String tagName;
+
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PhotoTag> photoTags = new ArrayList<>();
 
 }

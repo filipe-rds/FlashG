@@ -1,9 +1,16 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
 import br.edu.ifpb.pweb2.flashg.dtos.LikeDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Comment;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
+import br.edu.ifpb.pweb2.flashg.entity.Tag;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
@@ -20,6 +27,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.service.FacadeService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
@@ -85,12 +96,15 @@ public class FacadeController {
         Photographer searchedPhotographer = facadeService.findByIdPhotographer(id);
         String status = facadeService.checkFollowStatus(loggedPhotographer, searchedPhotographer);
         List<Photo> photos = facadeService.showPhotos(searchedPhotographer.getId());
-        List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(), loggedPhotographer.getId());
+        List<String> statusLikes = facadeService.getStatusLikeOfPhotosOtherPhotographer(searchedPhotographer.getId(),loggedPhotographer.getId() );
+        Map<Long, List<Tag>> photoTagsMap = facadeService.getTagsForPhotos(photos);
+
         mav.setViewName("application/showProfilePhotographer");
         mav.addObject("status", status);
         mav.addObject("photographer", searchedPhotographer);
         mav.addObject("photos", photos);
         mav.addObject("statusLikes", statusLikes);
+        mav.addObject("photoTagsMap", photoTagsMap);
         return mav;
     }
 
@@ -101,11 +115,14 @@ public class FacadeController {
         List<Photo> photos = facadeService.showPhotos(loggedPhotographer.getId());
         Photographer myProfile = facadeService.findByIdPhotographer(loggedPhotographer.getId());
         session.setAttribute("loggedPhotographer", myProfile);
-        List<String> statusLikes = facadeService.getStatusLikeOfPhotos(myProfile.getId());
+        List<String> statusLikes= facadeService.getStatusLikeOfPhotos(myProfile.getId());
+        Map<Long, List<Tag>> photoTagsMap = facadeService.getTagsForPhotos(photos);
+
         mav.setViewName("application/myProfilePhotographer");
         mav.addObject("photographer", myProfile);
         mav.addObject("photos", photos);
         mav.addObject("statusLikes", statusLikes);
+        mav.addObject("photoTagsMap", photoTagsMap);
         return mav;
     }
 
@@ -205,20 +222,28 @@ public class FacadeController {
 
     @GetMapping(value = "/uploadPhotos")
     public ModelAndView uploadPage(ModelAndView mav) {
+        List<Tag> tagSuggestions = facadeService.getAllTags();
         mav.addObject("photo", new Photo());
+        mav.addObject("tags", tagSuggestions);
+        mav.addObject("selectedTags");
         mav.setViewName("application/uploadPhotos");
         return mav;
     }
 
 
     @PostMapping(value = "/uploadPhotos")
-    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session, @RequestParam("image") MultipartFile file, @ModelAttribute("photo") Photo photo) throws Exception {
+    public ModelAndView handleFileUpload(ModelAndView mav, HttpSession session,
+                                         @RequestParam("image") MultipartFile file,
+                                         @ModelAttribute("photo")Photo photo,
+                                         @RequestParam(value = "tags", required = false) List<String> tagNames) throws Exception {
+
         if (file.isEmpty()) {
             mav.setViewName("application/uploadPhotos");
             return mav;
         }
         Photographer loggedPhotographer = facadeService.getLoggedPhotographer(session);
-        facadeService.uploadPhoto(loggedPhotographer.getId(), photo, file);
+
+        facadeService.uploadPhoto(loggedPhotographer.getId(),photo,file, tagNames);
         mav.setViewName("redirect:/myProfile");
         return mav;
     }
@@ -331,4 +356,18 @@ public class FacadeController {
         LikeDTO likeDTO = new LikeDTO(response, sizeLikes);
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
+
+    @GetMapping("/tags/suggestions")
+    @ResponseBody
+    public List<String> getTagSuggestions(@RequestParam("name") String name) {
+        return facadeService.GetTagsAlike(name)
+                .stream()
+                .map(Tag::getTagName)
+                .collect(Collectors.toList());
+    }
+
+
+
+
 }
+
