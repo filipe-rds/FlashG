@@ -80,11 +80,39 @@ function atualizarHTMLPosComentario(data, id) {
         <div class="flex items-start gap-3 mb-4 max-w-[294px]">
             <img src="${data.imageUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
             <div>
-                <div class="flex flex-row justify-between gap-6">
+                <div class="flex flex-row justify-between items-center gap-6">
                     <p class="text-sm font-medium text-slate-800">${data.photographerName}</p>
                     <p class="text-sm font-medium text-slate-800">${data.createdAt}</p>
+                    <!-- Botão de editar (somente para o dono do comentário) -->
+                    <div class="mt-2">
+                        <button onclick="enableEdit(${data.id})" class="text-blue-600 text-sm hover:underline">
+                            <img src="/FlashG/assets/icons/pen.svg" alt="User icon" class="w-[18px] h-[18px]">
+                        </button>
+                    </div>
+                    <div class="mt-2">
+                        <button onclick="enableDelete(${data.id})" class="text-blue-600 text-sm hover:underline">
+                            <img src="/FlashG/assets/icons/trash.svg" alt="User icon" class="w-[18px] h-[18px]">
+                        </button>
+                    </div>
                 </div>
-                <p id="commentText-${data.id}" class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
+                <!-- Exibição do comentário -->
+                <p id="dataText-${data.id}" class="text-sm text-slate-600 max-w-[248px] break-words">${data.commentText}</p>
+
+                <!-- Formulário de edição (oculto por padrão) -->
+                <form id="editForm-${data.id}" class="hidden mt-2">
+                    <textarea id="editTextArea-${data.id}" class="w-full p-2 rounded-md border text-sm" maxlength="512">${data.commentText}</textarea>
+                    <div class="flex gap-2 mt-2">
+                        <button type="submit" onclick="submitEdit(event, ${data.id})" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">Salvar</button>
+                        <button type="button" class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600" onclick="cancelEdit(${data.id})">Cancelar</button>
+                    </div>
+                </form>
+                <!-- Formulário de exclusão (oculto por padrão) -->
+                <form id="deleteForm-${data.id}" class="hidden mt-2">
+                    <div class="flex gap-2 mt-2">
+                        <button type="submit" onclick="deleteCommentNew(event, ${data.id})" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">Excluir</button>
+                        <button type="button" class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600" onclick="cancelDelete(${data.id})">Cancelar</button>
+                    </div>
+                </form>
             </div>
         </div>
     `;
