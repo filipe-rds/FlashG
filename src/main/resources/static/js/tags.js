@@ -76,9 +76,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let tagElement = document.createElement("button"); // Alterado para um botão
         tagElement.textContent = tagName;
         tagElement.classList.add(
-            "bg-blue-500", "text-white", "px-3", "py-1", "rounded-full",
+            "bg-gray-700", "text-white", "px-3", "py-1", "rounded-full",
             "text-sm", "mr-2", "w-1/4", "truncate", "text-center",
-            "hover:bg-red-500", "transition-colors", "duration-200"
+            "hover:bg-red-700", "transition-colors", "duration-200"
         );
 
         // Tornando a tag inteira clicável para remover
