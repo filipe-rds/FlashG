@@ -61,15 +61,14 @@ public class PhotographerService {
 
     public void updatePhotographer(Photographer photographer)  {
         // Valida se o e-mail já está sendo usado por outro fotógrafo
-        if (isEmailAlreadyRegistered(photographer.getEmail())
-                && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())) {
+        if (isEmailAlreadyRegistered(photographer.getUser().getEmail())
+                && !isEmailOfPhotographer(photographer.getUser().getEmail(), photographer.getId())) {
             throw new EmailAlreadyExistsUpdate(photographer.getId());
         }
 
         // Verifica se o fotógrafo existe antes de realizar o update
         Photographer existingPhotographer = repository.findById(photographer.getId())
                 .orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
-
 
         // Atualiza somente os campos que não são nulos
         copyNonNullProperties(photographer, existingPhotographer);
@@ -97,17 +96,17 @@ public class PhotographerService {
     }
 
     public String checkBlockedStatus(Photographer photographer){
-        return repository.isPhotographerBlocked(photographer.getId()) ? "Desbloquear" : "Bloquear";
-    }  
-    
+        return repository.isPhotographerEnabled(photographer.getId()) ? "Bloquear" : "Desbloquear";
+    }
+
     public void handleBlockAction(Long id) {
 
         Optional<Photographer> photographerOptional = repository.findById(id);
-        
+
         if (photographerOptional.isPresent()) {
             Photographer photographer = photographerOptional.get();
-            boolean isBlocked = photographer.isBlocked(); 
-            photographer.setBlocked(!isBlocked);
+            boolean isEnabled = photographer.getUser().isEnabled();
+            photographer.getUser().setEnabled(!isEnabled);
             repository.save(photographer);
         } else {
             throw new IllegalArgumentException("Photographer with ID " + id + " not found.");

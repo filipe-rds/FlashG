@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Inheritance(strategy =  InheritanceType.JOINED)
 public class Photographer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,16 +32,6 @@ public class Photographer {
     @NotBlank
     private String lastName;
 
-    @Column(unique = true)
-    @NotBlank
-    @Email
-    private String email;
-
-    @Column(nullable = false, length = 64)
-    @NotBlank
-    @Size(min = 8, max = 64)
-    private String password;
-
     private byte[] profilePicture;
 
     @Column(columnDefinition = "TEXT")
@@ -49,11 +40,9 @@ public class Photographer {
     @Column(nullable = false)
     private boolean acceptsFollowers = true;
 
-    @Column(nullable = false)
-    private boolean isAdmin = false;
-
-    @Column(nullable = false)
-    private boolean isBlocked = false;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Photo> photos;
