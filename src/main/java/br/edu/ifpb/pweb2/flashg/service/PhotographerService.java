@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -22,6 +23,9 @@ public class PhotographerService {
 
     @Autowired
     private  PhotographerRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Photographer> findByUsernameStartingWith(String username) throws NotFoundAnyPhotograferWithName {
 
@@ -83,8 +87,13 @@ public class PhotographerService {
             if (updatedUser.getEmail() != null) {
                 existingUser.setEmail(updatedUser.getEmail());
             }
-            // Atualize outros campos do User conforme necessário
-            // Não atualize a senha aqui a menos que seja necessário e esteja corretamente tratada
+
+            // Atualiza a senha se fornecida
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                // Criptografa a nova senha antes de salvar
+                String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
+                existingUser.setPassword(encodedPassword);
+            }
 
             // Redefine o usuário existente atualizado
             existingPhotographer.setUser(existingUser);
@@ -138,18 +147,37 @@ public class PhotographerService {
         // Guarda referência do usuário original
         User originalUser = target.getUser();
 
+        // Guarda temporariamente os valores de foto para verificar se devemos restaurá-los
+        byte[] originalProfilePicture = target.getProfilePicture();
+        String originalProfilePictureUrl = target.getProfilePictureUrl();
+
         // Cria um array de nomes de propriedades a serem ignoradas
         String[] ignoreProperties = {"user", "photos", "comments", "following", "followers", "likes"};
 
         // Copia apenas propriedades não nulas exceto as ignoradas
         BeanUtils.copyProperties(source, target, ignoreProperties);
 
+        // Restaura as fotos originais se novas não foram fornecidas
+        if (source.getProfilePicture() == null) {
+            target.setProfilePicture(originalProfilePicture);
+        }
+
+        if (source.getProfilePictureUrl() == null) {
+            target.setProfilePictureUrl(originalProfilePictureUrl);
+        }
+
         // Restaura o usuário original e atualiza apenas os campos específicos do usuário
         if (source.getUser() != null) {
+            // Atualiza o email se fornecido
             if (source.getUser().getEmail() != null) {
                 originalUser.setEmail(source.getUser().getEmail());
             }
-            // Atualize outros campos do usuário conforme necessário
+
+            // Atualiza a senha se fornecida
+            if (source.getUser().getPassword() != null && !source.getUser().getPassword().isEmpty()) {
+                String encodedPassword = passwordEncoder.encode(source.getUser().getPassword());
+                originalUser.setPassword(encodedPassword);
+            }
         }
 
         // Restaura a referência do usuário original
