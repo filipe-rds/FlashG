@@ -345,7 +345,9 @@
     }
 
     async function generatepdf(photoId) {
-        await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
+        const response = await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
+        const data = await response.json()
+        console.log(data)
     }
 
 </script>

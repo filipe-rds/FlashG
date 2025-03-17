@@ -264,6 +264,9 @@ public class FacadeService {
         return commentService.findByPhotoOrderByCreatedAtDesc(photo);
     }
 
+    public List<CommentProjection> findAllCommentOfPhotoAtAsc(Long photoId) {
+        return commentService.findByPhotoOrderByCreatedAtAsc(photoId);
+    }
 
     public String handleLikeAction(long photoid, Long photographerid) {
         return LikeService.handleLikeAction(photoid, photographerid) ? "Descurtir" : "Curtir";

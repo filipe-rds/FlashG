@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import java.util.List;
 
+import br.edu.ifpb.pweb2.flashg.entity.CommentProjection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,10 @@ public class CommentService {
 
     public List<Comment> findByPhotoOrderByCreatedAtDesc(Photo photo) {
         return repository.findByPhotoOrderByCreatedAtDesc(photo);
+    }
+
+    public List<CommentProjection> findByPhotoOrderByCreatedAtAsc(Long photoId) {
+        return repository.findCommentTextAndCreatedAtByPhotoIdOrderByCreatedAtAsc(photoId);
     }
 
     public Comment findCommentById(Long commentId) {
