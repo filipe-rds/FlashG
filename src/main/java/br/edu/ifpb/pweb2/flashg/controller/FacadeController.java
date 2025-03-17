@@ -269,8 +269,12 @@ public class FacadeController {
 
 
     @PostMapping(value = "/editProfilePhotographer")
-    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
-
+    public ModelAndView editProfilePhotographer(
+            @Valid @ModelAttribute Photographer photographer,
+            BindingResult result,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) throws EmailAlreadyExists {
         ModelAndView mav = new ModelAndView();
 
         if (result.hasErrors()) {

@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import br.edu.ifpb.pweb2.flashg.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
@@ -70,8 +71,24 @@ public class PhotographerService {
         Photographer existingPhotographer = repository.findById(photographer.getId())
                 .orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
 
+        // Guarda a referência ao usuário existente
+        User existingUser = existingPhotographer.getUser();
+
         // Atualiza somente os campos que não são nulos
         copyNonNullProperties(photographer, existingPhotographer);
+
+        // Agora atualiza os dados do usuário separadamente
+        if (photographer.getUser() != null) {
+            User updatedUser = photographer.getUser();
+            if (updatedUser.getEmail() != null) {
+                existingUser.setEmail(updatedUser.getEmail());
+            }
+            // Atualize outros campos do User conforme necessário
+            // Não atualize a senha aqui a menos que seja necessário e esteja corretamente tratada
+
+            // Redefine o usuário existente atualizado
+            existingPhotographer.setUser(existingUser);
+        }
 
         // Persiste as alterações no banco de dados
         repository.save(existingPhotographer);
@@ -117,11 +134,26 @@ public class PhotographerService {
         return repository.findAllPhotos(id);
     }
 
-    // Copia propriedades não nulas de um objeto de origem para um objeto de destino.
-    private void copyNonNullProperties(Object source, Object target) {
-        // Usa o método utilitário do Spring BeanUtils para copiar as propriedades,
-        // excluindo aquelas que estão nulas no objeto de origem.
-        BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
+    private void copyNonNullProperties(Photographer source, Photographer target) {
+        // Guarda referência do usuário original
+        User originalUser = target.getUser();
+
+        // Cria um array de nomes de propriedades a serem ignoradas
+        String[] ignoreProperties = {"user", "photos", "comments", "following", "followers", "likes"};
+
+        // Copia apenas propriedades não nulas exceto as ignoradas
+        BeanUtils.copyProperties(source, target, ignoreProperties);
+
+        // Restaura o usuário original e atualiza apenas os campos específicos do usuário
+        if (source.getUser() != null) {
+            if (source.getUser().getEmail() != null) {
+                originalUser.setEmail(source.getUser().getEmail());
+            }
+            // Atualize outros campos do usuário conforme necessário
+        }
+
+        // Restaura a referência do usuário original
+        target.setUser(originalUser);
     }
 
     // Retorna os nomes das propriedades nulas de um objeto.
@@ -138,7 +170,4 @@ public class PhotographerService {
                 .map(java.beans.PropertyDescriptor::getName)             // Extrai o nome da propriedade
                 .toArray(String[]::new);                                // Converte o stream em um array de strings
     }
-
-
-
 }
