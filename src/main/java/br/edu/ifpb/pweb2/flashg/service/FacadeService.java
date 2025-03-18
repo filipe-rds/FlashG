@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -333,5 +334,9 @@ public class FacadeService {
 
     public void deleteComment(Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    public void generatePDF(List<CommentProjection> comments) throws FileNotFoundException {
+        commentService.generatePDF(comments);
     }
 }

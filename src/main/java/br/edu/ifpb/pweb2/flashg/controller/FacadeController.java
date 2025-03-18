@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -335,9 +336,9 @@ public class FacadeController {
 
     @ResponseBody
     @RequestMapping(value = "/generatePDF")
-    public ResponseEntity<List<CommentProjection>> generatePDF(@RequestParam("photoId") String photoId) {
+    public ResponseEntity<List<CommentProjection>> generatePDF(@RequestParam("photoId") String photoId) throws FileNotFoundException {
         List<CommentProjection> comments = facadeService.findAllCommentOfPhotoAtAsc(Long.parseLong(photoId));
-        
+        facadeService.generatePDF(comments);
         return ResponseEntity.ok().body(comments);
     }
 }
