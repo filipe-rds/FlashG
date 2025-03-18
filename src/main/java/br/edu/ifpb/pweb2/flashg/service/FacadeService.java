@@ -204,7 +204,6 @@ public class FacadeService {
         photo.setPhotographer(photographer);
 
         photoService.create(photo,file);
-        System.out.println("Photo ID after save: " + photo.getId());
 
         if (photo.getId() == null) {
             throw new RuntimeException("Photo ID is null after saving!");
@@ -387,7 +386,6 @@ public class FacadeService {
 
             if (tag.getId() != null) {
                 tags.add(tag);
-                System.out.println("Tag criada: " + tag.getTagName() + " | ID: " + tag.getId());
             } else {
                 throw new IllegalStateException("Erro ao criar tag: ID não foi gerado.");
             }
