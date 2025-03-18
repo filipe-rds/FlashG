@@ -32,7 +32,6 @@
 
                                 <div class="mb-4 form-group">
                                     <input type="hidden"  th:field="*{id}" />
-                                    <input type="hidden"  th:field="*{user.password}" />
                                 </div>
 
                                 <!-- Username -->
@@ -64,6 +63,14 @@
                                     <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></p>
                                 </div>
 
+                                <!-- Senha -->
+                                <div class="mb-4 form-group">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="email">Senha</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="password" id="password" th:field="*{user.password}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.password')}" th:errors="*{user.email}"></p>
+                                </div>
+
                                 <!-- Aceita seguidores -->
                                 <div class="mb-4 flex items-center">
                                     <label class="block text-gray-700 font-semibold mr-4" for="acceptsFollowers">Aceita Seguidores</label>
@@ -77,36 +84,51 @@
 
                                 <div class="mb-4 form-group">
                                     <input type="hidden"  th:field="*{id}" />
-                                    <input type="hidden"  th:field="*{user.password}" />
                                 </div>
 
                                 <!-- Campos para Admin -->
+                                <!-- Username -->
                                 <div class="mb-4 form-group">
-                                    <label class="block text-gray-700 font-semibold mb-2">Username</label>
-                                    <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                                           type="text" th:value="*{username}"  />
-                                </div>
-                                <div class="mb-4 form-group">
-                                    <label class="block text-gray-700 font-semibold mb-2">Nome</label>
-                                    <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                                           type="text" th:value="*{firstName}"  />
-                                </div>
-                                <div class="mb-4 form-group">
-                                    <label class="block text-gray-700 font-semibold mb-2">Sobrenome</label>
-                                    <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                                           type="text" th:value="*{lastName}"  />
-                                </div>
-                                <div class="mb-4 form-group">
-                                    <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                                    <input class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                                           type="email" th:value="*{user.email}"  />
+                                    <label class="block text-gray-700 font-semibold mb-2" for="username">Username</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="text" th:field="*{username}" />
                                 </div>
 
-                                <!-- Bloqueado -->
-                                <div  class="mb-4 flex items-center">
-                                    <label class="block text-gray-700 font-semibold mr-4" for="isBlocked">Conta ativa</label>
+                                <!-- Nome Completo -->
+                                <div class="mb-4 form-group">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="firstName">Nome</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="text"  th:field="*{firstName}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                                </div>
+                                <div class="mb-4 form-group">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="lastName">Sobrenome</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="text"  th:field="*{lastName}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="mb-4 form-group">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="email">Email</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="email"  th:field="*{user.email}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></p>
+                                </div>
+
+                                <!-- Senha -->
+                                <div class="mb-4 form-group">
+                                    <label class="block text-gray-700 font-semibold mb-2" for="email">Senha</label>
+                                    <input class="w-full p-2 border border-gray-300 rounded"
+                                           type="password" th:field="*{user.password}" />
+                                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('user.password')}" th:errors="*{user.email}"></p>
+                                </div>
+
+                                <!--Conta Ativa -->
+                                <div class="mb-4 flex items-center">
+                                    <label class="block text-gray-700 font-semibold mr-4">Conta Ativa</label>
                                     <input class="form-checkbox h-5 w-5 text-blue-600"
-                                           type="checkbox" id="isBlocked" th:field="*{user.enabled}" />
+                                           type="checkbox" id="isEnabled" th:field="*{user.enabled}" />
                                 </div>
                             </div>
 

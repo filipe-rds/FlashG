@@ -75,22 +75,9 @@ public class PhotographerService {
         Photographer existingPhotographer = repository.findById(photographer.getId())
                 .orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
 
-        // Guarda a referência ao usuário existente
-        User existingUser = existingPhotographer.getUser();
 
         // Atualiza somente os campos que não são nulos
         copyNonNullProperties(photographer, existingPhotographer);
-
-        // Agora atualiza os dados do usuário separadamente
-        if (photographer.getUser() != null) {
-            User updatedUser = photographer.getUser();
-            if (updatedUser.getEmail() != null) {
-                existingUser.setEmail(updatedUser.getEmail());
-            }
-
-            // Redefine o usuário existente atualizado
-            existingPhotographer.setUser(existingUser);
-        }
 
         // Persiste as alterações no banco de dados
         repository.save(existingPhotographer);
@@ -132,6 +119,7 @@ public class PhotographerService {
         }
     }
 
+
     public List<Photo> findAllPhotos(Long id){
         return repository.findAllPhotos(id);
     }
@@ -161,20 +149,31 @@ public class PhotographerService {
 
         // Restaura o usuário original e atualiza apenas os campos específicos do usuário
         if (source.getUser() != null) {
-            // Atualiza o email se fornecido
-            if (source.getUser().getEmail() != null) {
-                originalUser.setEmail(source.getUser().getEmail());
+            User updatedUser = source.getUser();
+
+            // Atualiza a senha para ser ciptografada caso haja alguma mudança
+            if (!updatedUser.getPassword().equals(originalUser.getPassword())) {
+                String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
+                updatedUser.setPassword(encodedPassword);
             }
 
-            // Atualiza a senha se fornecida
-            if (source.getUser().getPassword() != null && !source.getUser().getPassword().isEmpty()) {
-                String encodedPassword = passwordEncoder.encode(source.getUser().getPassword());
-                originalUser.setPassword(encodedPassword);
-            }
+            // Persiste a role do usuário
+            updatedUser.setRole(originalUser.getRole());
+
+            // Atualiza os demais campos
+            copyNonNullPropertiesGeneric(updatedUser, originalUser);
+
         }
 
         // Restaura a referência do usuário original
         target.setUser(originalUser);
+    }
+
+    // Copia propriedades não nulas de um objeto de origem para um objeto de destino.
+    private void copyNonNullPropertiesGeneric(Object source, Object target) {
+        // Usa o método utilitário do Spring BeanUtils para copiar as propriedades,
+        // excluindo aquelas que estão nulas no objeto de origem.
+        BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
     }
 
     // Retorna os nomes das propriedades nulas de um objeto.
