@@ -88,13 +88,6 @@ public class PhotographerService {
                 existingUser.setEmail(updatedUser.getEmail());
             }
 
-            // Atualiza a senha se fornecida
-            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                // Criptografa a nova senha antes de salvar
-                String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
-                existingUser.setPassword(encodedPassword);
-            }
-
             // Redefine o usuário existente atualizado
             existingPhotographer.setUser(existingUser);
         }
