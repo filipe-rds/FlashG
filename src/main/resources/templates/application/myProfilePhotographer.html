@@ -196,86 +196,84 @@
                                 </div>
                             </div>
                             <!-- Comments Section -->
+                            <!-- Esta parte seria inserida no local onde está a seção de comentários existente -->
                             <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
                                 <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
                                     <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
-                                    <div th:each="comment : ${photo.comments}">
-                                        <div class="flex items-start gap-3 mb-4 max-w-[294px]">
-                                            <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil"
-                                                 class="h-8 w-8 rounded-full object-cover">
-                                            <div>
-                                                <div class="flex flex-row justify-between items-center gap-6">
-                                                    <p th:text="${comment.photographer.username}"
-                                                       class="text-sm font-medium text-slate-800"></p>
-                                                    <p th:text="${comment.getDate()}"
-                                                       class="text-sm font-medium text-slate-800"></p>
-                                                    <!-- Botão de editar (somente para o dono do comentário) -->
-                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
-                                                         class="mt-2">
-                                                        <button th:attr="onclick='enableEdit(' + ${comment.id} + ')'"
-                                                                class="text-blue-600 text-sm hover:underline">
-                                                            <img th:src="@{/assets/icons/pen.svg}" alt="User icon"
-                                                                 class="w-[18px] h-[18px]">
-                                                        </button>
-                                                    </div>
-                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
-                                                         class="mt-2">
-                                                        <button th:attr="onclick='enableDelete(' + ${comment.id} + ')'"
-                                                                class="text-blue-600 text-sm hover:underline">
-                                                            <img th:src="@{/assets/icons/trash.svg}" alt="User icon"
-                                                                 class="w-[18px] h-[18px]">
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <!-- Exibição do comentário -->
-                                                <p th:id="'commentText-' + ${comment.id}"
-                                                   th:text="${comment.commentText}"
-                                                   class="text-sm text-slate-600 max-w-[248px] break-words"></p>
-
-                                                <!-- Formulário de edição (oculto por padrão) -->
-                                                <form th:id="'editForm-' + ${comment.id}" class="hidden mt-2">
-                            <textarea th:id="'editTextArea-' + ${comment.id}"
-                                      class="w-full p-2 rounded-md border text-sm" maxlength="512"
-                                      th:text="${comment.commentText}"></textarea>
-                                                    <div class="flex gap-2 mt-2">
-                                                        <button type="submit"
-                                                                th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'"
-                                                                class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
-                                                            Salvar
-                                                        </button>
-                                                        <button type="button"
-                                                                class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                                                th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">
-                                                            Cancelar
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                                <!-- Formulário de exclusão (oculto por padrão) -->
-                                                <form th:id="'deleteForm-' + ${comment.id}" class="hidden mt-2">
-                                                    <div class="flex gap-2 mt-2">
-                                                        <button type="submit"
-                                                                th:attr="onclick='deleteCommentNew(event, ' + ${comment.id} + ')'"
-                                                                class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">
-                                                            Excluir
-                                                        </button>
-                                                        <button type="button"
-                                                                class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                                                th:attr="onclick='cancelDelete(' + ${comment.id} + ')'">
-                                                            Cancelar
-                                                        </button>
-                                                    </div>
-                                                </form>
+                                    <!-- Loop pelos comentários -->
+                                    <div th:each="comment : ${photo.comments}" th:id="'comment-' + ${comment.id}" class="flex items-start gap-3 mb-4 max-w-[294px]">
+                                        <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil"
+                                             class="h-8 w-8 rounded-full object-cover">
+                                        <div class="w-full">
+                                            <div class="flex flex-row justify-between items-center">
+                                                <p th:text="${comment.photographer.username}"
+                                                   class="text-sm font-medium text-slate-800"></p>
+                                                <p th:text="${comment.getDate()}"
+                                                   class="text-xs text-gray-500"></p>
                                             </div>
+
+                                            <!-- Texto do comentário -->
+                                            <p th:id="'commentText-' + ${comment.id}"
+                                               th:text="${comment.commentText}"
+                                               class="text-sm text-slate-600 max-w-[248px] break-words">
+                                            </p>
+
+                                                <!-- Botões apenas visíveis para o dono do comentário -->
+                                            <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="flex gap-2 mt-2">
+                                                <button class="edit-btn text-blue-600 text-sm hover:underline" th:data-id="${comment.id}">
+                                                    <img th:src="@{/assets/icons/pen.svg}" alt="Editar" class="w-[18px] h-[18px]">
+                                                </button>
+                                                <button class="delete-btn text-red-600 text-sm hover:underline" th:data-id="${comment.id}">
+                                                    <img th:src="@{/assets/icons/trash.svg}" alt="Excluir" class="w-[18px] h-[18px]">
+                                                </button>
+                                            </div>
+
+
+
+
+                                            <!-- Formulário de edição (oculto por padrão) -->
+                                            <form th:id="'editForm-' + ${comment.id}" class="edit-form hidden mt-2" th:data-id="${comment.id}">
+                                                <textarea th:id="'editTextArea-' + ${comment.id}"
+                                                          class="w-full p-2 rounded-md border text-sm" maxlength="512"
+                                                          th:text="${comment.commentText}">
+                                                </textarea>
+                                                <div class="flex gap-2 mt-2">
+                                                    <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
+                                                        Salvar
+                                                    </button>
+                                                    <button type="button" class="cancel-edit-btn px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                            th:data-id="${comment.id}">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <!-- Formulário de exclusão (oculto por padrão) -->
+                                            <form th:id="'deleteForm-' + ${comment.id}" class="delete-form hidden mt-2" th:data-id="${comment.id}">
+                                                <div class="flex gap-2 mt-2">
+                                                    <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">
+                                                        Excluir
+                                                    </button>
+                                                    <button type="button" class="cancel-delete-btn px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                            th:data-id="${comment.id}">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
-                  <textarea
-                          th:id="'textArea-' + ${iterStat.index}"
-                          placeholder="Escreva seu comentário..."
-                          class="w-full p-2 rounded-md border text-sm"
-                          name="commentText" maxlength="512"
-                          th:value="${commentText}"></textarea>
+
+                                <!-- Formulário para adicionar novos comentários -->
+                                <form th:id="'form-' + ${iterStat.index}" class="mt-4">
+                                    <textarea
+                                            th:id="'textArea-' + ${iterStat.index}"
+                                            placeholder="Escreva seu comentário..."
+                                            class="w-full p-2 rounded-md border text-sm"
+                                            name="commentText" maxlength="512"
+                                            th:value="${commentText}">
+
+                                    </textarea>
                                     <div>
                                         <input type="hidden" id="createdAt" name="createdAt"/>
                                         <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
@@ -294,74 +292,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function enableDelete(commentId) {
-            document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
-        }
-
-        function cancelDelete(commentId) {
-            document.getElementById('deleteForm-' + commentId).classList.add('hidden');
-        }
-
-        function deleteCommentNew(event, commentId) {
-            event.preventDefault();
-            fetch('/FlashG/comment/delete', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({commentId})
-            })
-                .then(() => {
-                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-                })
-                .catch(error => console.error('Erro ao excluir comentário:', error));
-        }
-
-        function enableEdit(commentId) {
-            document.getElementById('commentText-' + commentId).classList.add('hidden');
-            document.getElementById('editForm-' + commentId).classList.remove('hidden');
-        }
-
-        function cancelEdit(commentId) {
-            document.getElementById('commentText-' + commentId).classList.remove('hidden');
-            document.getElementById('editForm-' + commentId).classList.add('hidden');
-        }
-
-        function submitEdit(event, commentId) {
-            event.preventDefault();
-            const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
-
-            if (newCommentText === "") {
-                deleteComment(commentId);
-                return;
-            }
-
-            fetch('/FlashG/comment/edit', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({commentId, newCommentText})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('commentText-' + commentId).innerText = data.updatedText;
-                    document.getElementById('commentText-' + commentId).classList.remove('hidden');
-                    document.getElementById('editForm-' + commentId).classList.add('hidden');
-                })
-                .catch(error => console.error('Erro ao atualizar comentário:', error));
-        }
-
-        function deleteComment(commentId) {
-            fetch('/FlashG/comment/delete', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({commentId})
-            })
-                .then(() => {
-                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-                })
-                .catch(error => console.error('Erro ao excluir comentário:', error));
-        }
-    </script>
 </div>
 </body>
 </html>
