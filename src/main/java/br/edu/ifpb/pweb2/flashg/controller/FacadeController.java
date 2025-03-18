@@ -63,7 +63,7 @@ public class FacadeController {
     }
 
 
-    @GetMapping("/logout")
+    @GetMapping("/auth/logout")
     public ModelAndView logout(ModelAndView mav, HttpSession session) {
         facadeService.logoutPhotographer(session);
         mav.setViewName("redirect:/auth/signin");
@@ -269,8 +269,12 @@ public class FacadeController {
 
 
     @PostMapping(value = "/editProfilePhotographer")
-    public ModelAndView editProfilePhotographer(@Valid @ModelAttribute Photographer photographer, BindingResult result, HttpSession session, RedirectAttributes redirectAttributes) throws EmailAlreadyExists {
-
+    public ModelAndView editProfilePhotographer(
+            @Valid @ModelAttribute Photographer photographer,
+            BindingResult result,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) throws EmailAlreadyExists {
         ModelAndView mav = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -335,7 +339,7 @@ public class FacadeController {
         facadeService.saveComment(comment);
         facadeService.findAllCommentOfPhoto(photo);
         Photo photoBanco = facadeService.findPhotoById(photo.getId());
-        CommentDTO commentDTO = new CommentDTO(comment.getPhotographer().getProfilePictureUrl(), comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(), photoBanco.getComments().size());
+        CommentDTO commentDTO = new CommentDTO(comment.getId(),comment.getPhotographer().getProfilePictureUrl(), comment.getCommentText(), comment.getDate(), comment.getPhotographer().getUsername(), photoBanco.getComments().size());
         return ResponseEntity.status(HttpStatus.CREATED).body(commentDTO);
     }
 

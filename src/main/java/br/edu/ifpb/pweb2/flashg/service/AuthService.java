@@ -2,60 +2,71 @@ package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.entity.User;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
 import br.edu.ifpb.pweb2.flashg.exception.PhotographerIsBlockedException;
 import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
+import br.edu.ifpb.pweb2.flashg.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public class AuthService implements UserDetailsService {
     @Autowired
-    private PhotographerRepository photographerRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private  PhotographerRepository photographerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private boolean isEmailAlreadyRegistered(String email) {
-        return this.photographerRepository.findByEmail(email).isPresent();
-    }
 
-    private boolean isUsernameAlreadyRegistered(String username) throws UsernameAlreadyExists {
-        return this.photographerRepository.findByUsername(username).isPresent();
-    }
+    // ================ Registro ================
+    @Transactional
+    public Photographer register(Photographer photographer)
+            throws EmailAlreadyExists, UsernameAlreadyExists {
 
-    public Photographer register(Photographer photographer) throws EmailAlreadyExists {
-        if (isEmailAlreadyRegistered(photographer.getEmail())) {
-            throw new EmailAlreadyExists();
-        }
+        validateUserEmail(photographer.getUser().getEmail());
+        validatePhotographerUsername(photographer.getUsername());
 
-        if(isUsernameAlreadyRegistered(photographer.getUsername())){
-            throw new UsernameAlreadyExists();
-        }
+        // Codifica a senha do User
+        photographer.getUser().setPassword(
+                passwordEncoder.encode(photographer.getUser().getPassword())
+        );
 
         photographer.setProfilePictureUrl("https://media.cdnandroid.com/60/1f/2a/ad/b6/imagen-dazz-cam-vintage-film-camera-retro-art-0ori.jpg");
 
-        return this.photographerRepository.save(photographer);
+        return photographerRepository.save(photographer);
     }
 
-    public Photographer login(LoginDTO photographer) throws EmailOrPasswordIsIncorrect, PhotographerIsBlockedException {
-        Optional<Photographer> optionalPhotographer = this.photographerRepository.findByEmail(photographer.getEmail());
 
-        if (optionalPhotographer.isPresent()) {
-            Photographer photographerGet = optionalPhotographer.get();
-            
-            if(photographerGet.isBlocked()){
-                throw new PhotographerIsBlockedException();
-            }
-            if (photographerGet.getPassword().equals(photographer.getPassword())) {
-                return optionalPhotographer.get();
-            } else {
-                throw new EmailOrPasswordIsIncorrect();
-            }
-        } else {
-            throw new EmailOrPasswordIsIncorrect();
+    // ================ Validações ================
+    private void validateUserEmail(String email) throws EmailAlreadyExists {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new EmailAlreadyExists("E-mail já registrado: " + email);
         }
+    }
+
+    private void validatePhotographerUsername(String username) throws UsernameAlreadyExists {
+        Optional<Photographer> photographer = photographerRepository.findByUsername(username);
+        if (photographer.isPresent()) {
+            throw new UsernameAlreadyExists("Username já existe: " + username);
+        }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
     }
 
 }

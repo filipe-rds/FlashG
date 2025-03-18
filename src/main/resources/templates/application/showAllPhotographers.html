@@ -37,70 +37,70 @@ layout:decorate="~{layout/layout}">
             <div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                 <table class="w-full text-left table-auto min-w-max">
                     <thead>
-                        <tr>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Id
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Username
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Nome
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    E-mail
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Pode ser seguido
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Administrador
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Bloqueio
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Editar Dados
-                                </p>
-                            </th>
-                        </tr>
+                    <tr>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Id
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Username
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Nome
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                E-mail
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Pode ser seguido
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Privilégios
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Bloqueio
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Editar Dados
+                            </p>
+                        </th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
-                            <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
-                            <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
-                            <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
-                            <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
-                            <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <form th:action="@{/blockAction}" method="POST">
-                                <td class="p-4 py-5 text-sm">
-                                    <input type="hidden" name="id" th:value="${photographer.id}" />
-                                    <button type="submit" 
-                                            th:text="${photographer.isBlocked ? 'Desbloquear' : 'Bloquear'}" 
-                                            class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
-                                    </button>
-                                </td>
-                            </form>                                                 
-                            <td class="p-4 py-5 text-sm ">
-                                <a th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Editar</a>
+                    <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
+                        <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
+                        <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
+                        <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
+                        <td th:text="${photographer.user.email}" class="p-4 py-5 text-sm text-slate-800"></td>
+                        <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                        <td th:text="${photographer.user.role}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                        <form th:action="@{/blockAction}" method="POST">
+                            <td class="p-4 py-5 text-sm">
+                                <input type="hidden" name="id" th:value="${photographer.id}" />
+                                <button type="submit"
+                                        th:text="${photographer.user.enabled ? 'Bloquear' : 'Desbloquear'}"
+                                        class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
+                                </button>
                             </td>
-                        </tr>
+                        </form>
+                        <td class="p-4 py-5 text-sm ">
+                            <a th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Editar</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -136,14 +136,7 @@ layout:decorate="~{layout/layout}">
                         <div class="text-sm text-slate-500" >
                             <p><b th:text="${'Total: ' + photographers.size()}"></b></p>
                         </div>
-<!--                        <div class="flex space-x-1">-->
-<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
-<!--                                Prev-->
-<!--                            </button>-->
-<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
-<!--                                Next-->
-<!--                            </button>-->
-<!--                        </div>-->
+
                     </div>
                 </div>
             </div>
