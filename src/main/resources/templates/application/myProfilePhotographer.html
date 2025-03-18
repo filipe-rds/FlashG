@@ -4,336 +4,364 @@
       xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-  <title>FlashG</title>
+    <title>FlashG</title>
 </head>
 <body>
 <div layout:fragment="content">
-  <div th:if="${photographer}" class="overflow-auto max-w-full max-h-screen">
-    <div class="bg-gray-100 h-auto px-12 lg:px-48 py-8">
-      <div class="flex md:flex-row-reverse flex-wrap">
-        <!-- Informações do usuário -->
-        <div class="w-full md:w-3/4 p-4">
-          <div class="text-left pl-4 pt-3 flex justify-between items-center">
-            <div>
-              <h1 class="text-2xl font-bold text-gray-800"
-                  th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"></h1>
-              <p class="text-lg text-gray-600" th:text="'@' + ${photographer.username}"></p>
-            </div>
-            <div class="flex gap-4">
-              <!-- Botão de editar -->
-              <button class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg">
-                <a th:href="@{showEditProfilePhotographer/{id}(id=${session.loggedPhotographer.id})}">Editar Perfil</a>
-              </button>
-            </div>
-          </div>
+    <div th:if="${photographer}" class="overflow-auto max-w-full max-h-screen">
+        <div class="bg-gray-100 h-auto px-12 lg:px-48 py-8">
+            <div class="flex md:flex-row-reverse flex-wrap">
+                <!-- Informações do usuário -->
+                <div class="w-full md:w-3/4 p-4">
+                    <div class="text-left pl-4 pt-3 flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800"
+                                th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"></h1>
+                            <p class="text-lg text-gray-600" th:text="'@' + ${photographer.username}"></p>
+                        </div>
+                        <div class="flex gap-4">
+                            <!-- Botão de editar -->
+                            <button class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg">
+                                <a th:href="@{showEditProfilePhotographer/{id}(id=${session.loggedPhotographer.id})}">Editar
+                                    Perfil</a>
+                            </button>
+                        </div>
+                    </div>
 
-          <div class="text-left pl-4 pt-3">
+                    <div class="text-left pl-4 pt-3">
                 <span class="text-base font-semibold text-gray-700 mr-4">
                   <b th:if="${photos}" th:text="${photos.size()}"></b> posts
                 </span>
-            <span class="text-base font-semibold text-gray-700 mr-4">
+                        <span class="text-base font-semibold text-gray-700 mr-4">
                   <b th:text="${photographer.followers.size()}"></b> seguidores
                 </span>
-            <span class="text-base font-semibold text-gray-700">
+                        <span class="text-base font-semibold text-gray-700">
                   <b th:text="${photographer.following.size()}"></b> seguindo
                 </span>
-          </div>
-
-          <div class="text-left pl-4 pt-3">
-            <p class="text-base font-medium text-blue-700"></p>
-            <p class="text-base font-medium text-gray-700">
-              Bio
-            </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod.</p>
-          </div>
-        </div>
-
-        <!-- Avatar -->
-        <div class="w-full h-full md:w-1/4 text-center">
-          <div class="relative mt-8 cursor-pointer">
-            <img class="h-40 w-40 rounded-full object-cover mx-auto"
-                 alt="Avatar do fotógrafo"
-                 th:src="${photographer.profilePictureUrl}"
-                 th:data-dialog-target="dialog-avatar"/>
-          </div>
-        </div>
-      </div>
-    </div>
-
-      <!--  dialog para  alterar o avatar -->
-      <div data-dialog-backdrop="dialog-avatar" data-dialog-backdrop-close="true"
-           class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-          <div class="relative flex flex-col justify-around md:flex-row items-center gap-6 m-4 w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg" role="dialog" th:data-dialog="dialog-avatar">
-
-              <!-- Avatar Preview -->
-              <div class="text-center flex flex-col items-center gap-4">
-                  <div class="relative">
-                      <img
-                              id="avatar-preview"
-                              th:src="${photographer.profilePictureUrl}"
-                              class="h-40 w-40 rounded-full object-cover border border-gray-300"
-                              alt="Avatar do fotógrafo"
-                      />
-                  </div>
-                  <span class="text-sm text-gray-600">Pré-visualização da foto</span>
-              </div>
-
-              <!-- Upload & Confirm Section -->
-              <form th:action="@{/myProfile}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center gap-6">
-                  <!-- Upload -->
-                  <label for="avatar" class="flex flex-col items-center gap-2 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-gray-500 stroke-gray-700" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <span class="text-gray-600 font-medium">Upload Foto</span>
-                  </label>
-                  <input type="file" class="hidden" id="avatar" th:name="avatar" accept="image/*" required
-                         onchange="previewImage(event)" />
-
-                  <!-- Confirm Button -->
-                  <button type="submit" class="px-6 py-2 rounded-lg bg-gray-800 text-white font-semibold hover:bg-gray-900 transition">
-                      Confirmar Alteração
-                  </button>
-              </form>
-          </div>
-      </div>
-
-    <div th:if="${photos}" class="overflow-auto mx-auto p-4">
-      <div class="w-full px-4">
-        <div class="mb-6 text-center">
-          <h2 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Suas Fotos</h2>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
-          <div th:each="photo, iterStat : ${photos}">
-            <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md"
-                 th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
-              <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}"
-                   th:alt="${photo.title}"/>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dialog foto -->
-        <div th:each="photo, iterStat : ${photos}">
-          <div th:id="'dialog-' + ${iterStat.index}" th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
-               data-dialog-backdrop-close="true"
-               class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
-            <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
-                 th:data-dialog="'image-dialog-' + ${iterStat.index}">
-
-              <!-- Main Content -->
-              <div class="flex flex-col justify-between flex-1 p-4 overflow-y-scroll">
-                <!-- Header -->
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <img th:src="${photographer.profilePictureUrl}"
-                         alt="foto-perfil"
-                         class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
-                    <div class="pl-1 -mt-px flex flex-col">
-                      <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"
-                         class="text-sm text-slate-800 font-medium"></p>
-                      <p th:text="'@'+ ${photographer.username}"
-                         class="text-xs font-normal text-slate-500"></p>
                     </div>
-                  </div>
+
+                    <div class="text-left pl-4 pt-3">
+                        <p class="text-base font-medium text-blue-700"></p>
+                        <p class="text-base font-medium text-gray-700">
+                            Bio
+                        </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod.</p>
+                    </div>
                 </div>
 
-                <!-- Image -->
-                <div class="relative border-b border-t border-blue-gray-100 my-4">
-                  <img th:alt="${photo.title}" class="h-[30rem] w-full object-cover object-center"
-                       th:src="${photo.imageUrl}" />
+                <!-- Avatar -->
+                <div class="w-full h-full md:w-1/4 text-center">
+                    <div class="relative mt-8 cursor-pointer">
+                        <img class="h-40 w-40 rounded-full object-cover mx-auto"
+                             alt="Avatar do fotógrafo"
+                             th:src="${photographer.profilePictureUrl}"
+                             th:data-dialog-target="dialog-avatar"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  dialog para  alterar o avatar -->
+        <div data-dialog-backdrop="dialog-avatar" data-dialog-backdrop-close="true"
+             class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+            <div class="relative flex flex-col justify-around md:flex-row items-center gap-6 m-4 w-full max-w-3xl rounded-lg bg-white p-6 shadow-lg"
+                 role="dialog" th:data-dialog="dialog-avatar">
+
+                <!-- Avatar Preview -->
+                <div class="text-center flex flex-col items-center gap-4">
+                    <div class="relative">
+                        <img
+                                id="avatar-preview"
+                                th:src="${photographer.profilePictureUrl}"
+                                class="h-40 w-40 rounded-full object-cover border border-gray-300"
+                                alt="Avatar do fotógrafo"
+                        />
+                    </div>
+                    <span class="text-sm text-gray-600">Pré-visualização da foto</span>
                 </div>
 
-                <!-- Title -->
-                <h1 class="text-xl font-semibold text-slate-800 text-center" th:text="${photo.title}"></h1>
-                <!--   Tags               -->
-                  <div class="text-sm text-slate-600 text-center mt-2">
+                <!-- Upload & Confirm Section -->
+                <form th:action="@{/myProfile}" method="POST" enctype="multipart/form-data"
+                      class="flex flex-col items-center gap-6">
+                    <!-- Upload -->
+                    <label for="avatar" class="flex flex-col items-center gap-2 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 fill-gray-500 stroke-gray-700"
+                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="text-gray-600 font-medium">Upload Foto</span>
+                    </label>
+                    <input type="file" class="hidden" id="avatar" th:name="avatar" accept="image/*" required
+                           onchange="previewImage(event)"/>
+
+                    <!-- Confirm Button -->
+                    <button type="submit"
+                            class="px-6 py-2 rounded-lg bg-gray-800 text-white font-semibold hover:bg-gray-900 transition">
+                        Confirmar Alteração
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${photos}" class="overflow-auto mx-auto p-4">
+            <div class="w-full px-4">
+                <div class="mb-6 text-center">
+                    <h2 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Suas Fotos</h2>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
+                    <div th:each="photo, iterStat : ${photos}">
+                        <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md"
+                             th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
+                            <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}"
+                                 th:alt="${photo.title}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dialog foto -->
+                <div th:each="photo, iterStat : ${photos}">
+                    <div th:id="'dialog-' + ${iterStat.index}"
+                         th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+                         data-dialog-backdrop-close="true"
+                         class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
+                        <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
+                             th:data-dialog="'image-dialog-' + ${iterStat.index}">
+
+                            <!-- Main Content -->
+                            <div class="flex flex-col justify-between flex-1 p-4 overflow-y-scroll">
+                                <!-- Header -->
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img th:src="${photographer.profilePictureUrl}"
+                                             alt="foto-perfil"
+                                             class="relative inline-block h-9 w-9 rounded-full object-cover object-center">
+                                        <div class="pl-1 -mt-px flex flex-col">
+                                            <p th:text="${photographer.firstName} + ' ' + ${photographer.lastName}"
+                                               class="text-sm text-slate-800 font-medium"></p>
+                                            <p th:text="'@'+ ${photographer.username}"
+                                               class="text-xs font-normal text-slate-500"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Image -->
+                                <div class="relative border-b border-t border-blue-gray-100 my-4">
+                                    <img th:alt="${photo.title}" class="h-[30rem] w-full object-cover object-center"
+                                         th:src="${photo.imageUrl}"/>
+                                </div>
+
+                                <!-- Title -->
+                                <h1 class="text-xl font-semibold text-slate-800 text-center"
+                                    th:text="${photo.title}"></h1>
+                                <!--   Tags               -->
+                                <div class="text-sm text-slate-600 text-center mt-2">
                     <span th:each="tag : ${photoTagsMap[photo.id]}"
                           th:text="'#'+ ${tag.tagName}"
                           class="tag bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold
                  hover:bg-gray-700 transition-all duration-200 shadow-sm mr-2 mb-2 inline-block">
                     </span>
-                  </div>
+                                </div>
 
-                <!-- Description -->
-                <p class="text-sm text-slate-600 text-center mt-2" th:text="${photo.description}"></p>
+                                <!-- Description -->
+                                <p class="text-sm text-slate-600 text-center mt-2" th:text="${photo.description}"></p>
 
-                <!-- Footer -->
-                <div class="flex shrink-0 flex-wrap items-center justify-between mt-4 text-blue-gray-500">
-                  <div class="flex items-center gap-16">
-                    <div>
-                      <p class="text-slate-500 text-sm">Curtidas</p>
-                      <p th:id="'sizeLikes-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.likes.size()}"></p>
-                    </div>
-                    <div>
-                      <p class="text-slate-500 text-sm">Comentários</p>
-                      <p th:id="'sizeComment-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
-                    </div>
-                  </div>
+                                <!-- Footer -->
+                                <div class="flex shrink-0 flex-wrap items-center justify-between mt-4 text-blue-gray-500">
+                                    <div class="flex items-center gap-16">
+                                        <div>
+                                            <p class="text-slate-500 text-sm">Curtidas</p>
+                                            <p th:id="'sizeLikes-' + ${iterStat.index}"
+                                               class="text-slate-800 font-medium" th:text="${photo.likes.size()}"></p>
+                                        </div>
+                                        <div>
+                                            <p class="text-slate-500 text-sm">Comentários</p>
+                                            <p th:id="'sizeComment-' + ${iterStat.index}"
+                                               class="text-slate-800 font-medium"
+                                               th:text="${photo.comments.size()}"></p>
+                                        </div>
+                                    </div>
 
 
+                                    <form th:id="'formLike-' + ${iterStat.index}" action="">
+                                        <input type="hidden" id="photo" name="photo" th:value="${photo.id}"/>
+                                        <input type="hidden" id="photographer" name="photographer"
+                                               th:value="${session.loggedPhotographer.id}"/>
 
-
-                <form  th:id="'formLike-' + ${iterStat.index}" action="">
-                  <input type="hidden" id="photo" name="photo" th:value="${photo.id}"/>
-                  <input type="hidden" id="photographer" name="photographer" th:value="${session.loggedPhotographer.id}"/>
-
-                  <button  th:id="'buttonLike-' + ${iterStat.index}" type="submit" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
-                    <a th:text="${statusLikes[iterStat.index]}"></a>
-                  </button>
-                </form>
-                </div>
-              </div>
-              <!-- Comments Section -->
-              <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
-                <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
-                  <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
-                  <div th:each="comment : ${photo.comments}">
-                    <div class="flex items-start gap-3 mb-4 max-w-[294px]">
-                      <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
-                      <div>
-                        <div class="flex flex-row justify-between items-center gap-6">
-                            <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
-                            <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
-                            <!-- Botão de editar (somente para o dono do comentário) -->
-                            <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="mt-2">
-                                <button th:attr="onclick='enableEdit(' + ${comment.id} + ')'"
-                                        class="text-blue-600 text-sm hover:underline">
-                                    <img th:src="@{/assets/icons/pen.svg}" alt="User icon" class="w-[18px] h-[18px]">
-                                </button>
+                                        <button th:id="'buttonLike-' + ${iterStat.index}" type="submit"
+                                                class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
+                                            <a th:text="${statusLikes[iterStat.index]}"></a>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
-                            <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="mt-2">
-                              <button th:attr="onclick='enableDelete(' + ${comment.id} + ')'"
-                                      class="text-blue-600 text-sm hover:underline">
-                                  <img th:src="@{/assets/icons/trash.svg}" alt="User icon" class="w-[18px] h-[18px]">
-                              </button>
-                          </div>
-                        </div>
-                        <!-- Exibição do comentário -->
-                        <p th:id="'commentText-' + ${comment.id}" th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
+                            <!-- Comments Section -->
+                            <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
+                                <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
+                                    <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
+                                    <div th:each="comment : ${photo.comments}">
+                                        <div class="flex items-start gap-3 mb-4 max-w-[294px]">
+                                            <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil"
+                                                 class="h-8 w-8 rounded-full object-cover">
+                                            <div>
+                                                <div class="flex flex-row justify-between items-center gap-6">
+                                                    <p th:text="${comment.photographer.username}"
+                                                       class="text-sm font-medium text-slate-800"></p>
+                                                    <p th:text="${comment.getDate()}"
+                                                       class="text-sm font-medium text-slate-800"></p>
+                                                    <!-- Botão de editar (somente para o dono do comentário) -->
+                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
+                                                         class="mt-2">
+                                                        <button th:attr="onclick='enableEdit(' + ${comment.id} + ')'"
+                                                                class="text-blue-600 text-sm hover:underline">
+                                                            <img th:src="@{/assets/icons/pen.svg}" alt="User icon"
+                                                                 class="w-[18px] h-[18px]">
+                                                        </button>
+                                                    </div>
+                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
+                                                         class="mt-2">
+                                                        <button th:attr="onclick='enableDelete(' + ${comment.id} + ')'"
+                                                                class="text-blue-600 text-sm hover:underline">
+                                                            <img th:src="@{/assets/icons/trash.svg}" alt="User icon"
+                                                                 class="w-[18px] h-[18px]">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- Exibição do comentário -->
+                                                <p th:id="'commentText-' + ${comment.id}"
+                                                   th:text="${comment.commentText}"
+                                                   class="text-sm text-slate-600 max-w-[248px] break-words"></p>
 
-                        <!-- Formulário de edição (oculto por padrão) -->
-                        <form th:id="'editForm-' + ${comment.id}" class="hidden mt-2">
-                            <textarea th:id="'editTextArea-' + ${comment.id}" class="w-full p-2 rounded-md border text-sm" maxlength="512"
-                                th:text="${comment.commentText}"></textarea>
-                              <div class="flex gap-2 mt-2">
-                                  <button type="submit" th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">Salvar</button>
-                                  <button type="button" class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                          th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">Cancelar</button>
-                              </div>
-                        </form>
-                        <!-- Formulário de exclusão (oculto por padrão) -->
-                        <form th:id="'deleteForm-' + ${comment.id}" class="hidden mt-2">
-                            <div class="flex gap-2 mt-2">
-                                <button type="submit" th:attr="onclick='deleteCommentNew(event, ' + ${comment.id} + ')'" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">Excluir</button>
-                                <button type="button" class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                        th:attr="onclick='cancelDelete(' + ${comment.id} + ')'">Cancelar</button>
-                            </div>
-                      </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
+                                                <!-- Formulário de edição (oculto por padrão) -->
+                                                <form th:id="'editForm-' + ${comment.id}" class="hidden mt-2">
+                            <textarea th:id="'editTextArea-' + ${comment.id}"
+                                      class="w-full p-2 rounded-md border text-sm" maxlength="512"
+                                      th:text="${comment.commentText}"></textarea>
+                                                    <div class="flex gap-2 mt-2">
+                                                        <button type="submit"
+                                                                th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'"
+                                                                class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
+                                                            Salvar
+                                                        </button>
+                                                        <button type="button"
+                                                                class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                                th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                                <!-- Formulário de exclusão (oculto por padrão) -->
+                                                <form th:id="'deleteForm-' + ${comment.id}" class="hidden mt-2">
+                                                    <div class="flex gap-2 mt-2">
+                                                        <button type="submit"
+                                                                th:attr="onclick='deleteCommentNew(event, ' + ${comment.id} + ')'"
+                                                                class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">
+                                                            Excluir
+                                                        </button>
+                                                        <button type="button"
+                                                                class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                                th:attr="onclick='cancelDelete(' + ${comment.id} + ')'">
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
                   <textarea
                           th:id="'textArea-' + ${iterStat.index}"
                           placeholder="Escreva seu comentário..."
                           class="w-full p-2 rounded-md border text-sm"
                           name="commentText" maxlength="512"
                           th:value="${commentText}"></textarea>
-                  <div>
-                      <input type="hidden" id="createdAt" name="createdAt" />
-                      <input type="hidden"  name="photo" id="photo" th:value="${photo.id}" />
-                      <input type="hidden"  name="photographer" id="photographer" th:value="${session.loggedPhotographer.id}" />
-                  </div>
-                  <button type="submit" class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">Enviar</button>
-                </form>
-              </div>
+                                    <div>
+                                        <input type="hidden" id="createdAt" name="createdAt"/>
+                                        <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
+                                        <input type="hidden" name="photographer" id="photographer"
+                                               th:value="${session.loggedPhotographer.id}"/>
+                                    </div>
+                                    <button type="submit"
+                                            class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">
+                                        Enviar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+
+    <script>
+        function enableDelete(commentId) {
+            document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
+        }
+
+        function cancelDelete(commentId) {
+            document.getElementById('deleteForm-' + commentId).classList.add('hidden');
+        }
+
+        function deleteCommentNew(event, commentId) {
+            event.preventDefault();
+            fetch('/FlashG/comment/delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId})
+            })
+                .then(() => {
+                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
+                })
+                .catch(error => console.error('Erro ao excluir comentário:', error));
+        }
+
+        function enableEdit(commentId) {
+            document.getElementById('commentText-' + commentId).classList.add('hidden');
+            document.getElementById('editForm-' + commentId).classList.remove('hidden');
+        }
+
+        function cancelEdit(commentId) {
+            document.getElementById('commentText-' + commentId).classList.remove('hidden');
+            document.getElementById('editForm-' + commentId).classList.add('hidden');
+        }
+
+        function submitEdit(event, commentId) {
+            event.preventDefault();
+            const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
+
+            if (newCommentText === "") {
+                deleteComment(commentId);
+                return;
+            }
+
+            fetch('/FlashG/comment/edit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId, newCommentText})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('commentText-' + commentId).innerText = data.updatedText;
+                    document.getElementById('commentText-' + commentId).classList.remove('hidden');
+                    document.getElementById('editForm-' + commentId).classList.add('hidden');
+                })
+                .catch(error => console.error('Erro ao atualizar comentário:', error));
+        }
+
+        function deleteComment(commentId) {
+            fetch('/FlashG/comment/delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId})
+            })
+                .then(() => {
+                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
+                })
+                .catch(error => console.error('Erro ao excluir comentário:', error));
+        }
+    </script>
 </div>
 </body>
 </html>
-<script>
-
-  function enableDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.add('hidden');
-    }
-
-    function deleteCommentNew(event,commentId) {
-      
-      event.preventDefault();
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-
-
-
-
-
-    function enableEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('editForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('editForm-' + commentId).classList.add('hidden');
-    }
-
-    function submitEdit(event, commentId) {
-        event.preventDefault();
-        const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
-
-        if (newCommentText === "") {
-            deleteComment(commentId);
-            return;
-        }
-
-        fetch('/FlashG/comment/edit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId, newCommentText })
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('commentText-' + commentId).innerText = data.updatedText;
-                document.getElementById('commentText-' + commentId).classList.remove('hidden');
-                document.getElementById('editForm-' + commentId).classList.add('hidden');
-            })
-            .catch(error => console.error('Erro ao atualizar comentário:', error));
-    }
-
-    function deleteComment(commentId) {
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-</script>
-<script th:src="@{/js/commentProcess.js}"></script>
-<script th:src="@{/js/likeProcess.js}"></script>

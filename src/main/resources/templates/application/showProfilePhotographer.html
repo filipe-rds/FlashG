@@ -198,16 +198,20 @@
                                                     <p th:text="${comment.getDate()}"
                                                        class="text-sm font-medium text-slate-800"></p>
                                                     <!-- Botão de editar (somente para o dono do comentário) -->
-                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="mt-2">
+                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
+                                                         class="mt-2">
                                                         <button th:attr="onclick='enableEdit(' + ${comment.id} + ')'"
                                                                 class="text-blue-600 text-sm hover:underline">
-                                                            <img th:src="@{/assets/icons/pen.svg}" alt="User icon" class="w-[18px] h-[18px]">
+                                                            <img th:src="@{/assets/icons/pen.svg}" alt="User icon"
+                                                                 class="w-[18px] h-[18px]">
                                                         </button>
                                                     </div>
-                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="mt-2">
+                                                    <div th:if="${session.loggedPhotographer.id == comment.photographer.id}"
+                                                         class="mt-2">
                                                         <button th:attr="onclick='enableDelete(' + ${comment.id} + ')'"
                                                                 class="text-blue-600 text-sm hover:underline">
-                                                            <img th:src="@{/assets/icons/trash.svg}" alt="User icon" class="w-[18px] h-[18px]">
+                                                            <img th:src="@{/assets/icons/trash.svg}" alt="User icon"
+                                                                 class="w-[18px] h-[18px]">
                                                         </button>
                                                     </div>
                                                 </div>
@@ -221,18 +225,18 @@
                                                 <textarea th:id="'editTextArea-' + ${comment.id}"
                                                           class="w-full p-2 rounded-md border text-sm" maxlength="512"
                                                           th:text="${comment.commentText}"></textarea>
-                                                <div class="flex gap-2 mt-2">
-                                                    <button type="submit"
-                                                            th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'"
-                                                            class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
-                                                        Salvar
-                                                    </button>
-                                                    <button type="button"
-                                                            class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
-                                                            th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">
-                                                        Cancelar
-                                                    </button>
-                                                </div>
+                                                    <div class="flex gap-2 mt-2">
+                                                        <button type="submit"
+                                                                th:attr="onclick='submitEdit(event, ' + ${comment.id} + ')'"
+                                                                class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
+                                                            Salvar
+                                                        </button>
+                                                        <button type="button"
+                                                                class="px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                                th:attr="onclick='cancelEdit(' + ${comment.id} + ')'">
+                                                            Cancelar
+                                                        </button>
+                                                    </div>
                                                 </form>
                                                 <!-- Formulário de exclusão (oculto por padrão) -->
                                                 <form th:id="'deleteForm-' + ${comment.id}" class="hidden mt-2">
@@ -278,86 +282,76 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function enableDelete(commentId) {
+            document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
+        }
+
+        function cancelDelete(commentId) {
+            document.getElementById('deleteForm-' + commentId).classList.add('hidden');
+        }
+
+        function deleteCommentNew(event, commentId) {
+
+            event.preventDefault();
+            fetch('/FlashG/comment/delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId})
+            })
+                .then(() => {
+                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
+                })
+                .catch(error => console.error('Erro ao excluir comentário:', error));
+        }
+
+
+        function enableEdit(commentId) {
+            document.getElementById('commentText-' + commentId).classList.add('hidden');
+            document.getElementById('editForm-' + commentId).classList.remove('hidden');
+        }
+
+        function cancelEdit(commentId) {
+            document.getElementById('commentText-' + commentId).classList.remove('hidden');
+            document.getElementById('editForm-' + commentId).classList.add('hidden');
+        }
+
+        function submitEdit(event, commentId) {
+            event.preventDefault();
+            const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
+
+            if (newCommentText === "") {
+                deleteComment(commentId);
+                return;
+            }
+
+            fetch('/FlashG/comment/edit', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId, newCommentText})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('commentText-' + commentId).innerText = data.updatedText;
+                    document.getElementById('commentText-' + commentId).classList.remove('hidden');
+                    document.getElementById('editForm-' + commentId).classList.add('hidden');
+                })
+                .catch(error => console.error('Erro ao atualizar comentário:', error));
+        }
+
+        function deleteComment(commentId) {
+            fetch('/FlashG/comment/delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({commentId})
+            })
+                .then(() => {
+                    document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
+                })
+                .catch(error => console.error('Erro ao excluir comentário:', error));
+        }
+    </script>
 </div>
 </body>
 </html>
-
-<script>
-
-    function enableDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.add('hidden');
-    }
-
-    function deleteCommentNew(event,commentId) {
-
-        event.preventDefault();
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-
-
-
-
-
-    function enableEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('editForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('editForm-' + commentId).classList.add('hidden');
-    }
-
-    function submitEdit(event, commentId) {
-        event.preventDefault();
-        const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
-
-        if (newCommentText === "") {
-            deleteComment(commentId);
-            return;
-        }
-
-        fetch('/FlashG/comment/edit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId, newCommentText })
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('commentText-' + commentId).innerText = data.updatedText;
-                document.getElementById('commentText-' + commentId).classList.remove('hidden');
-                document.getElementById('editForm-' + commentId).classList.add('hidden');
-            })
-            .catch(error => console.error('Erro ao atualizar comentário:', error));
-    }
-
-    function deleteComment(commentId) {
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-</script>
-<script th:src="@{/js/commentProcess.js}"></script>
-<script th:src="@{/js/likeProcess.js}"></script>
