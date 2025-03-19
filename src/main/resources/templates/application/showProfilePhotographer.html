@@ -173,6 +173,10 @@
                                                 class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
                                             <a th:text="${statusLikes[iterStat.index]}"></a>
                                         </button>
+
+                                        <div sec:authorize="hasRole('ADMIN')" th:if="${photo.comments.size() > 0}">
+                                            <button type="button" th:attr="onclick='generatepdf(' + ${photo.id} + ')'" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">Comentários em PDF</button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -276,3 +280,11 @@
 </div>
 </body>
 </html>
+
+<script>
+    async function generatepdf(photoId) {
+        const response = await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
+        const data = await response.json()
+        console.log(data)
+    }
+</script>
