@@ -216,8 +216,7 @@
                                             <form th:id="'editForm-' + ${comment.id}" class="edit-form hidden mt-2" th:data-id="${comment.id}">
                                                 <textarea th:id="'editTextArea-' + ${comment.id}"
                                                           class="w-full p-2 rounded-md border text-sm" maxlength="512"
-                                                          th:text="${comment.commentText}">
-                                                </textarea>
+                                                          th:text="${comment.commentText}"></textarea>
                                                 <div class="flex gap-2 mt-2">
                                                     <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
                                                         Salvar
@@ -252,9 +251,7 @@
                                             placeholder="Escreva seu comentário..."
                                             class="w-full p-2 rounded-md border text-sm"
                                             name="commentText" maxlength="512"
-                                            th:value="${commentText}">
-
-                                    </textarea>
+                                            th:value="${commentText}"></textarea>
                                     <div>
                                         <input type="hidden" id="createdAt" name="createdAt"/>
                                         <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
