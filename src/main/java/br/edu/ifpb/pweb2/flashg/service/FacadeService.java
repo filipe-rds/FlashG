@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -274,6 +275,9 @@ public class FacadeService {
         return commentService.findByPhotoOrderByCreatedAtDesc(photo);
     }
 
+    public List<CommentProjection> findAllCommentOfPhotoAtAsc(Long photoId) {
+        return commentService.findByPhotoOrderByCreatedAtAsc(photoId);
+    }
 
     public String handleLikeAction(long photoid, Long photographerid) {
         return LikeService.handleLikeAction(photoid, photographerid) ? "Descurtir" : "Curtir";
@@ -428,5 +432,9 @@ public class FacadeService {
 
     public void deleteComment(Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    public void generatePDF(List<CommentProjection> comments) throws FileNotFoundException {
+        commentService.generatePDF(comments);
     }
 }

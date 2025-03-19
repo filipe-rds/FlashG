@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
+@ToString(exclude = {"photo", "photographer"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
