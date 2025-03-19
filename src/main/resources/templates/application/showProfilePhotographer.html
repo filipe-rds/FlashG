@@ -164,24 +164,13 @@
                                     </div>
 
 
-                                    <form class="flex shrink-0 flex-wrap items-center justify-between" th:id="'formLike-' + ${iterStat.index}" action="">
+                                    <form th:id="'formLike-' + ${iterStat.index}" action="">
                                         <input type="hidden" id="photo" name="photo" th:value="${photo.id}"/>
                                         <input type="hidden" id="photographer" name="photographer"
                                                th:value="${session.loggedPhotographer.id}"/>
 
-                                        <div th:if="${photo.comments.size() > 0 and session.loggedPhotographer.isAdmin()}">
-                                            <button type="button" th:attr="onclick='generatepdf(' + ${photo.id} + ')'" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">Comentários em PDF</button>
-                                        </div>
-
                                         <button th:id="'buttonLike-' + ${iterStat.index}" type="submit"
-
-                                                class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800  mr-4">
-                                            <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                              <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
-                                            </svg> -->
-
                                                 class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
-
                                             <a th:text="${statusLikes[iterStat.index]}"></a>
                                         </button>
                                     </form>
@@ -287,83 +276,3 @@
 </div>
 </body>
 </html>
-
-<script>
-    function enableDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelDelete(commentId) {
-        //document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('deleteForm-' + commentId).classList.add('hidden');
-    }
-
-    function deleteCommentNew(event,commentId) {
-        event.preventDefault();
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-    function enableEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.add('hidden');
-        document.getElementById('editForm-' + commentId).classList.remove('hidden');
-    }
-
-    function cancelEdit(commentId) {
-        document.getElementById('commentText-' + commentId).classList.remove('hidden');
-        document.getElementById('editForm-' + commentId).classList.add('hidden');
-    }
-
-    function submitEdit(event, commentId) {
-        event.preventDefault();
-        const newCommentText = document.getElementById('editTextArea-' + commentId).value.trim();
-
-        if (newCommentText === "") {
-            deleteComment(commentId);
-            return;
-        }
-
-        fetch('/FlashG/comment/edit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId, newCommentText })
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('commentText-' + commentId).innerText = data.updatedText;
-                document.getElementById('commentText-' + commentId).classList.remove('hidden');
-                document.getElementById('editForm-' + commentId).classList.add('hidden');
-            })
-            .catch(error => console.error('Erro ao atualizar comentário:', error));
-    }
-
-    function deleteComment(commentId) {
-        fetch('/FlashG/comment/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ commentId })
-        })
-            .then(() => {
-                document.getElementById('commentText-' + commentId).parentElement.parentElement.remove();
-            })
-            .catch(error => console.error('Erro ao excluir comentário:', error));
-    }
-
-    async function generatepdf(photoId) {
-        const response = await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
-        const data = await response.json()
-        console.log(data)
-    }
-
-</script>
-<script th:src="@{/js/commentProcess.js}"></script>
-<script th:src="@{/js/likeProcess.js}"></script>
-
