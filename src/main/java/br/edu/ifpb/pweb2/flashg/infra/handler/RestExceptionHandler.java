@@ -1,4 +1,4 @@
-package br.edu.ifpb.pweb2.flashg.infra;
+package br.edu.ifpb.pweb2.flashg.infra.handler;
 
 import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;

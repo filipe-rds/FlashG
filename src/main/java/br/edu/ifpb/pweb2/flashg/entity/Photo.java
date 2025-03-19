@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,6 +34,9 @@ public class Photo {
 
     @OneToMany(mappedBy = "photo")
     private List<Likee> likes;
+
+    @OneToMany(mappedBy = "photo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PhotoTag> photoTags = new ArrayList<>();;
 
     private String imageUrl;
     private byte[] imageData;
