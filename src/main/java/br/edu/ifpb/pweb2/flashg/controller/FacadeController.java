@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
 import br.edu.ifpb.pweb2.flashg.dtos.LikeDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Comment;
-import br.edu.ifpb.pweb2.flashg.entity.CommentProjection;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Tag;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
@@ -34,7 +33,6 @@ import br.edu.ifpb.pweb2.flashg.service.FacadeService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -363,15 +361,6 @@ public class FacadeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
 
-
-    @ResponseBody
-    @RequestMapping(value = "/generatePDF")
-    public ResponseEntity<List<CommentProjection>> generatePDF(@RequestParam("photoId") String photoId) throws FileNotFoundException {
-        List<CommentProjection> comments = facadeService.findAllCommentOfPhotoAtAsc(Long.parseLong(photoId));
-        facadeService.generatePDF(comments);
-        return ResponseEntity.ok().body(comments);
-    }
-
     @GetMapping("/tags/suggestions")
     @ResponseBody
     public List<String> getTagSuggestions(@RequestParam("name") String name) {
@@ -381,4 +370,8 @@ public class FacadeController {
                 .collect(Collectors.toList());
     }
 
+
+
+
 }
+

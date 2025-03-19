@@ -9,11 +9,9 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.ToString;
 
 
 @Data
-@ToString(exclude = {"comments"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
