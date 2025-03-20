@@ -18,20 +18,20 @@
                     Que bom ter você de volta!
                 </h2>
                 <div class="bg-red-300 text-red-600 w-full p-4 rounded" role="alert" th:if="${error}" th:text="${error}"></div>
+                <div class="bg-red-300 text-red-600 w-full p-4 rounded" role="alert" th:if="${param.error}">E-mail ou senha incorretos!</div>
+                <div class="bg-green-300 text-green-600 w-full p-4 rounded" role="alert" th:if="${param.logout}">Você saiu com sucesso!</div>
             </div>
 
-            <form th:action="@{/auth/login}" th:object="${photographer}" method="post" class="flex flex-col gap-5">
+            <form th:action="@{/auth/login}"  method="post" class="flex flex-col gap-5">
                 <div>
                     <label for="email" class="text-lg block mb-2 font-medium text-zinc-950">Email:</label>
-                    <input type="email" id="email" name="email" th:field="*{email}" placeholder="exemplo@exemplo.com"
-                           class="border border-gray-300 text-zinc-950 text-sm rounded-lg focus:outline-gray-800 block w-full p-2.5 transition-all">
-                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                    <input type="email" id="email" name="email"  placeholder="exemplo@exemplo.com"
+                           class="border border-gray-300 text-zinc-950 text-sm rounded-lg focus:outline-gray-800 block w-full p-2.5 transition-all" required>
                 </div>
                 <div>
                     <label for="password" class="text-lg block mb-2 font-medium text-zinc-950">Senha:</label>
-                    <input type="password" id="password" name="password" th:field="*{password}"
-                           placeholder="Senha forte com no mínimo 8 dígitos" class="border border-gray-300 text-zinc-950 text-sm rounded-lg focus:outline-gray-800 block w-full p-2.5">
-                    <p class="text-red-600 text-md" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                    <input type="password" id="password" name="password"
+                           placeholder="Senha forte com no mínimo 8 dígitos" class="border border-gray-300 text-zinc-950 text-sm rounded-lg focus:outline-gray-800 block w-full p-2.5" required>
                 </div>
                 <button class="flex justify-center items-center bg-gray-700 w-full py-3 text-white text-xl rounded hover:bg-gray-800 transition-colors mt-2">
                     Logar no Sistema

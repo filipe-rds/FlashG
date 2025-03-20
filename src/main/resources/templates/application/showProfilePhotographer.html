@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org" xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+<html lang="pt_BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="https://ultraq.net.nz/web/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/layout}">
 <head>
     <title>FlashG</title>
@@ -21,17 +23,19 @@
                         <div class="flex gap-4">
                             <!-- Opção de seguir -->
                             <div class="flex items-center">
-                                <form th:action="@{/followAction}" method="POST" th:if="${photographer.acceptsFollowers}">
-                                    <input type="hidden" name="id" th:value="${photographer.id}" />
+                                <form th:action="@{/followAction}" method="POST"
+                                      th:if="${photographer.acceptsFollowers}">
+                                    <input type="hidden" name="id" th:value="${photographer.id}"/>
                                     <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
                                             type="submit" th:text="${status}">
                                     </button>
                                 </form>
                             </div>
                             <!-- Ícone de configurações -->
-                            <a role="button" th:if="${session.loggedPhotographer.isAdmin()}" th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"
-                                    class="p-2 border-transparent text-gray-700 rounded-full hover:text-blue-600 focus:outline-none"
-                                    aria-label="Configurações">
+                            <a role="button" sec:authorize="hasRole('ADMIN')"
+                               th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"
+                               class="p-2 border-transparent text-gray-700 rounded-full hover:text-blue-600 focus:outline-none"
+                               aria-label="Configurações">
                                 <svg
                                         class="h-6 w-6"
                                         fill="none"
@@ -41,8 +45,8 @@
                                         stroke="currentColor"
                                         viewBox="0 0 24 24">
                                     <path
-                                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                             </a>
                         </div>
@@ -52,10 +56,10 @@
                         <span class="text-base font-semibold text-gray-700 mr-4">
                           <b th:if="${photos}" th:text="${photos.size()}"></b> posts
                         </span>
-                                        <span class="text-base font-semibold text-gray-700 mr-4">
+                        <span class="text-base font-semibold text-gray-700 mr-4">
                           <b th:text="${photographer.followers.size()}"></b> seguidores
                         </span>
-                                        <span class="text-base font-semibold text-gray-700">
+                        <span class="text-base font-semibold text-gray-700">
                           <b th:text="${photographer.following.size()}"></b> seguindo
                         </span>
                     </div>
@@ -84,20 +88,22 @@
         <div th:if="${photos}" class="overflow-auto mx-auto p-4">
             <div class="w-full px-4">
                 <div class="mb-6 text-center">
-                    <h2 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Galeria de Fotos</h2>
+                    <h2 class="text-center text-2xl font-semibold mb-4 sm:mb-0">Suas Fotos</h2>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-4 shadow-md">
                     <div th:each="photo, iterStat : ${photos}">
                         <div class="w-full h-0 pb-[100%] relative cursor-pointer overflow-hidden rounded-lg shadow-md"
                              th:data-dialog-target="'image-dialog-' + ${iterStat.index}">
                             <img class="absolute inset-0 object-cover w-full h-full" th:src="${photo.imageUrl}"
-                                 th:alt="${photo.title}" />
+                                 th:alt="${photo.title}"/>
                         </div>
                     </div>
                 </div>
+
                 <!-- Dialog foto -->
                 <div th:each="photo, iterStat : ${photos}">
-                    <div th:id="'dialog-' + ${iterStat.index}" th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
+                    <div th:id="'dialog-' + ${iterStat.index}"
+                         th:data-dialog-backdrop="'image-dialog-' + ${iterStat.index}"
                          data-dialog-backdrop-close="true"
                          class="pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300">
                         <div class="relative m-4 w-4/5 h-[90vh] flex rounded-lg bg-white shadow-sm" role="dialog"
@@ -122,12 +128,21 @@
 
                                 <!-- Image -->
                                 <div class="relative border-b border-t border-blue-gray-100 my-4">
-                                    <img th:alt="${photo.title}" class="object-scale-down h-[30rem] w-full object-cover object-center"
-                                         th:src="${photo.imageUrl}" />
+                                    <img th:alt="${photo.title}" class="h-[30rem] w-full object-cover object-center"
+                                         th:src="${photo.imageUrl}"/>
                                 </div>
 
                                 <!-- Title -->
-                                <h1 class="text-xl font-semibold text-slate-800 text-center" th:text="${photo.title}"></h1>
+                                <h1 class="text-xl font-semibold text-slate-800 text-center"
+                                    th:text="${photo.title}"></h1>
+                                <!--   Tags               -->
+                                <div class="text-sm text-slate-600 text-center mt-2">
+                    <span th:each="tag : ${photoTagsMap[photo.id]}"
+                          th:text="'#'+ ${tag.tagName}"
+                          class="tag bg-gray-600 text-white px-3 py-1 rounded-full text-xs font-semibold
+                 hover:bg-gray-700 transition-all duration-200 shadow-sm mr-2 mb-2 inline-block">
+                    </span>
+                                </div>
 
                                 <!-- Description -->
                                 <p class="text-sm text-slate-600 text-center mt-2" th:text="${photo.description}"></p>
@@ -137,63 +152,127 @@
                                     <div class="flex items-center gap-16">
                                         <div>
                                             <p class="text-slate-500 text-sm">Curtidas</p>
-                                            <p th:id="'sizeLikes-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.likes.size()}"></p>
-                                          </div>
+                                            <p th:id="'sizeLikes-' + ${iterStat.index}"
+                                               class="text-slate-800 font-medium" th:text="${photo.likes.size()}"></p>
+                                        </div>
                                         <div>
                                             <p class="text-slate-500 text-sm">Comentários</p>
-                                            <p th:id="'sizeComment-' + ${iterStat.index}"  class="text-slate-800 font-medium" th:text="${photo.comments.size()}"></p>
+                                            <p th:id="'sizeComment-' + ${iterStat.index}"
+                                               class="text-slate-800 font-medium"
+                                               th:text="${photo.comments.size()}"></p>
                                         </div>
                                     </div>
 
 
-                                    <form  th:id="'formLike-' + ${iterStat.index}" action="">
+                                    <form th:id="'formLike-' + ${iterStat.index}" action="">
                                         <input type="hidden" id="photo" name="photo" th:value="${photo.id}"/>
-                                        <input type="hidden" id="photographer" name="photographer" th:value="${session.loggedPhotographer.id}"/>
-                      
-                                        <button  th:id="'buttonLike-' + ${iterStat.index}" type="submit" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
-                                          <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                                            <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z"/>
-                                          </svg> -->
-                                          <a th:text="${statusLikes[iterStat.index]}"></a>
-                                        </button>
-                                      </form>
+                                        <input type="hidden" id="photographer" name="photographer"
+                                               th:value="${session.loggedPhotographer.id}"/>
 
+                                        <button th:id="'buttonLike-' + ${iterStat.index}" type="submit"
+                                                class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">
+                                            <a th:text="${statusLikes[iterStat.index]}"></a>
+                                        </button>
+
+                                        <div sec:authorize="hasRole('ADMIN')" th:if="${photo.comments.size() > 0}">
+                                            <button type="button" th:attr="onclick='generatepdf(' + ${photo.id} + ')'" class="flex items-center rounded-md border border-slate-300 py-2 px-4 text-sm shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-slate-800">Comentários em PDF</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-
                             <!-- Comments Section -->
+                            <!-- Esta parte seria inserida no local onde está a seção de comentários existente -->
                             <div class="w-[30%] p-4 border-l border-slate-200 flex flex-col justify-between">
                                 <div th:id="'listComment-' + ${iterStat.index}" class="overflow-y-auto flex-grow h-0">
                                     <h2 class="text-lg font-medium text-slate-800 mb-4">Comentários</h2>
-                                    <!-- Comentários fictícios -->
-
-                                    <div th:each="comment : ${photo.comments}">
-                                        <div class="flex items-start gap-3 mb-4 max-w-[294px]">
-                                            <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil" class="h-8 w-8 rounded-full object-cover">
-                                            <div class="">
-                                                <div class="flex flex-row justify-between gap-6">
-                                                    <p th:text="${comment.photographer.username}" class="text-sm font-medium text-slate-800"></p>
-                                                    <p th:text="${comment.getDate()}" class="text-sm font-medium text-slate-800"></p>
-                                                </div>
-                                                <p th:text="${comment.commentText}" class="text-sm text-slate-600 max-w-[248px] break-words"></p>
+                                    <!-- Loop pelos comentários -->
+                                    <div th:each="comment : ${photo.comments}" th:id="'comment-' + ${comment.id}" class="flex items-start gap-3 mb-4 max-w-[294px]">
+                                        <img th:src="${comment.photographer.profilePictureUrl}" alt="perfil"
+                                             class="h-8 w-8 rounded-full object-cover">
+                                        <div class="w-full">
+                                            <div class="flex flex-row justify-between items-center">
+                                                <p th:text="${comment.photographer.username}"
+                                                   class="text-sm font-medium text-slate-800"></p>
+                                                <p th:text="${comment.getDate()}"
+                                                   class="text-xs text-gray-500"></p>
                                             </div>
+
+                                            <!-- Texto do comentário -->
+                                            <p th:id="'commentText-' + ${comment.id}"
+                                               th:text="${comment.commentText}"
+                                               class="text-sm text-slate-600 max-w-[248px] break-words">
+                                            </p>
+
+                                            <!-- Botões apenas visíveis para o dono do comentário -->
+                                            <div th:if="${session.loggedPhotographer.id == comment.photographer.id}" class="flex gap-2 mt-2">
+                                                <button class="edit-btn text-blue-600 text-sm hover:underline" th:data-id="${comment.id}">
+                                                    <img th:src="@{/assets/icons/pen.svg}" alt="Editar" class="w-[18px] h-[18px]">
+                                                </button>
+                                                <button class="delete-btn text-red-600 text-sm hover:underline" th:data-id="${comment.id}">
+                                                    <img th:src="@{/assets/icons/trash.svg}" alt="Excluir" class="w-[18px] h-[18px]">
+                                                </button>
+                                            </div>
+
+
+
+
+                                            <!-- Formulário de edição (oculto por padrão) -->
+                                            <form th:id="'editForm-' + ${comment.id}" class="edit-form hidden mt-2" th:data-id="${comment.id}">
+                                                <textarea th:id="'editTextArea-' + ${comment.id}"
+                                                          class="w-full p-2 rounded-md border text-sm" maxlength="512"
+                                                          th:text="${comment.commentText}"></textarea>
+                                                <div class="flex gap-2 mt-2">
+                                                    <button type="submit" class="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-800">
+                                                        Salvar
+                                                    </button>
+                                                    <button type="button" class="cancel-edit-btn px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                            th:data-id="${comment.id}">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                            <!-- Formulário de exclusão (oculto por padrão) -->
+                                            <form th:id="'deleteForm-' + ${comment.id}" class="delete-form hidden mt-2" th:data-id="${comment.id}">
+                                                <div class="flex gap-2 mt-2">
+                                                    <button type="submit" class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-800">
+                                                        Excluir
+                                                    </button>
+                                                    <button type="button" class="cancel-delete-btn px-3 py-1 bg-gray-400 text-white rounded-md hover:bg-gray-600"
+                                                            th:data-id="${comment.id}">
+                                                        Cancelar
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                <form th:id="'form-' + ${iterStat.index}" class="mt-4" action="">
-                  <textarea
-                          th:id="'textArea-' + ${iterStat.index}"
-                          placeholder="Escreva seu comentário..."
-                          class="w-full p-2 rounded-md border text-sm" maxlength="512"
-                          name="commentText"
-                          th:value="${commentText}"></textarea>
-                                    <div>
-                                        <input type="hidden" id="createdAt" name="createdAt" />
-                                        <input type="hidden"  name="photo" id="photo" th:value="${photo.id}" />
-                                        <input type="hidden"  name="photographer" id="photographer" th:value="${session.loggedPhotographer.id}" />
-                                    </div>
-                                    <button type="submit" class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">Enviar</button>
-                                </form>
+
+                                <div th:if="${session.loggedPhotographer.blockComments == false}">
+                                    <!-- Formulário para adicionar novos comentários -->
+                                    <form th:id="'form-' + ${iterStat.index}" class="mt-4">
+                                        <textarea
+                                                th:id="'textArea-' + ${iterStat.index}"
+                                                placeholder="Escreva seu comentário..."
+                                                class="w-full p-2 rounded-md border text-sm"
+                                                name="commentText" maxlength="512"
+                                                th:value="${commentText}"></textarea>
+                                        <div>
+                                            <input type="hidden" id="createdAt" name="createdAt"/>
+                                            <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
+                                            <input type="hidden" name="photographer" id="photographer"
+                                                th:value="${session.loggedPhotographer.id}"/>
+                                        </div>
+                                        <button type="submit"
+                                                class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">
+                                            Enviar
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <div th:unless="${session.loggedPhotographer.blockComments == false}" class="mt-2 text-red-500">
+                                    Você foi bloqueado de fazer comentários, entre em contato com o nosso suporte para saber o motivo!
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -205,5 +284,11 @@
 </body>
 </html>
 
-<script th:src="@{/js/commentProcess.js}"></script>
-<script th:src="@{/js/likeProcess.js}"></script>
+<script>
+    async function generatepdf(photoId) {
+        const response = await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);  // Abre o PDF em uma nova aba
+    }
+</script>

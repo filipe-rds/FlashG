@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
+import br.edu.ifpb.pweb2.flashg.entity.Tag;
 import br.edu.ifpb.pweb2.flashg.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class PhotoService {
         return repository.getPhotosByPhotographerId(id);
     }
 
+    public List<Tag> getTagsByPhoto(Long id){
+        return repository.getTagsByPhotoId(id);
+    }
 
 
 }

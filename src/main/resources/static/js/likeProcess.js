@@ -4,7 +4,6 @@ $("[id^='formLike-']").on("submit", function(event) {
     // Cria um objeto FormData a partir do formulário
     const formId = $(this).attr("id");  // Obtém o ID do formulário
     const idPart = formId.split('-')[1];
-    console.log(idPart);
     //const formData = new FormData(this);  // 'this' refere-se ao formulário
     const formData = new FormData(this);  // 'this' refere-se ao formulário
     // Preenche o campo de data com a data e hora atual

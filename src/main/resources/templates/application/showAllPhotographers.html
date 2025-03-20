@@ -17,18 +17,18 @@ layout:decorate="~{layout/layout}">
                 <div class="ml-3">
                     <div class="w-full max-w-sm min-w-[200px] relative">
                         <div class="relative">
-                            <input
+                            <!-- <input
                                     class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
                                     placeholder="Procure por username..."
-                            />
-                            <button
+                            /> -->
+                            <!-- <button
                                     class="absolute h-8 w-8 right-1 top-1 my-auto px-2 flex items-center bg-white rounded "
                                     type="button"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
+                            > -->
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-8 h-8 text-slate-600">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                                 </svg>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -37,86 +37,120 @@ layout:decorate="~{layout/layout}">
             <div class="relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-lg bg-clip-border">
                 <table class="w-full text-left table-auto min-w-max">
                     <thead>
-                        <tr>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Id
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Username
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Nome
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    E-mail
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Pode ser seguido
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Administrador
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Bloqueio
-                                </p>
-                            </th>
-                            <th class="p-4 border-b border-slate-200 bg-slate-50">
-                                <p class="text-sm font-normal leading-none text-slate-500">
-                                    Editar Dados
-                                </p>
-                            </th>
-                        </tr>
+                    <tr>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Id
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Username
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Nome
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                E-mail
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Pode ser seguido
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Privilégios
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Bloqueio total
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Bloqueio de comentar
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Editar Dados
+                            </p>
+                        </th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
-                            <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
-                            <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
-                            <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
-                            <td th:text="${photographer.email}" class="p-4 py-5 text-sm text-slate-800"></td>
-                            <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <td th:text="${photographer.isAdmin}" class="p-4 py-5 text-sm text-slate-800 "></td>
-                            <form th:action="@{/blockAction}" method="POST">
-                                <td class="p-4 py-5 text-sm">
-                                    <input type="hidden" name="id" th:value="${photographer.id}" />
-                                    <button type="submit" 
-                                            th:text="${photographer.isBlocked ? 'Desbloquear' : 'Bloquear'}" 
-                                            class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
-                                    </button>
-                                </td>
-                            </form>                                                 
-                            <td class="p-4 py-5 text-sm ">
-                                <a th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Editar</a>
+                    <tr th:each="photographer : ${photographers}" class="hover:bg-slate-50 border-b border-slate-200">
+                        <td th:text="${photographer.id}" class="p-4 py-5 text-sm text-slate-800 font-semibold"></td>
+                        <td th:text="${photographer.username}" class="p-4 py-5 text-sm text-slate-800"></td>
+                        <td th:text="${photographer.firstName + ' ' + photographer.lastName}" class="p-4 py-5 text-sm text-slate-500"></td>
+                        <td th:text="${photographer.user.email}" class="p-4 py-5 text-sm text-slate-800"></td>
+                        <td th:text="${photographer.acceptsFollowers}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                        <td th:text="${photographer.user.role}" class="p-4 py-5 text-sm text-slate-800 "></td>
+                        <form th:action="@{/blockAction}" method="POST">
+                            <td class="p-4 py-5 text-sm">
+                                <input type="hidden" name="id" th:value="${photographer.id}" />
+                                <button type="submit"
+                                        th:text="${photographer.user.enabled ? 'Bloquear' : 'Desbloquear'}"
+                                        class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
+                                </button>
                             </td>
-                        </tr>
+                        </form>
+                        <form th:action="@{/blockActionComment}" method="POST">
+                            <td class="p-4 py-5 text-sm">
+                                <input type="hidden" name="id" th:value="${photographer.id}" />
+                                <button type="submit"
+                                        th:text="${photographer.blockComments ? 'Desbloquear' : 'Bloquear'}"
+                                        class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
+                                </button>
+                            </td>
+                        </form>
+                        <td class="p-4 py-5 text-sm ">
+                            <a th:href="@{/showEditProfilePhotographer/{id}(id=${photographer.id})}"  class="text-slate-500 hover:underline font-semibold">Editar</a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
+
+                <nav aria-label="Pagination" th:if="${totalPages > 0}" class="my-4 ml-3">
+                    <ul class="flex gap-3 items-center">
+                        <li class="text-zinc-400 font-medium">
+                            <a th:replace="fragments/paging :: paging(1, '<<', 'First Page', ${currentPage == 1 ? 'opacity-50 cursor-not-allowed' : ''})"></a>
+                        </li>
+                        <li class="text-zinc-400 font-medium">
+                            <a th:replace="fragments/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page', ${currentPage == 1 ? 'opacity-50 cursor-not-allowed' : ''})"></a>
+                        </li>
+                        <li class="text-zinc-800 font-medium" th:if="${currentPage - 2 > 1}">
+                            <a href="#">...</a>
+                        </li>
+                        <li class="text-zinc-800 font-medium" th:classappend="${page == currentPage} ? 'font-semibold bg-slate-800 flex justify-center items-center font-medium rounded-lg py-1 w-[32px]'"
+                            th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                            <a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page}, ${page == currentPage ? 'text-zinc-300' : ''})"></a>
+                        </li>
+                        <li class="text-zinc-800 font-medium" th:if="${currentPage + 2 < totalPages}">
+                            <a href="#">...</a>
+                        </li>
+                        <li class="text-zinc-400 font-medium">
+                            <a th:replace="fragments/paging :: paging(${currentPage + 1},'Next', 'Next Page', ${currentPage == totalPages ? 'opacity-50 cursor-not-allowed' : ''})"></a>
+                        </li>
+                        <li class="text-zinc-400 font-medium">
+                            <a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Last Page', ${currentPage == totalPages ? 'opacity-50 cursor-not-allowed' : ''})"></a>
+                        </li>
+                    </ul>
+                </nav>
 
                 <div >
                     <div class="flex justify-between items-center px-4 py-3" th:if="${photographers?.size() > 0}">
                         <div class="text-sm text-slate-500" >
                             <p><b th:text="${'Total: ' + photographers.size()}"></b></p>
                         </div>
-<!--                        <div class="flex space-x-1">-->
-<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
-<!--                                Prev-->
-<!--                            </button>-->
-<!--                            <button class="px-3 py-1 min-w-9 min-h-9 text-sm font-normal text-slate-500 bg-white border border-slate-200 rounded hover:bg-slate-50 hover:border-slate-400 transition duration-200 ease">-->
-<!--                                Next-->
-<!--                            </button>-->
-<!--                        </div>-->
+
                     </div>
                 </div>
             </div>

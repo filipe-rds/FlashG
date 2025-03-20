@@ -1,5 +1,8 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
+import br.edu.ifpb.pweb2.flashg.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import br.edu.ifpb.pweb2.flashg.entity.Photo;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.*;
@@ -8,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -19,6 +23,9 @@ public class PhotographerService {
 
     @Autowired
     private  PhotographerRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Photographer> findByUsernameStartingWith(String username) throws NotFoundAnyPhotograferWithName {
 
@@ -33,8 +40,8 @@ public class PhotographerService {
         return repository.findById(id).orElseThrow(() -> new PhotographerNotFoundException("Fotógrafo não encontrado"));
     }
 
-    public List<Photographer> findAllPhotographers(){
-        return repository.findAllByOrderByIdAsc();
+    public Page<Photographer> findAllPhotographers(Pageable page){
+        return repository.findAllByOrderByIdAsc(page);
     }
 
     public List<Photographer> findAllFollowing(Long id){
@@ -59,8 +66,8 @@ public class PhotographerService {
 
     public void updatePhotographer(Photographer photographer)  {
         // Valida se o e-mail já está sendo usado por outro fotógrafo
-        if (isEmailAlreadyRegistered(photographer.getEmail())
-                && !isEmailOfPhotographer(photographer.getEmail(), photographer.getId())) {
+        if (isEmailAlreadyRegistered(photographer.getUser().getEmail())
+                && !isEmailOfPhotographer(photographer.getUser().getEmail(), photographer.getId())) {
             throw new EmailAlreadyExistsUpdate(photographer.getId());
         }
 
@@ -95,29 +102,89 @@ public class PhotographerService {
     }
 
     public String checkBlockedStatus(Photographer photographer){
-        return repository.isPhotographerBlocked(photographer.getId()) ? "Desbloquear" : "Bloquear";
-    }  
-    
+        return repository.isPhotographerEnabled(photographer.getId()) ? "Bloquear" : "Desbloquear";
+    }
+
     public void handleBlockAction(Long id) {
 
         Optional<Photographer> photographerOptional = repository.findById(id);
-        
+
         if (photographerOptional.isPresent()) {
             Photographer photographer = photographerOptional.get();
-            boolean isBlocked = photographer.isBlocked(); 
-            photographer.setBlocked(!isBlocked);
+            boolean isEnabled = photographer.getUser().isEnabled();
+            photographer.getUser().setEnabled(!isEnabled);
             repository.save(photographer);
         } else {
             throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
         }
     }
 
+    public void handleBlockActionComment(Long id) {
+
+        Optional<Photographer> photographerOptional = repository.findById(id);
+
+        if (photographerOptional.isPresent()) {
+            Photographer photographer = photographerOptional.get();
+            boolean isEnabled = photographer.isBlockComments();
+            photographer.setBlockComments(!isEnabled);
+            repository.save(photographer);
+        } else {
+            throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
+        }
+    }
+
+
     public List<Photo> findAllPhotos(Long id){
         return repository.findAllPhotos(id);
     }
 
+    private void copyNonNullProperties(Photographer source, Photographer target) {
+        // Guarda referência do usuário original
+        User originalUser = target.getUser();
+
+        // Guarda temporariamente os valores de foto para verificar se devemos restaurá-los
+        byte[] originalProfilePicture = target.getProfilePicture();
+        String originalProfilePictureUrl = target.getProfilePictureUrl();
+
+        // Cria um array de nomes de propriedades a serem ignoradas
+        String[] ignoreProperties = {"user", "photos", "comments", "following", "followers", "likes"};
+
+        // Copia apenas propriedades não nulas exceto as ignoradas
+        BeanUtils.copyProperties(source, target, ignoreProperties);
+
+        // Restaura as fotos originais se novas não foram fornecidas
+        if (source.getProfilePicture() == null) {
+            target.setProfilePicture(originalProfilePicture);
+        }
+
+        if (source.getProfilePictureUrl() == null) {
+            target.setProfilePictureUrl(originalProfilePictureUrl);
+        }
+
+        // Restaura o usuário original e atualiza apenas os campos específicos do usuário
+        if (source.getUser() != null) {
+            User updatedUser = source.getUser();
+
+            // Atualiza a senha para ser ciptografada caso haja alguma mudança
+            if (!updatedUser.getPassword().equals(originalUser.getPassword())) {
+                String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
+                updatedUser.setPassword(encodedPassword);
+            }
+
+            // Persiste a role do usuário
+            updatedUser.setRole(originalUser.getRole());
+
+            // Atualiza os demais campos
+            copyNonNullPropertiesGeneric(updatedUser, originalUser);
+
+        }
+
+        // Restaura a referência do usuário original
+        target.setUser(originalUser);
+    }
+
     // Copia propriedades não nulas de um objeto de origem para um objeto de destino.
-    private void copyNonNullProperties(Object source, Object target) {
+    private void copyNonNullPropertiesGeneric(Object source, Object target) {
         // Usa o método utilitário do Spring BeanUtils para copiar as propriedades,
         // excluindo aquelas que estão nulas no objeto de origem.
         BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
@@ -137,7 +204,4 @@ public class PhotographerService {
                 .map(java.beans.PropertyDescriptor::getName)             // Extrai o nome da propriedade
                 .toArray(String[]::new);                                // Converte o stream em um array de strings
     }
-
-
-
 }
