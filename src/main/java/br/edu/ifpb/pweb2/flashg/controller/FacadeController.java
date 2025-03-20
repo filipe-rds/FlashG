@@ -1,5 +1,9 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -8,10 +12,7 @@ import java.util.stream.Collectors;
 
 import br.edu.ifpb.pweb2.flashg.dtos.CommentDTO;
 import br.edu.ifpb.pweb2.flashg.dtos.LikeDTO;
-import br.edu.ifpb.pweb2.flashg.entity.Comment;
-import br.edu.ifpb.pweb2.flashg.entity.Photo;
-import br.edu.ifpb.pweb2.flashg.entity.Tag;
-import br.edu.ifpb.pweb2.flashg.entity.Photographer;
+import br.edu.ifpb.pweb2.flashg.entity.*;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.service.FacadeService;
 import jakarta.servlet.http.HttpSession;
@@ -20,8 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -370,6 +370,24 @@ public class FacadeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(likeDTO);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/generatePDF")
+    public ResponseEntity<byte[]> generatePDF(@RequestParam("photoId") String photoId) throws FileNotFoundException {
+        List<CommentProjection> comments = facadeService.findAllCommentOfPhotoAtAsc(Long.parseLong(photoId));
+        facadeService.generatePDF(comments);
+        File file = new File("GeneratorPDF/Comments.pdf");
+        try {
+            byte[] pdfBytes = Files.readAllBytes(file.toPath());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.attachment().filename("relatorio.pdf").build());
+
+            return ResponseEntity.ok().headers(headers).body(pdfBytes);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/tags/suggestions")
     @ResponseBody
     public List<String> getTagSuggestions(@RequestParam("name") String name) {
@@ -378,9 +396,5 @@ public class FacadeController {
                 .map(Tag::getTagName)
                 .collect(Collectors.toList());
     }
-
-
-
-
 }
 

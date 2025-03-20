@@ -29,8 +29,8 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.findByEmail("admin@flashg.com").isEmpty()) {
             // Cria o User (admin)
             User adminUser = new User();
-            adminUser.setEmail("admin@f");
-            adminUser.setPassword(passwordEncoder.encode("123")); // Codifica a senha
+            adminUser.setEmail("admin@flashg.com");
+            adminUser.setPassword(passwordEncoder.encode("admin1234")); // Codifica a senha
             adminUser.setRole(UserRole.ADMIN); // Define a role como ADMIN
 
             // Cria o Photographer (admin)
