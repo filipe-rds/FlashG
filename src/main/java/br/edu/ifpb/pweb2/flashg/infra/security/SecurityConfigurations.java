@@ -34,7 +34,8 @@ public class SecurityConfigurations {
                         // Rotas específicas para ROLE ADMIN
                         .requestMatchers(
                                 "/showAllPhotographers",
-                                "/blockAction"
+                                "/blockAction",
+                                "/blockActionComment"
                         ).hasRole("ADMIN")
 
                         // Todas as outras rotas exigem pelo menos que o usuário seja autenticado
