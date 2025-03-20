@@ -61,4 +61,8 @@ public class Photographer {
     @OneToMany(mappedBy = "photographer", fetch = FetchType.EAGER)
     private List<Likee> likes;
 
+    @Column(nullable = false)
+    private boolean blockComments = false;
+
+
 }

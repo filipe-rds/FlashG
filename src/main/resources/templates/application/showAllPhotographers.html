@@ -70,7 +70,12 @@ layout:decorate="~{layout/layout}">
                         </th>
                         <th class="p-4 border-b border-slate-200 bg-slate-50">
                             <p class="text-sm font-normal leading-none text-slate-500">
-                                Bloqueio
+                                Bloqueio total
+                            </p>
+                        </th>
+                        <th class="p-4 border-b border-slate-200 bg-slate-50">
+                            <p class="text-sm font-normal leading-none text-slate-500">
+                                Bloqueio de comentar
                             </p>
                         </th>
                         <th class="p-4 border-b border-slate-200 bg-slate-50">
@@ -93,6 +98,15 @@ layout:decorate="~{layout/layout}">
                                 <input type="hidden" name="id" th:value="${photographer.id}" />
                                 <button type="submit"
                                         th:text="${photographer.user.enabled ? 'Bloquear' : 'Desbloquear'}"
+                                        class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
+                                </button>
+                            </td>
+                        </form>
+                        <form th:action="@{/blockActionComment}" method="POST">
+                            <td class="p-4 py-5 text-sm">
+                                <input type="hidden" name="id" th:value="${photographer.id}" />
+                                <button type="submit"
+                                        th:text="${photographer.blockComments ? 'Desbloquear' : 'Bloquear'}"
                                         class="text-slate-500 hover:underline font-semibold bg-transparent border-none cursor-pointer">
                                 </button>
                             </td>

@@ -119,6 +119,20 @@ public class PhotographerService {
         }
     }
 
+    public void handleBlockActionComment(Long id) {
+
+        Optional<Photographer> photographerOptional = repository.findById(id);
+
+        if (photographerOptional.isPresent()) {
+            Photographer photographer = photographerOptional.get();
+            boolean isEnabled = photographer.isBlockComments();
+            photographer.setBlockComments(!isEnabled);
+            repository.save(photographer);
+        } else {
+            throw new IllegalArgumentException("Photographer with ID " + id + " not found.");
+        }
+    }
+
 
     public List<Photo> findAllPhotos(Long id){
         return repository.findAllPhotos(id);
