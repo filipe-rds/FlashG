@@ -1,6 +1,9 @@
 package br.edu.ifpb.pweb2.flashg.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,8 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -361,10 +363,20 @@ public class FacadeController {
 
     @ResponseBody
     @RequestMapping(value = "/generatePDF")
-    public ResponseEntity<List<CommentProjection>> generatePDF(@RequestParam("photoId") String photoId) throws FileNotFoundException {
+    public ResponseEntity<byte[]> generatePDF(@RequestParam("photoId") String photoId) throws FileNotFoundException {
         List<CommentProjection> comments = facadeService.findAllCommentOfPhotoAtAsc(Long.parseLong(photoId));
         facadeService.generatePDF(comments);
-        return ResponseEntity.ok().body(comments);
+        File file = new File("GeneratorPDF/Comments.pdf");
+        try {
+            byte[] pdfBytes = Files.readAllBytes(file.toPath());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.attachment().filename("relatorio.pdf").build());
+
+            return ResponseEntity.ok().headers(headers).body(pdfBytes);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/tags/suggestions")

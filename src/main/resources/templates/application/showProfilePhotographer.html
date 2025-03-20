@@ -284,7 +284,8 @@
 <script>
     async function generatepdf(photoId) {
         const response = await fetch(`/FlashG/generatePDF?photoId=${photoId}`)
-        const data = await response.json()
-        console.log(data)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);  // Abre o PDF em uma nova aba
     }
 </script>
