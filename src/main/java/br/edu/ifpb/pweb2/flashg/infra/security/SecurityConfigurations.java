@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.flashg.infra.security;
 
+import br.edu.ifpb.pweb2.flashg.infra.handler.CustomAuthenticationFailureHandler;
 import br.edu.ifpb.pweb2.flashg.infra.handler.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
@@ -43,11 +45,11 @@ public class SecurityConfigurations {
                         .loginProcessingUrl("/auth/login")
                         .usernameParameter("email")
                         .successHandler(authenticationSuccessHandler())
-                        .failureUrl("/auth/signin?error")
+                        .failureHandler(authenticationFailureHandler())
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/auth/logout")
                         .logoutSuccessUrl("/auth/signin?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
@@ -61,6 +63,12 @@ public class SecurityConfigurations {
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler(){
+        return new CustomAuthenticationFailureHandler();
+    }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
