@@ -244,25 +244,31 @@
                                     </div>
                                 </div>
 
-                                <!-- Formulário para adicionar novos comentários -->
-                                <form th:id="'form-' + ${iterStat.index}" class="mt-4">
-                                    <textarea
-                                            th:id="'textArea-' + ${iterStat.index}"
-                                            placeholder="Escreva seu comentário..."
-                                            class="w-full p-2 rounded-md border text-sm"
-                                            name="commentText" maxlength="512"
-                                            th:value="${commentText}"></textarea>
-                                    <div>
-                                        <input type="hidden" id="createdAt" name="createdAt"/>
-                                        <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
-                                        <input type="hidden" name="photographer" id="photographer"
-                                               th:value="${session.loggedPhotographer.id}"/>
-                                    </div>
-                                    <button type="submit"
-                                            class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">
-                                        Enviar
-                                    </button>
-                                </form>
+                                <div th:if="${session.loggedPhotographer.blockComments == false}">
+                                    <!-- Formulário para adicionar novos comentários -->
+                                    <form th:id="'form-' + ${iterStat.index}" class="mt-4">
+                                        <textarea
+                                                th:id="'textArea-' + ${iterStat.index}"
+                                                placeholder="Escreva seu comentário..."
+                                                class="w-full p-2 rounded-md border text-sm"
+                                                name="commentText" maxlength="512"
+                                                th:value="${commentText}"></textarea>
+                                        <div>
+                                            <input type="hidden" id="createdAt" name="createdAt"/>
+                                            <input type="hidden" name="photo" id="photo" th:value="${photo.id}"/>
+                                            <input type="hidden" name="photographer" id="photographer"
+                                                th:value="${session.loggedPhotographer.id}"/>
+                                        </div>
+                                        <button type="submit"
+                                                class="mt-2 w-full py-2 bg-gray-600 text-white rounded-md hover:bg-gray-800">
+                                            Enviar
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <div th:unless="${session.loggedPhotographer.blockComments == false}" class="mt-2 text-red-500">
+                                    Você foi bloqueado de fazer comentários, entre em contato com o nosso suporte para saber o motivo!
+                                </div>
                             </div>
                         </div>
                     </div>

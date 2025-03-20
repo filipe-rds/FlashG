@@ -258,6 +258,15 @@ public class FacadeController {
         return mav;
     }
 
+    @PostMapping(value = "/blockActionComment")
+    public ModelAndView blockActionComment(ModelAndView mav, @RequestParam("id") Long id) {
+        //facadeService.handleBlockAction(loggedPhotographer.getId(), id);
+        //session.setAttribute("loggedPhotographer", updatedLoggedPhotographer);
+        facadeService.handleBlockActionComment(id);
+        mav.setViewName("redirect:/showAllPhotographers");
+        return mav;
+    }
+
 
     @GetMapping(value = "/showEditProfilePhotographer/{id}")
     public ModelAndView editProfilePhotographer(ModelAndView mav, @PathVariable("id") Long id) {
