@@ -18,7 +18,7 @@
                     Que bom ter você de volta!
                 </h2>
                 <div class="bg-red-300 text-red-600 w-full p-4 rounded" role="alert" th:if="${error}" th:text="${error}"></div>
-                <div class="bg-red-300 text-red-600 w-full p-4 rounded" role="alert" th:if="${param.error}">E-mail ou senha incorretos!</div>
+                <div class="bg-red-300 text-red-600 w-full p-4 rounded" role="alert"  th:if="${param.error}" th:text="${param.error}"></div>
                 <div class="bg-green-300 text-green-600 w-full p-4 rounded" role="alert" th:if="${param.logout}">Você saiu com sucesso!</div>
             </div>
 

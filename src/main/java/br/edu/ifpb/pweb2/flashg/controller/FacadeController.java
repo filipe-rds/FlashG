@@ -62,15 +62,6 @@ public class FacadeController {
         return mav;
     }
 
-
-    @GetMapping("/auth/logout")
-    public ModelAndView logout(ModelAndView mav, HttpSession session) {
-        facadeService.logoutPhotographer(session);
-        mav.setViewName("redirect:/auth/signin");
-        return mav;
-    }
-
-
     @GetMapping(value = "/searchPhotographers")
     public ModelAndView searchPhotographers(ModelAndView mav) {
         mav.setViewName("application/findPhotographers");

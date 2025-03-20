@@ -1,11 +1,8 @@
 package br.edu.ifpb.pweb2.flashg.service;
 
-import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.entity.User;
 import br.edu.ifpb.pweb2.flashg.exception.EmailAlreadyExists;
-import br.edu.ifpb.pweb2.flashg.exception.EmailOrPasswordIsIncorrect;
-import br.edu.ifpb.pweb2.flashg.exception.PhotographerIsBlockedException;
 import br.edu.ifpb.pweb2.flashg.exception.UsernameAlreadyExists;
 import br.edu.ifpb.pweb2.flashg.repository.PhotographerRepository;
 import br.edu.ifpb.pweb2.flashg.repository.UserRepository;

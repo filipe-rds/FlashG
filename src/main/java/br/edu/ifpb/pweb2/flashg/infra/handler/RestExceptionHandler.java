@@ -1,6 +1,5 @@
 package br.edu.ifpb.pweb2.flashg.infra.handler;
 
-import br.edu.ifpb.pweb2.flashg.dtos.LoginDTO;
 import br.edu.ifpb.pweb2.flashg.entity.Photographer;
 import br.edu.ifpb.pweb2.flashg.exception.*;
 import br.edu.ifpb.pweb2.flashg.service.PhotographerService;
@@ -58,14 +57,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return mav;
     }
 
-    @ExceptionHandler(EmailOrPasswordIsIncorrect.class)
-    private ModelAndView handlerEmailOrPasswordIsIncorrect(EmailOrPasswordIsIncorrect ex) {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("auth/signin");
-        mav.addObject("photographer", new LoginDTO());
-        mav.addObject("error", ex.getMessage());
-        return mav;
-    }
 
     @ExceptionHandler(UsernameAlreadyExists.class)
     private ModelAndView handlerUsernameAlreadyExists(UsernameAlreadyExists ex) {
@@ -84,14 +75,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return mav;
     }
 
-    @ExceptionHandler(PhotographerIsBlockedException.class)
-    private ModelAndView handlerPhotographerIsBlockedException(PhotographerIsBlockedException ex) {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("auth/signin");
-        mav.addObject("photographer", new LoginDTO());
-        mav.addObject("error", ex.getMessage());
-        return mav;
-    }
 
     @ExceptionHandler(EmailAlreadyExistsUpdate.class)
     private ModelAndView handlerEmailAlreadyExistsUpdate(EmailAlreadyExistsUpdate ex) {
