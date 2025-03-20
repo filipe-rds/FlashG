@@ -199,6 +199,10 @@ public class FacadeService {
         photographerService.handleBlockAction(id);
     }
 
+    public void handleBlockActionComment(Long id) {
+        photographerService.handleBlockActionComment(id);
+    }
+
     public void uploadPhoto(Long id, Photo photo, MultipartFile file, List<String> tagNames) throws Exception {
         Photographer photographer = photographerService.findById(id);
         photo.setPhotographer(photographer);
